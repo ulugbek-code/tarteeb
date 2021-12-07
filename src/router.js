@@ -4,6 +4,8 @@ import Dashboard from "./pages/Dashboard.vue";
 import Records from "./pages/Records.vue";
 import Tasks from "./pages/Tasks.vue";
 import Users from "./pages/Users.vue";
+import SignUp from "./pages/SignUp.vue";
+import SignIn from "./pages/SignIn.vue";
 import NotFound from "./pages/NotFound.vue";
 
 const router = createRouter({
@@ -13,6 +15,8 @@ const router = createRouter({
     { path: "/users", component: Users },
     { path: "/tasks", component: Tasks },
     { path: "/records", component: Records },
+    { path: "/SignUp", component: SignUp },
+    { path: "/SignIn", component: SignIn },
     { path: "/:notFound(.*)", component: NotFound },
   ],
 });
