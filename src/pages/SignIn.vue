@@ -5,28 +5,13 @@
     </div>
     <h3>Log in to your account</h3>
     <form @submit.prevent="signIn" class="form">
-      <div :class="{ invalid: isUserInvalid }" class="input-container">
-        <input
-          @click="toggleError"
-          v-model.trim="userName"
-          type="text"
-          required
-        />
-        <span>Username</span>
-        <small v-if="isUserInvalid">Field login is required.</small>
+      <div class="input-container">
+        <input v-model.trim="userName" type="text" required />
+        <span>Email</span>
       </div>
-      <div :class="{ invalid: isPasswordInvalid }" class="input-container">
-        <input
-          @click="toggleError"
-          v-model.trim="password"
-          type="password"
-          required
-        />
+      <div class="input-container">
+        <input v-model.trim="password" type="password" required />
         <span>Password</span>
-        <small v-if="isPasswordInvalid">Field password is required.</small>
-      </div>
-      <div v-if="error" class="warning">
-        User {{ userName }} with these credentials doesn't exist.
       </div>
       <button class="btn">Sign In</button>
     </form>
@@ -36,72 +21,39 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   data() {
     return {
       userName: "",
       password: "",
-      validity: false,
-      error: false,
-      isActiveNav: true,
     };
   },
-  computed: {
-    // isActiveNav() {
-    //   return this.$store.state.isActive;
-    // },
-    isUserInvalid() {
-      return this.validity && this.userName == "";
-    },
-    isPasswordInvalid() {
-      return this.validity && this.password == "";
+  methods: {
+    signIn() {
+      axios
+        .post(
+          "https://time-tracker.azurewebsites.net/api/Users/Login",
+          {},
+          {
+            headers: {
+              "access-control-allow-origin": "*",
+              "content-encoding": "gzip",
+              "Content-Type": "*",
+              login: "johndoe@gmail.com", //this.userName,
+              password: "john1999", //this.password,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log("AXIOS ERROR: ", err);
+        });
     },
   },
-  //   methods: {
-  //     toggleError() {
-  //       this.validity = false;
-  //       this.error = false;
-  //     },
-  //     async signIn() {
-  //       if (this.userName !== "" && this.password !== "") {
-  //         this.$Progress.start();
-  //         await axios
-  //           .post(
-  //             "https://bspacedev.azurewebsites.net/api/Users/Login",
-  //             {},
-  //             {
-  //               headers: {
-  //                 login: this.userName,
-  //                 password: this.password,
-  //               },
-  //             }
-  //           )
-  //           .then((res) => {
-  //             if (res.data.isValid === true) {
-  //               this.$store.dispatch("signing", res);
-  //             } else {
-  //               this.$Progress.finish();
-  //               this.error = true;
-  //               return;
-  //             }
-  //             this.$Progress.finish();
-  //           })
-  //           .catch((err) => {
-  //             console.log("AXIOS ERROR: ", err);
-  //             this.$Progress.fail();
-  //           });
-
-  //         if (this.isActiveNav) {
-  //           this.$router.push("/dashboard");
-  //         }
-  //       } else {
-  //         this.$Progress.finish();
-  //         this.validity = true;
-  //       }
-  //     },
-  //   },
 };
 </script>
 

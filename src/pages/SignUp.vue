@@ -77,14 +77,6 @@ export default {
     };
   },
   computed: {
-    // getFirms() {
-    //   return this.$store.getters["firm/getFirmsData"].map((firm) => {
-    //     return {
-    //       name: firm.name,
-    //       id: firm.id,
-    //     };
-    //   });
-    // },
     isEmailValid() {
       //eslint-disable-next-line
       return /^[\-0-9a-zA-Z\.\+_]+@[\-0-9a-zA-Z\.\+_]+\.[a-zA-Z]{2,}$/.test(
@@ -104,86 +96,6 @@ export default {
       return !this.isEmailValid && this.isEmailTouched;
     },
   },
-  //   methods: {
-  //     getCountryByUser() {
-  //       axios
-  //         .get("http://ip-api.com/json/")
-  //         .then((res) => (this.user.country = res.data.country))
-  //         .catch((err) => console.log(err));
-  //     },
-  //     getCountries() {
-  //       axios
-  //         .get("https://restcountries.com/v3.1/all")
-  //         .then((res) => {
-  //           this.countries = res.data.map((r) => r.name.common);
-  //         })
-  //         .catch((err) => console.log(err));
-  //     },
-  //     toggleValidity() {
-  //       this.isValid = true;
-  //       this.isEmpty = false;
-  //     },
-  //     typeSet(val) {
-  //       this.user.userCountry = val;
-  //     },
-  //     getPositionId(val) {
-  //       this.positionId = val;
-  //     },
-  //     async signUp() {
-  //       if (
-  //         this.isEmailValid &&
-  //         this.isPasswordSecure &&
-  //         this.userData.firstName.length !== 0 &&
-  //         this.userData.lastName.length !== 0 &&
-  //         this.userData.userName.length !== 0 &&
-  //         this.userData.firm.length !== 0 &&
-  //         this.userData.phone.length !== 0 &&
-  //         this.positionId.length !== 0
-  //       ) {
-  //         console.log({
-  //           firmId: this.userData.firm,
-  //           firstName: this.userData.firstName,
-  //           lastName: this.userData.lastName,
-  //           email: this.userData.email,
-  //           login: this.userData.userName,
-  //           password: this.userData.password,
-  //           telephone: this.userData.phone,
-  //           role: this.positionId,
-  //         });
-  //         await axios
-  //           .post("https://bspacedev.azurewebsites.net/api/Users/Register", {
-  //             firmId: this.userData.firm,
-  //             firstName: this.userData.firstName,
-  //             lastName: this.userData.lastName,
-  //             email: this.userData.email,
-  //             login: this.userData.userName,
-  //             password: this.userData.password,
-  //             telephone: this.userData.phone,
-  //             role: this.positionId,
-  //           })
-  //           .then((res) => {
-  //             this.isValid = true;
-  //             if (res.data.isValid) {
-  //               // console.log(res.data.data)
-  //               // console.log('success')
-  //               this.$router.push("/signIn");
-  //             } else {
-  //               this.isValid = false;
-  //               this.errorList = res.data.errors;
-  //             }
-  //           })
-  //           .catch((e) => {
-  //             console.log(e);
-  //           });
-  //       } else {
-  //         this.isEmpty = true;
-  //       }
-  //     },
-  //   },
-  //   created() {
-  //     this.getCountryByUser();
-  //     this.getCountries();
-  //   },
 };
 </script>
 
