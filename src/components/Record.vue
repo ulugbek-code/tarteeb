@@ -19,11 +19,12 @@
         <td width="40%">
           <base-dropdown
             :options="['Task 1', 'Task 2', 'Task 3', 'Task 4']"
+            @input="getOption"
           ></base-dropdown>
         </td>
-        <td width="3%"><input type="text" /></td>
+        <td width="3%"><input v-model="hour" type="number" /></td>
         <td width="5%">
-          <input type="text" />
+          <input v-model="overTime" type="number" />
         </td>
         <td>
           <p>?</p>
@@ -31,13 +32,18 @@
       </tr>
       <tr>
         <td width="40%">
-          <textarea rows="3" placeholder="Description"></textarea>
+          <textarea
+            v-model="desc"
+            rows="3"
+            placeholder="Description"
+          ></textarea>
         </td>
         <td></td>
         <td></td>
         <td></td>
         <td>
-          <button class="red">Cancel</button><button class="green">Send</button>
+          <button @click="cancel" class="red">Cancel</button
+          ><button @click="sendRecord" class="green">Send</button>
         </td>
       </tr>
     </table>
@@ -45,6 +51,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import BaseDropdown from "../components/BaseDropdown.vue";
 
 export default {
@@ -55,11 +62,44 @@ export default {
   data() {
     return {
       isOpen: false,
+      option: "Task 1",
+      hour: "",
+      desc: "",
+      overTime: "",
     };
   },
   methods: {
     openForm() {
       this.isOpen = !this.isOpen;
+    },
+    getOption(opt) {
+      this.option = opt;
+    },
+    async sendRecord() {
+      try {
+        if (this.hour !== "" && this.desc) {
+          await axios.post(
+            "https://time-tracker.azurewebsites.net/api/Records/Add",
+            {
+              userId: 0,
+              date: this.day,
+              hoursWorked: this.hour,
+              ticket: this.option,
+              description: this.desc,
+            }
+          );
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+
+      this.isOpen = false;
+      this.cancel();
+    },
+    cancel() {
+      this.hour = "";
+      this.desc = "";
+      this.overTime = "";
     },
   },
 };
@@ -112,13 +152,14 @@ td:nth-child(1) {
 }
 th {
   text-align: center;
-  padding: 12px;
+  padding: 10px;
   background: #fff;
   border: 1px solid #dddddd;
 }
 input {
   width: 80px;
-  height: 3rem;
+  height: 2.5rem;
+  padding-left: 30%;
 }
 textarea {
   width: 100%;

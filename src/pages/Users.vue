@@ -31,7 +31,7 @@
           <td>{{ user.firstname }} {{ user.lastname }}</td>
           <td>December</td>
           <td width="15%">
-            <router-link to="/records"
+            <router-link to="/list"
               ><button>Generate report</button></router-link
             >
           </td>
@@ -153,22 +153,25 @@ table {
 td {
   border: 1px solid #dddddd;
   text-align: left;
-  padding: 10px;
+  padding: 8px;
 }
 td:nth-child(3) {
   padding: 0;
   background: #5c7aea;
   cursor: pointer;
+  border-radius: 12px;
 }
 td:nth-child(4) {
   padding: 0;
   background: #6ecb63;
   cursor: pointer;
+  border-radius: 12px;
 }
 td:nth-child(5) {
   padding: 0;
   background: #ff5c58;
   cursor: pointer;
+  border-radius: 12px;
 }
 th {
   text-align: center;

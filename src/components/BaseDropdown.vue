@@ -47,9 +47,9 @@ export default {
       open: false,
     };
   },
-  mounted() {
-    this.$emit("input", this.selected);
-  },
+  // mounted() {
+  //   this.$emit("input", this.selected);
+  // },
 };
 </script>
 

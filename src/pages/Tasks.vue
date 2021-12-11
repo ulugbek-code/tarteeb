@@ -154,7 +154,7 @@ export default {
 }
 .add-task input {
   padding: 12px;
-  width: 250px;
+  width: 200px;
   height: 28px;
   color: #1c1f25;
   font-size: 1rem;
