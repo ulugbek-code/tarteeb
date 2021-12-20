@@ -26,7 +26,7 @@
           <path d="M8 11h4" />
           <path d="M8 15h3" />
         </svg>
-        Balance Sheet</router-link
+        Time Sheets</router-link
       >
       <router-link class="box" to="/profitLoss">
         <svg
@@ -49,7 +49,7 @@
           <path d="M7 9h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
           <path d="M5 15v1m0 -8v1" />
         </svg>
-        Profit & Loss
+        Coming soon...
       </router-link>
       <router-link class="box" to="/changesEquity">
         <svg
@@ -73,7 +73,7 @@
           <polyline points="14 8 16 8 16 10" />
           <polyline points="16 14 16 16 14 16" />
         </svg>
-        Changes on Equity</router-link
+        Coming soon...</router-link
       >
       <router-link class="box" to="/cashFlow">
         <svg
@@ -95,7 +95,7 @@
             d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2"
           />
         </svg>
-        Cash Flow</router-link
+        Coming soon...</router-link
       >
     </div>
   </div>
