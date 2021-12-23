@@ -3,32 +3,44 @@
     <base-dialog
       v-if="isBtnClicked"
       title="Register new user"
+      color="#1a1e33"
       @close="close"
-      :color="color"
     >
       <template #default>
-        <div v-if="isApprove">
-          <span class="tick">&#10004;</span>
-        </div>
-        <div v-else>
-          <span class="exit">&#215; </span>
+        <div>
+          <form class="form-reg">
+            <div class="input-container">
+              <input v-model.trim="firstName" type="text" required />
+              <span>Firstname</span>
+            </div>
+            <div class="input-container">
+              <input v-model.trim="lastName" type="text" required />
+              <span>Lastname</span>
+            </div>
+            <div class="input-container">
+              <input v-model.trim="phoneNumber" type="tel" required />
+              <span>Phone number</span>
+            </div>
+            <div class="input-container">
+              <input
+                v-model.trim="dateOfBirth"
+                class="date"
+                type="date"
+                required
+              />
+              <!-- <span>Date of birth</span> -->
+            </div>
+          </form>
         </div>
       </template>
+      <template #actions>
+        <button class="form-btn">Register</button>
+        <button @click="close" class="form-btn">Cancel</button>
+      </template>
     </base-dialog>
-    <div class="header-wrapper">
-      <div class="tasks-header">
-        <div>
-          <h2>Employees</h2>
-          <input type="text" placeholder="Search" />
-        </div>
-        <div>
-          <button @click="change('rejected')">Add Employee</button>
-        </div>
-      </div>
-    </div>
     <div class="body-wrapper">
       <employees-list></employees-list>
-      <employee-form></employee-form>
+      <employee-form @addEmp="change"></employee-form>
     </div>
   </div>
 </template>
@@ -46,20 +58,10 @@ export default {
     return {
       isBtnClicked: false,
       isApprove: false,
-      color: "green",
     };
   },
   methods: {
-    change(payload) {
-      if (payload == "approve") {
-        this.title = "Approved";
-        this.color = "green";
-        this.isApprove = true;
-      } else {
-        this.title = "Rejected";
-        this.color = "red";
-        this.isApprove = false;
-      }
+    change() {
       this.isBtnClicked = true;
     },
     close() {
@@ -73,24 +75,73 @@ export default {
 #users-container {
   margin-left: 270px;
 }
-.header-wrapper {
-  height: 10vh;
-  padding: 1rem 2rem;
-}
-.tasks-header {
-  width: 97%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-}
-.tasks-header div {
-  display: flex;
-}
-
 .body-wrapper {
   display: flex;
   height: 90vh;
   width: 95%;
   margin: 0 auto;
+}
+.form-reg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.form-reg * {
+  font-family: "Poppins";
+}
+.form-reg input {
+  margin: 10px 0;
+  padding: 6px 16px;
+  width: 250px;
+  height: 32px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+}
+.form-btn {
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  font-weight: 500;
+  background: rgba(76, 175, 80, 1);
+  transition: all 0.2s ease;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+.form-btn:nth-child(2) {
+  background: brown;
+  margin-left: 4px;
+}
+.form-btn:hover {
+  background: rgba(76, 175, 80, 0.7);
+}
+.form-btn:nth-child(2):hover {
+  background: rgba(165, 42, 42, 0.7);
+}
+.input-container {
+  position: relative;
+}
+
+.date::-webkit-calendar-picker-indicator,
+.date::-webkit-inner-spin-button {
+  display: none;
+}
+.input-container span {
+  color: rgba(68, 68, 68, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-left: 16px;
+  padding-top: 16px;
+  font-size: 14px;
+  transition: 0.6s ease-in-out;
+  pointer-events: none;
+}
+.form-reg input:focus ~ span,
+.form-reg input:valid ~ span {
+  transform: translate(-20%, -70%);
+  font-size: 12px;
+  color: #fff;
 }
 </style>

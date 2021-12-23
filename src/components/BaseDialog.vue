@@ -1,20 +1,16 @@
 <template>
   <div @click="$emit('close')"></div>
-  <dialog open>
-    <header :class="color">
+  <dialog open :style="{ background: color }">
+    <header>
       <slot name="header">
         <h2>{{ title }}</h2>
       </slot>
     </header>
     <section>
-      <span>
-        <slot></slot>
-      </span>
+      <slot></slot>
     </section>
     <ul>
-      <slot name="actions">
-        <button @click="$emit('close')">Close</button>
-      </slot>
+      <slot name="actions"> </slot>
     </ul>
   </dialog>
 </template>
@@ -48,8 +44,8 @@ div {
 dialog {
   position: fixed;
   top: 20vh;
-  left: 1 0%;
-  width: 20%;
+  left: 10%;
+  width: 24%;
   z-index: 100;
   border-radius: 12px;
   border: none;
@@ -60,20 +56,15 @@ dialog {
 }
 
 header {
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: center;
   color: white;
   width: 100%;
   padding: 1rem;
 }
-header.green {
-  background: #6ecb63;
-}
-header.red {
-  background-color: #ff5c58;
-}
 header h2 {
   margin: 0;
 }
-
 section {
   padding: 1.2rem 1rem 1rem;
   /* padding-top: 2rem; */
@@ -84,7 +75,7 @@ section {
 ul {
   padding: 1rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 0;
 }
 button {
@@ -96,7 +87,7 @@ button {
 
 @media (min-width: 768px) {
   dialog {
-    left: calc(50% - 10rem);
+    left: calc(50% - 12rem);
     /* width: 40rem; */
   }
 }

@@ -6,8 +6,13 @@
     <h3>Log in to your account</h3>
     <form @submit.prevent="signIn" class="form">
       <div class="input-container">
-        <input v-model.trim="userName" type="text" required />
-        <span>Email</span>
+        <input
+          v-model="phoneNumber"
+          @input="enforcePhoneFormat()"
+          type="tel"
+          required
+        />
+        <span>Phone number</span>
       </div>
       <div class="input-container">
         <input v-model.trim="password" type="password" required />
@@ -26,25 +31,42 @@ import axios from "axios";
 export default {
   data() {
     return {
-      userName: "",
+      phoneNumber: "",
       password: "",
     };
   },
   methods: {
+    enforcePhoneFormat() {
+      let x = this.phoneNumber
+        .replace(/\D/g, "")
+        .match(/(\d{0,2})(\d{0,3})(\d{0,4})/);
+      this.phoneNumber = !x[2]
+        ? x[1]
+        : "(" + x[1] + ") " + x[2] + (x[3] ? "-" + x[3] : "");
+      if (this.phoneNumber.length > 11) {
+        this.phoneNumber =
+          this.phoneNumber.substring(0, 11) +
+          "-" +
+          this.phoneNumber.substring(11);
+      }
+    },
     signIn() {
+      console.log(this.phoneNumber);
       axios
         .post(
           "https://time-tracker.azurewebsites.net/api/Users/Login",
-          {},
           {
-            headers: {
-              "access-control-allow-origin": "*",
-              "content-encoding": "gzip",
-              "Content-Type": "*",
-              login: "johndoe@gmail.com", //this.userName,
-              password: "john1999", //this.password,
-            },
+            login: "johndoe@gmail.com", //this.userName,
+            password: "john1999", //this.password,
           }
+          // {
+          //   headers: {
+          //     "access-control-allow-origin": "*",
+          //     "content-encoding": "gzip",
+          //     "Content-Type": "*",
+          //     login: "johndoe@gmail.com", //this.userName,
+          //     password: "john1999", //this.password,
+          //   },
         )
         .then((res) => {
           console.log(res.data);

@@ -1,5 +1,12 @@
 <template>
   <div id="emp-list">
+    <div class="list-header">
+      <h2>Employees</h2>
+      <div class="search-input">
+        <img src="../../assets/search.png" alt="" />
+        <input type="text" placeholder="Search..." />
+      </div>
+    </div>
     <table>
       <tr>
         <th>Id</th>
@@ -89,9 +96,40 @@ export default {
   flex: 1;
   padding-right: 1rem;
 }
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 16px 12px 16px;
+}
+.search-input {
+  position: relative;
+}
+.search-input img {
+  position: absolute;
+  left: 3%;
+  top: 7px;
+
+  height: 16px;
+}
+.search-input input {
+  width: 100%;
+  padding: 4px 32px;
+  border: 0.5px solid rgba(67, 97, 238, 0.35);
+  border-radius: 50px;
+  outline: rgba(67, 97, 238, 1);
+  color: rgba(85, 85, 85, 1);
+  font-family: "Poppins", "sans-serif";
+  transition: all 0.4s ease;
+}
+.search-input input:hover {
+  border: 0.5px solid rgba(67, 97, 238, 1);
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
+  margin-top: 10px;
 }
 tr {
   border-radius: 24px;
@@ -127,19 +165,5 @@ tr:not(:nth-child(1)):hover {
 #last-td {
   display: flex;
   flex-direction: column;
-}
-.tick {
-  color: #6ecb63;
-  font-size: 2rem;
-  padding: 8px 24px;
-  border: 1px solid #6ecb63;
-  border-radius: 50%;
-}
-.exit {
-  color: #ff5c58;
-  font-size: 2rem;
-  padding: 8px 24px;
-  border: 1px solid #ff5c58;
-  border-radius: 50%;
 }
 </style>
