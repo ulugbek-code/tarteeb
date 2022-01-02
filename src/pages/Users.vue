@@ -123,9 +123,8 @@ export default {
   position: relative;
 }
 
-.date::-webkit-calendar-picker-indicator,
-.date::-webkit-inner-spin-button {
-  display: none;
+.date::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 .input-container span {
   color: rgba(68, 68, 68, 0.6);

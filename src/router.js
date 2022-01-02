@@ -3,7 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "./pages/Dashboard.vue";
 import Records from "./pages/Records.vue";
 import RecordsList from "./pages/RecordsList.vue";
-import Tasks from "./pages/Tasks.vue";
+// import Tasks from "./pages/Tasks.vue";
+import Boards from "./pages/Boards.vue";
 import Users from "./pages/Users.vue";
 import Settings from "./pages/Settings.vue";
 import SignUp from "./pages/SignUp.vue";
@@ -15,7 +16,7 @@ const router = createRouter({
   routes: [
     { path: "/", component: Dashboard },
     { path: "/users", component: Users },
-    { path: "/tasks", component: Tasks },
+    { path: "/tasks", component: Boards },
     { path: "/records", component: Records },
     { path: "/list", component: RecordsList },
     { path: "/settings", component: Settings },
