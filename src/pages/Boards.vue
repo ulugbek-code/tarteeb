@@ -1,40 +1,66 @@
 <template>
-  <base-dialog
-    v-if="isBtnClicked"
-    title="Register new user"
-    color="#1a1e33"
-    @close="close"
-  >
+  <base-dialog v-if="isBtnClicked" color="#fff" width="680px" @close="close">
     <template #default>
-      <div>
-        <form class="form-reg">
-          <div class="input-container">
-            <input v-model.trim="firstName" type="text" required />
-            <span>Firstname</span>
+      <form class="form-task">
+        <h2>Add new task</h2>
+        <div class="parent">
+          <div class="input-wrapper div1">
+            <textarea
+              rows="4"
+              placeholder="Task description goes here..."
+            ></textarea>
           </div>
-          <div class="input-container">
-            <input v-model.trim="lastName" type="text" required />
-            <span>Lastname</span>
+
+          <div class="div2">
+            <base-dropdown
+              :options="['Assignee', 'Task 2', 'Task 3', 'Task 4']"
+              @input="getOption"
+            ></base-dropdown>
           </div>
-          <div class="input-container">
-            <input v-model.trim="phoneNumber" type="tel" required />
-            <span>Phone number</span>
+          <div class="div3">
+            <base-dropdown
+              :options="[
+                'Expected delivery date',
+                'Task 2',
+                'Task 3',
+                'Task 4',
+              ]"
+              @input="getOption"
+            ></base-dropdown>
           </div>
-          <div class="input-container">
-            <input
-              v-model.trim="dateOfBirth"
-              class="date"
-              type="date"
-              required
-            />
-            <!-- <span>Date of birth</span> -->
+
+          <div class="div4">
+            <span id="reporter">Reporter</span>
+            <base-dropdown
+              :options="['John Doe', 'Task 2', 'Task 3', 'Task 4']"
+              @input="getOption"
+            ></base-dropdown>
           </div>
-        </form>
-      </div>
+          <div class="div5">
+            <base-dropdown
+              :options="['Status', 'Task 2', 'Task 3', 'Task 4']"
+              @input="getOption"
+            ></base-dropdown>
+          </div>
+          <div class="div6">
+            <p>Priority<span>*</span></p>
+            <star-rating
+              v-model:rating="rating"
+              :star-size="25"
+              :max-rating="3"
+              :show-rating="false"
+            ></star-rating>
+          </div>
+        </div>
+      </form>
     </template>
     <template #actions>
-      <button class="form-btn">Register</button>
-      <button @click="close" class="form-btn">Cancel</button>
+      <div class="btn-wrapper">
+        <the-button :green="true" class="form-btn">Save</the-button>
+        <the-button :red="true" @click="close" class="form-btn"
+          >Cancel</the-button
+        >
+      </div>
     </template>
   </base-dialog>
   <header>
@@ -82,26 +108,34 @@
 
 <script>
 import { VueDraggableNext } from "vue-draggable-next";
+import StarRating from "vue-star-rating";
 import CardsList from "../components/tasks/CardList.vue";
 import CardTask from "../components/tasks/CardTask.vue";
 import OverlayTask from "../components/tasks/OverlayTask.vue";
 import PopupTask from "../components/tasks/PopupTask.vue";
+import BaseDropdown from "../components/BaseDropdown.vue";
 
 export default {
   components: {
     draggable: VueDraggableNext,
+    StarRating,
     CardsList,
     CardTask,
     PopupTask,
     OverlayTask,
+    BaseDropdown,
   },
   data() {
     return {
       isBtnClicked: false,
       listName: "",
+      rating: null,
     };
   },
   methods: {
+    getOption(opt) {
+      console.log(opt);
+    },
     createList() {
       if (this.listName !== "") {
         this.$store.dispatch("createList", this.listName);
@@ -121,6 +155,66 @@ export default {
 </script>
 
 <style scoped>
+.form-task {
+  width: 100%;
+  box-sizing: border-box;
+}
+.form-task * {
+  font-family: "Poppins", sans-serif;
+  color: #444;
+}
+.form-task textarea {
+  width: 100%;
+  background: #f2f3f6;
+  border: none;
+  padding: 1rem 0 0 1rem;
+  outline: none;
+}
+.parent {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 48px);
+  grid-column-gap: 12px;
+  grid-row-gap: 8px;
+}
+
+.div1 {
+  grid-area: 1 / 1 / 3 / 5;
+}
+.div2 {
+  grid-area: 3 / 1 / 4 / 3;
+}
+.div3 {
+  grid-area: 3 / 3 / 4 / 5;
+}
+.div4 {
+  grid-area: 4 / 1 / 5 / 3;
+  position: relative;
+}
+#reporter {
+  position: absolute;
+  z-index: 10;
+  font-size: 12px;
+  bottom: 92%;
+}
+.div5 {
+  grid-area: 5 / 1 / 6 / 3;
+}
+.div6 {
+  grid-area: 4 / 3 / 6 / 5;
+  margin-left: 1rem;
+}
+.div6 span {
+  color: rgb(175, 39, 39);
+}
+.btn-wrapper {
+  width: 95%;
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-wrapper button {
+  margin-left: 1rem;
+}
 header {
   margin-left: 270px;
   display: flex;
@@ -175,7 +269,7 @@ header {
   /* width: 100vw;*/
   height: 88vh;
   border: 1px;
-  z-index: 90;
+  z-index: 10;
   margin-left: 270px;
   /* overflow-x: hidden; */
   /* margin-left: 270px; */

@@ -1,7 +1,7 @@
 <template>
   <div @click="$emit('close')"></div>
-  <dialog open :style="{ background: color }">
-    <header>
+  <dialog open :style="{ background: color, width: width }">
+    <header v-if="title">
       <slot name="header">
         <h2>{{ title }}</h2>
       </slot>
@@ -25,6 +25,9 @@ export default {
     color: {
       type: String,
     },
+    width: {
+      required: false,
+    },
   },
   emits: ["close"],
 };
@@ -38,13 +41,14 @@ div {
   height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.75);
-  z-index: 10;
+  z-index: 100;
 }
 
 dialog {
   position: fixed;
-  top: 20vh;
-  left: 10%;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
   width: 24%;
   z-index: 200;
   border-radius: 12px;
@@ -52,7 +56,7 @@ dialog {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 header {
@@ -84,11 +88,7 @@ button {
   border: none;
   cursor: pointer;
 }
-
-@media (min-width: 768px) {
-  dialog {
-    left: calc(50% - 12rem);
-    /* width: 40rem; */
-  }
-}
 </style>
+
+@media (min-width: 768px) { dialog { left: calc(50% - 12rem); /* width: 40rem;
+*/ } }

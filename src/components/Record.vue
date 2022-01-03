@@ -52,13 +52,10 @@
 
 <script>
 import axios from "axios";
-import BaseDropdown from "../components/BaseDropdown.vue";
+// import BaseDropdown from "../components/BaseDropdown.vue";
 
 export default {
   props: ["day"],
-  components: {
-    BaseDropdown,
-  },
   data() {
     return {
       isOpen: false,

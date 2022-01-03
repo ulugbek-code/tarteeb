@@ -59,14 +59,14 @@ export default {
   width: 100%;
   text-align: left;
   outline: none;
-  height: 47px;
-  line-height: 47px;
+  font-size: 14px;
+  line-height: 36px;
 }
 
 .custom-select .selected {
-  background: hsla(0, 0%, 86.7%, 0.8);
-  border-radius: 6px;
-  border: 1px solid #666666;
+  background: #f2f3f6;
+  border-radius: 25px;
+  border: 1px solid rgba(67, 97, 238, 0.35);
   color: rgb(68, 68, 68);
   padding-left: 1em;
   cursor: pointer;
@@ -81,7 +81,7 @@ export default {
 .custom-select .selected:after {
   position: absolute;
   content: "";
-  top: 22px;
+  top: 18px;
   right: 1em;
   width: 0;
   height: 0;
@@ -92,7 +92,7 @@ export default {
 .custom-select .items {
   color: rgb(68, 68, 68);
   border-radius: 0px 0px 6px 6px;
-  overflow: hidden;
+  /* overflow: hidden; */
   /* border-right: 1px solid #ad8225;
   border-left: 1px solid #ad8225;
   border-bottom: 1px solid #ad8225; */
@@ -100,7 +100,7 @@ export default {
   background-color: rgb(206, 203, 203);
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 100;
 }
 
 .custom-select .items div {
