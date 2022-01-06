@@ -72,6 +72,11 @@ export default {
 </script>
 
 <style scoped>
+tr.changedDay,
+.form-time,
+tr:not(:last-child) {
+  border-bottom: 0.8px solid rgba(157, 152, 152, 0.7);
+}
 tr.changedDay {
   background: #fff;
 }
@@ -94,7 +99,7 @@ tr.changedDay {
 } */
 .form-time td,
 .tasks td {
-  padding: 0 1rem 8px;
+  padding: 1rem 18px 10px;
 }
 .btn {
   background: #fff;
@@ -110,12 +115,12 @@ tr.changedDay {
 .form-time,
 .tasks {
   background: #fff;
-  /* padding: 8px 8px 8px 1rem; */
 }
 .time-wrapper input {
   width: 40px;
   height: 35px;
   padding: 1px;
+  outline: none;
 }
 .time-wrapper textarea {
   width: 96%;
@@ -126,6 +131,7 @@ tr.changedDay {
   border: 1px solid rgba(67, 97, 238, 0.35);
   color: #444;
   font-family: "Poppins", sans-serif;
+  resize: none;
 }
 .fade-enter-active,
 .fade-leave-active {

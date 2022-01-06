@@ -54,10 +54,10 @@ export default {
       console.log(this.phoneNumber);
       axios
         .post(
-          "https://time-tracker.azurewebsites.net/api/Users/Login",
+          "https://time-tracker.azurewebsites.net/api/user/login",
           {
-            login: "johndoe@gmail.com", //this.userName,
-            password: "john1999", //this.password,
+            login: "998914490133", //this.userName,
+            password: "test", //this.password,
           }
           // {
           //   headers: {
