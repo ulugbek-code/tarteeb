@@ -1,11 +1,6 @@
 <template>
-  <div id="users-container">
-    <base-dialog
-      v-if="isBtnClicked"
-      title="Register new user"
-      color="#1a1e33"
-      @close="close"
-    >
+  <div :class="[!isNavOpened ? 'nav' : '']" id="users-container">
+    <base-dialog v-if="isBtnClicked" title="Register new user" @close="close">
       <template #default>
         <div>
           <form class="form-reg">
@@ -60,6 +55,11 @@ export default {
       isApprove: false,
     };
   },
+  computed: {
+    isNavOpened() {
+      return this.$store.getters.isNavOpened;
+    },
+  },
   methods: {
     change() {
       this.isBtnClicked = true;
@@ -73,7 +73,11 @@ export default {
 
 <style scoped>
 #users-container {
+  transition: all 0.4s ease;
   margin-left: 270px;
+}
+#users-container.nav {
+  margin-left: 110px;
 }
 .body-wrapper {
   display: flex;
@@ -97,6 +101,7 @@ export default {
   border-radius: 20px;
   border: none;
   outline: none;
+  color: #444;
 }
 .form-btn {
   font-family: "Poppins", sans-serif;
@@ -122,12 +127,14 @@ export default {
 .input-container {
   position: relative;
 }
-
+.date {
+  color: rgba(68, 68, 68, 0.8);
+}
 .date::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 .input-container span {
-  color: rgba(68, 68, 68, 0.6);
+  color: rgba(68, 68, 68, 0.8);
   position: absolute;
   top: 0;
   left: 0;
@@ -141,6 +148,6 @@ export default {
 .form-reg input:valid ~ span {
   transform: translate(-20%, -70%);
   font-size: 12px;
-  color: #fff;
+  /* color: #fff; */
 }
 </style>

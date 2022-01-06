@@ -1,4 +1,7 @@
 export default {
+  toggleNavbar(context) {
+    context.commit("toggleNavbar");
+  },
   createList(context, payload) {
     context.commit("createNewList", payload);
   },

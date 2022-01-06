@@ -63,7 +63,7 @@
       </div>
     </template>
   </base-dialog>
-  <header>
+  <header :class="[!isNavOpened ? 'nav' : '']" class="box">
     <h2>Tasks</h2>
     <div class="flex">
       <div class="search-input">
@@ -75,7 +75,7 @@
       </div>
     </div>
   </header>
-  <main class="list-container">
+  <main :class="[!isNavOpened ? 'nav' : '']" class="list-container">
     <overlay-task></overlay-task>
     <popup-task></popup-task>
     <section class="list-wrapper">
@@ -150,11 +150,21 @@ export default {
     lists() {
       return this.$store.getters["lists"];
     },
+    isNavOpened() {
+      return this.$store.getters.isNavOpened;
+    },
   },
 };
 </script>
 
 <style scoped>
+.box {
+  transition: all 0.4s ease;
+}
+.box.nav,
+.list-container.nav {
+  margin-left: 110px;
+}
 .form-task {
   width: 100%;
   box-sizing: border-box;
@@ -271,6 +281,7 @@ header {
   border: 1px;
   z-index: 10;
   margin-left: 270px;
+  transition: all 0.4s ease;
   /* overflow-x: hidden; */
   /* margin-left: 270px; */
 }

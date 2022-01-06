@@ -1,97 +1,66 @@
 <template>
-  <div @click="openForm" class="day">
-    <span><img src="../assets/down.png" alt="" /></span>
-    <div>
-      <p>{{ day.replace(/-/g, "/") }}</p>
-      <h4>Elbek Normurodov</h4>
-    </div>
-  </div>
-  <div v-if="isOpen" class="form">
-    <table>
-      <tr>
-        <th width="40%"><h4>Tickets</h4></th>
-        <th width="3%"><h4>Hours</h4></th>
-        <th width="5%"><h4>Overtime</h4></th>
-        <th><h4>Status</h4></th>
-        <th><h4>Action</h4></th>
-      </tr>
-      <tr>
-        <td width="40%">
-          <base-dropdown
-            :options="['Task 1', 'Task 2', 'Task 3', 'Task 4']"
-            @input="getOption"
-          ></base-dropdown>
-        </td>
-        <td width="3%"><input v-model="hour" type="number" /></td>
-        <td width="5%">
-          <input v-model="overTime" type="number" />
-        </td>
-        <td>
-          <p>?</p>
-        </td>
-      </tr>
-      <tr>
-        <td width="40%">
-          <textarea
-            v-model="desc"
-            rows="3"
-            placeholder="Description"
-          ></textarea>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-          <button @click="cancel" class="red">Cancel</button
-          ><button @click="sendRecord" class="green">Send</button>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <tr @click="openForm" :class="{ changedDay: isTimeOpened }" class="day">
+    <td>{{ day.replace(/-/g, "/") }}</td>
+    <td>0 h</td>
+    <td>
+      <!-- <button @click="write" class="btn">Request unlock</button> -->
+      <button @click="write" class="btn">Deadlines for the day</button>
+      <button @click="write" class="btn">Show tasks</button>
+      <button @click="write" class="btn">Enter my time</button>
+    </td>
+  </tr>
+
+  <tr v-if="isTimeOpened" class="form-time">
+    <td class="time-wrapper" width="35%">
+      <base-dropdown :options="['task1', 'task2']"></base-dropdown>
+    </td>
+    <td class="time-wrapper">
+      <input type="number" />
+      <span> h</span>
+    </td>
+    <td class="time-wrapper">
+      <textarea rows="2" placeholder="Type your comment here..."></textarea>
+    </td>
+  </tr>
+
+  <template v-if="isTimeOpened">
+    <tr v-for="a in array" :key="a.task" class="tasks">
+      <td>{{ a.task }}</td>
+      <td>{{ a.hour }}</td>
+      <td>{{ a.desc }}</td>
+    </tr>
+  </template>
 </template>
 
 <script>
-import axios from "axios";
 // import BaseDropdown from "../components/BaseDropdown.vue";
 
 export default {
   props: ["day"],
   data() {
     return {
-      isOpen: false,
+      isTimeOpened: false,
       option: "Task 1",
-      hour: "",
-      desc: "",
-      overTime: "",
+      array: [
+        {
+          task: "task 1",
+          hour: 12,
+          desc: "The points defining a custom star shape.",
+        },
+        {
+          task: "task 2",
+          hour: 8,
+          desc: "When set to true, the rating cannot be edited.",
+        },
+      ],
     };
   },
   methods: {
     openForm() {
-      this.isOpen = !this.isOpen;
+      this.isTimeOpened = !this.isTimeOpened;
     },
     getOption(opt) {
       this.option = opt;
-    },
-    async sendRecord() {
-      try {
-        if (this.hour !== "" && this.desc) {
-          await axios.post(
-            "https://time-tracker.azurewebsites.net/api/Records/Add",
-            {
-              userId: 0,
-              date: this.day,
-              hoursWorked: this.hour,
-              ticket: this.option,
-              description: this.desc,
-            }
-          );
-        }
-      } catch (e) {
-        console.log(e.message);
-      }
-
-      this.isOpen = false;
-      this.cancel();
     },
     cancel() {
       this.hour = "";
@@ -103,81 +72,66 @@ export default {
 </script>
 
 <style scoped>
-.day {
-  display: flex;
+tr.changedDay {
   background: #fff;
-  margin: 4px 0;
-  padding: 6px;
-  border-radius: 5px;
-  cursor: pointer;
-  color: rgb(68, 68, 68);
 }
-.day div {
-  margin: 4px 0;
-  padding: 0 4px;
+.day td {
+  padding: 1rem;
 }
-span {
-  font-size: 2rem;
-  padding: 0 8px;
-  padding-top: 14px;
+/* .day td:first-child {
+  border-top-left-radius: 12px;
 }
-.first,
-.second {
-  display: flex;
+.day td:last-child {
+  border-top-right-radius: 12px;
 }
-.first h4 {
-  flex: 1;
+.form-time td:first-child,
+.tasks:nth-child(2) td:first-child {
+  border-bottom-left-radius: 12px;
 }
-.first h4:nth-child(1) {
-  flex: 1.5;
+.form-time td:last-child,
+.tasks:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+} */
+.form-time td,
+.tasks td {
+  padding: 0 1rem 8px;
 }
-
-p {
-  text-align: center;
-}
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-td {
-  /* border: 1px solid #dddddd; */
-  text-align: center;
-  padding: 2px;
-}
-td:nth-child(1) {
-  text-align: left;
-}
-th {
-  text-align: center;
-  padding: 10px;
+.btn {
   background: #fff;
-  border: 1px solid #dddddd;
-}
-input {
-  width: 80px;
-  height: 2.5rem;
-  padding-left: 30%;
-}
-textarea {
-  width: 100%;
+  color: #444;
+  border: 1px solid #444;
   outline: none;
-  border: 1px solid rgb(179, 174, 174);
-  font-size: 14px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  /* padding: 8px; */
-}
-button {
-  padding: 6px;
-  margin: 0 4px;
-  outline: none;
-  border: none;
-  border-radius: 8%;
+  border-radius: 13px;
+  padding: 3px 6px;
+  font-size: 12px;
+  margin-right: 1rem;
   cursor: pointer;
 }
-.red {
-  background: lightcoral;
+.form-time,
+.tasks {
+  background: #fff;
+  /* padding: 8px 8px 8px 1rem; */
 }
-.green {
-  background: #6ecb63;
+.time-wrapper input {
+  width: 40px;
+  height: 35px;
+  padding: 1px;
+}
+.time-wrapper textarea {
+  width: 96%;
+  background: #f2f3f6;
+  padding: 8px 12px;
+  border-radius: 25px;
+  outline: none;
+  border: 1px solid rgba(67, 97, 238, 0.35);
+  color: #444;
+  font-family: "Poppins", sans-serif;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
 }
 </style>

@@ -7,6 +7,7 @@ import rootGetters from "./getters.js";
 const store = createStore({
   state() {
     return {
+      isNavOpened: true,
       overlay: false,
       lastListId: 3,
       lastCardId: 5,

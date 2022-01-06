@@ -1,15 +1,17 @@
 <template>
-  <nav>
+  <nav :class="!isNavOpened ? 'openedSideBar' : ''">
     <div
       @click="toggleHamburgerMenu"
-      :class="[isNavOpened ? 'open' : '']"
+      :class="[!isNavOpened ? 'open' : '']"
       class="hamburger-menu"
     >
       <span></span>
       <span></span>
       <span></span>
     </div>
-    <router-link to="/"><h1>Tarteeb</h1></router-link>
+    <router-link to="/"
+      ><h1>{{ companyName }}</h1></router-link
+    >
     <div class="info">
       <img src="../assets/unknown.png" alt="" />
       <div class="sub-info">
@@ -115,24 +117,6 @@
       </router-link>
       <router-link class="nav-link" to="/settings">
         <div @click="offseting" class="items">
-          <!-- <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icons"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#aaa"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
-          </svg> -->
           <svg
             class="icons"
             width="20"
@@ -191,16 +175,24 @@ export default {
   data() {
     return {
       userInfo: {},
-      isNavOpened: true,
+      // isNavOpened: true,
     };
   },
   computed: {
     companyName() {
-      if (!this.isNavOpened) {
-        return "BSpace";
+      if (this.isNavOpened) {
+        return "Tarteeb";
       } else {
-        return "BS";
+        return "TT";
       }
+    },
+    isNavOpened() {
+      return this.$store.getters.isNavOpened;
+    },
+  },
+  methods: {
+    toggleHamburgerMenu() {
+      this.$store.dispatch("toggleNavbar");
     },
   },
 };
@@ -213,7 +205,7 @@ export default {
   height: 30px;
   width: 4.5px;
   background: rgba(67, 97, 238, 1);
-  transition: 0.5s;
+  transition: 0.4s;
   border-radius: 4px;
   /* padding-bottom: 5px; */
 }
@@ -227,14 +219,20 @@ nav {
   overflow-x: hidden;
   background: rgba(19, 23, 40, 1);
   padding-left: 1.5rem;
-  transition: all 0.6s ease;
+  transition: all 0.35s ease;
 }
 .nav-li {
   position: relative;
-  animation: coming 0.7s ease;
+  animation: coming 0.4s ease;
 }
 nav.openedSideBar {
   width: 110px;
+}
+nav p,
+.sub-info {
+  position: relative;
+  left: -150px;
+  animation: slide 0.5s forwards;
 }
 nav.openedSideBar p,
 nav.openedSideBar .sub-info {
@@ -298,11 +296,13 @@ nav h1 {
   margin: 2rem 1rem 2rem 0;
 }
 .info img {
+  position: relative;
   height: 70px;
   width: 70px;
   border: 1px solid #333;
   background: rgba(255, 254, 254, 0.9);
   border-radius: 50%;
+  z-index: 10;
 }
 .sub-info {
   width: 100%;
@@ -377,4 +377,9 @@ a.router-link-active .icons {
     transform: translateX(0);
   }
 } */
+@keyframes slide {
+  100% {
+    left: 0;
+  }
+}
 </style>

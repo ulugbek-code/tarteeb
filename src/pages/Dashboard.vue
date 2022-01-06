@@ -1,6 +1,6 @@
 <template>
   <!-- <the-navigation></the-navigation> -->
-  <div class="box">
+  <div :class="[!isNavOpened ? 'nav' : '']" class="box">
     <div id="header-dashboard">
       <div class="header-box">
         <h2>Welcome Back, {{ user.firstName }}</h2>
@@ -30,8 +30,12 @@ export default {
   data() {
     return {
       user: {},
-      isNavOpened: true,
     };
+  },
+  computed: {
+    isNavOpened() {
+      return this.$store.getters.isNavOpened;
+    },
   },
 };
 </script>
@@ -39,7 +43,7 @@ export default {
 <style scoped>
 .box {
   margin-left: 270px;
-  transition: all 0.6s ease;
+  transition: all 0.4s ease;
 }
 .box.nav {
   margin-left: 110px;

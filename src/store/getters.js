@@ -1,4 +1,7 @@
 export default {
+  isNavOpened(state) {
+    return state.isNavOpened;
+  },
   lastListId(state) {
     return state.lastListId;
   },

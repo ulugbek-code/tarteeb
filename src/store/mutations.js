@@ -1,4 +1,7 @@
 export default {
+  toggleNavbar(state) {
+    state.isNavOpened = !state.isNavOpened;
+  },
   createNewList(state, payload) {
     state.lastListId++;
     const list = {

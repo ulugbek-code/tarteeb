@@ -56,13 +56,13 @@ dialog {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   padding: 0;
   margin: 0;
+  background: hsla(0, 0%, 86%, 1);
   /* overflow: hidden; */
 }
 
 header {
-  background-color: rgba(0, 0, 0, 0.2);
   text-align: center;
-  color: white;
+  color: #444;
   width: 100%;
   padding: 1rem;
 }
