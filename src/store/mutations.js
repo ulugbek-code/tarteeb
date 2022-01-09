@@ -2,14 +2,31 @@ export default {
   toggleNavbar(state) {
     state.isNavOpened = !state.isNavOpened;
   },
-  createNewList(state, payload) {
-    state.lastListId++;
-    const list = {
-      id: state.lastListId,
-      name: payload,
-    };
-    state.lists.push(list);
+  getLists(state, payload) {
+    state.lists = payload.data;
   },
+  getCards(state, payload) {
+    state.cardss = payload.data;
+  },
+  getUsers(state, payload) {
+    state.users = payload.data;
+    console.log(state.users);
+  },
+  // changeNewBoard(state, payload) {
+  //   state.lists = payload;
+  // },
+  // getMovedEl(state, payload) {
+  //   state.id = payload.draggedContext.element.id;
+  //   state.newOrder = payload.relatedContext.element.order;
+  // },
+  // createNewList(state, payload) {
+  //   // state.lastListId++;
+  //   const list = {
+  //     id: state.lastListId,
+  //     name: payload,
+  //   };
+  //   state.lists.push(list);
+  // },
   createNewCard(state, payload) {
     state.lastCardId++;
     const card = {

@@ -7,25 +7,14 @@ import rootGetters from "./getters.js";
 const store = createStore({
   state() {
     return {
-      isNavOpened: true,
+      isNavOpened: true, //for hamburger menu
       overlay: false,
-      lastListId: 3,
+      lastListId: null, //for creating new board
+      // id: null, // for changing board's order
+      // newOrder: null, // for sending new order in board changing proccess
       lastCardId: 5,
       currentData: null,
-      lists: [
-        {
-          id: 1,
-          name: "list #1",
-        },
-        {
-          id: 2,
-          name: "list #2",
-        },
-        {
-          id: 3,
-          name: "list #3",
-        },
-      ],
+      lists: [],
       cards: [
         {
           listId: 1,
@@ -43,6 +32,8 @@ const store = createStore({
           name: "card 3",
         },
       ],
+      cardss: [],
+      users: [],
     };
   },
   mutations: rootMutations,

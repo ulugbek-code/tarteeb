@@ -10,7 +10,6 @@
               placeholder="Task description goes here..."
             ></textarea>
           </div>
-
           <div class="div2">
             <base-dropdown
               :options="['Assignee', 'Task 2', 'Task 3', 'Task 4']"
@@ -78,21 +77,18 @@
   <main :class="[!isNavOpened ? 'nav' : '']" class="list-container">
     <overlay-task></overlay-task>
     <popup-task></popup-task>
+    <h1 v-if="isLoading">Loading...</h1>
     <section class="list-wrapper">
       <draggable
         :options="{ group: 'lists' }"
         group="lists"
         ghostClass="ghost"
         class="list-draggable"
+        :move="checkMove"
+        v-model="myLists"
       >
-        <div class="list-card" v-for="(list, index) in lists" :key="index">
-          <label class="list-header">{{ list.name }}</label>
-          <div class="list-content">
-            <CardsList :listId="list.id" :listName="list.name" />
-          </div>
-          <div class="list-footer">
-            <card-task :listId="list.id"></card-task>
-          </div>
+        <div class="list-card" v-for="list in lists" :key="list.id">
+          <Board :id="list.id" :name="list.name" />
         </div>
       </draggable>
       <input
@@ -107,10 +103,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import { VueDraggableNext } from "vue-draggable-next";
 import StarRating from "vue-star-rating";
-import CardsList from "../components/tasks/CardList.vue";
-import CardTask from "../components/tasks/CardTask.vue";
+import Board from "../components/tasks/Board.vue";
 import OverlayTask from "../components/tasks/OverlayTask.vue";
 import PopupTask from "../components/tasks/PopupTask.vue";
 import BaseDropdown from "../components/BaseDropdown.vue";
@@ -119,40 +115,79 @@ export default {
   components: {
     draggable: VueDraggableNext,
     StarRating,
-    CardsList,
-    CardTask,
+    Board,
     PopupTask,
     OverlayTask,
     BaseDropdown,
   },
   data() {
     return {
+      id: null, //to send id and new order below
+      newOrder: null,
       isBtnClicked: false,
       listName: "",
       rating: null,
+      isLoading: false,
     };
   },
-  methods: {
-    getOption(opt) {
-      console.log(opt);
-    },
-    createList() {
-      if (this.listName !== "") {
-        this.$store.dispatch("createList", this.listName);
-        this.listName = "";
-      }
-    },
-    close() {
-      this.isBtnClicked = false;
-    },
-  },
   computed: {
+    myLists: {
+      get() {
+        return this.$store.getters["lists"];
+      },
+      async set() {
+        this.isLoading = true;
+        // this.$store.dispatch("updateBoard", value);
+        await axios.post(
+          "https://time-tracker.azurewebsites.net/api/Boards/ChangeOrder",
+          {
+            id: this.id,
+            newOrder: this.newOrder,
+          }
+        );
+        this.$store.dispatch("getLists");
+        this.isLoading = false;
+      },
+    },
     lists() {
       return this.$store.getters["lists"];
     },
     isNavOpened() {
       return this.$store.getters.isNavOpened;
     },
+    getMaxOrder() {
+      return this.$store.getters.getMaxOrder;
+    },
+  },
+  methods: {
+    getOption(opt) {
+      console.log(opt);
+    },
+    async createList() {
+      if (this.listName !== "") {
+        // this.$store.dispatch("createList", this.listName);
+        await axios.post("https://time-tracker.azurewebsites.net/api/Boards", {
+          name: this.listName,
+          order: this.getMaxOrder,
+        });
+        this.$store.dispatch("getLists");
+        this.listName = "";
+      }
+    },
+    checkMove(evt) {
+      // this.$store.dispatch("getMove", evt);
+      this.id = evt.draggedContext.element.id;
+      this.newOrder = evt.relatedContext.element.order;
+      // console.log("Future index: " + evt.draggedContext.futureIndex);
+      // console.log("element: " + evt.draggedContext.element.name);
+    },
+    close() {
+      this.isBtnClicked = false;
+    },
+  },
+  created() {
+    this.$store.dispatch("getLists");
+    this.$store.dispatch("getUsers");
   },
 };
 </script>
@@ -318,7 +353,8 @@ header {
 }
 
 .input-new-list::placeholder {
-  color: rgb(20, 20, 20);
+  color: #444;
+  font-family: "Poppins", sans-serif;
 }
 
 .list-card {
@@ -326,49 +362,5 @@ header {
   display: flex;
   flex-direction: column;
   height: auto;
-}
-
-.list-header {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  word-break: break-all;
-  align-items: center;
-  min-width: 280px;
-  max-width: 280px;
-  line-height: 50px;
-  padding: 0px 10px 0px 10px;
-  background-color: rgba(235, 236, 240, 1);
-  border-radius: 10px 10px 0px 0px;
-  color: rgba(24, 43, 77, 1);
-  user-select: none;
-  cursor: pointer;
-}
-
-.list-content {
-  overflow-y: scroll;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 280px;
-  max-width: 280px;
-  height: auto;
-  background-color: rgba(235, 236, 240, 1);
-  padding: 0px 10px 0px 10px;
-  box-shadow: 1.5px 1.5px 1.5px 0.1px rgba(255, 255, 255, 0.1);
-  color: rgba(24, 43, 77, 1);
-}
-
-.list-footer {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 280px;
-  background-color: rgba(235, 236, 240, 1);
-  border-radius: 0px 0px 10px 10px;
-  color: white;
-  border-top: 0.5px solid rgba(255, 255, 255, 0.25);
-  padding: 0px 10px 10px 10px;
 }
 </style>

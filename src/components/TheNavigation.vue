@@ -63,7 +63,7 @@
             <rect x="15" y="4" width="6" height="16" rx="1" />
             <line x1="4" y1="20" x2="18" y2="20" />
           </svg>
-          <p>Records</p>
+          <p>Time</p>
         </div>
       </router-link>
       <router-link class="nav-link" to="/tasks">
@@ -213,7 +213,7 @@ nav {
   height: 100%;
   width: 270px;
   position: fixed;
-  z-index: 100;
+  z-index: 10;
   top: 0;
   left: 0;
   overflow-x: hidden;
@@ -302,7 +302,7 @@ nav h1 {
   border: 1px solid #333;
   background: rgba(255, 254, 254, 0.9);
   border-radius: 50%;
-  z-index: 10;
+  z-index: 9;
 }
 .sub-info {
   width: 100%;

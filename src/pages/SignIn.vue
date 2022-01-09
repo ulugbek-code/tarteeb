@@ -51,23 +51,15 @@ export default {
       }
     },
     signIn() {
-      console.log(this.phoneNumber);
+      const str = JSON.stringify({ login: "998914490133", password: "test" });
+      const headers = {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      };
       axios
-        .post(
-          "https://time-tracker.azurewebsites.net/api/user/login",
-          {
-            login: "998914490133", //this.userName,
-            password: "test", //this.password,
-          }
-          // {
-          //   headers: {
-          //     "access-control-allow-origin": "*",
-          //     "content-encoding": "gzip",
-          //     "Content-Type": "*",
-          //     login: "johndoe@gmail.com", //this.userName,
-          //     password: "john1999", //this.password,
-          //   },
-        )
+        .post("https://time-tracker.azurewebsites.net/api/user/login", str, {
+          headers,
+        })
         .then((res) => {
           console.log(res.data);
         })
@@ -75,6 +67,9 @@ export default {
           console.log("AXIOS ERROR: ", err);
         });
     },
+  },
+  async created() {
+    await this.signIn();
   },
 };
 </script>

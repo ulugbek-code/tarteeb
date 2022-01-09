@@ -26,7 +26,7 @@ button {
   outline: none;
   cursor: pointer;
   font-size: 11px;
-  transition: 0.4s all ease;
+  transition: 0.3s all ease;
 }
 .greeny {
   background: rgba(76, 175, 80, 1);

@@ -26,4 +26,9 @@ export default {
 html {
   font-family: "Poppins", sans-serif;
 }
+input {
+  border: none;
+  /* font-size: 15px; */
+  outline: none;
+}
 </style>
