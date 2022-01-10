@@ -6,45 +6,39 @@
         <div class="parent">
           <div class="input-wrapper div1">
             <textarea
+              v-model="desc"
               rows="4"
               placeholder="Task description goes here..."
             ></textarea>
           </div>
           <div class="div2">
             <base-dropdown
-              :options="['Assignee', 'Task 2', 'Task 3', 'Task 4']"
-              @input="getOption"
+              :options="usersNames"
+              default="Assignee here..."
+              @input="getAssignee"
             ></base-dropdown>
           </div>
           <div class="div3">
-            <base-dropdown
-              :options="[
-                'Expected delivery date',
-                'Task 2',
-                'Task 3',
-                'Task 4',
-              ]"
-              @input="getOption"
-            ></base-dropdown>
+            <input v-model="newDate" type="date" name="" id="" />
           </div>
-
           <div class="div4">
-            <span id="reporter">Reporter</span>
             <base-dropdown
-              :options="['John Doe', 'Task 2', 'Task 3', 'Task 4']"
-              @input="getOption"
+              :options="usersNames"
+              default="Reporter here..."
+              @input="getReporter"
             ></base-dropdown>
           </div>
           <div class="div5">
             <base-dropdown
-              :options="['Status', 'Task 2', 'Task 3', 'Task 4']"
-              @input="getOption"
+              :options="statusNames"
+              default="Status..."
+              @input="getStatus"
             ></base-dropdown>
           </div>
           <div class="div6">
             <p>Priority<span>*</span></p>
             <star-rating
-              v-model:rating="rating"
+              v-model:rating="newRating"
               :star-size="25"
               :max-rating="3"
               :show-rating="false"
@@ -55,7 +49,9 @@
     </template>
     <template #actions>
       <div class="btn-wrapper">
-        <the-button :green="true" class="form-btn">Save</the-button>
+        <the-button @click="addTask" :green="true" class="form-btn"
+          >Add</the-button
+        >
         <the-button :red="true" @click="close" class="form-btn"
           >Cancel</the-button
         >
@@ -77,7 +73,6 @@
   <main :class="[!isNavOpened ? 'nav' : '']" class="list-container">
     <overlay-task></overlay-task>
     <popup-task></popup-task>
-    <h1 v-if="isLoading">Loading...</h1>
     <section class="list-wrapper">
       <draggable
         :options="{ group: 'lists' }"
@@ -91,10 +86,15 @@
           <Board :id="list.id" :name="list.name" />
         </div>
       </draggable>
+      <div v-if="!isAddClicked" class="plus">
+        <span @click="toggleAddBtn">+</span>
+      </div>
       <input
+        v-else
+        v-focus
         type="text"
         class="input-new-list"
-        placeholder="Create a List"
+        placeholder="Create a List..."
         v-model="listName"
         @keyup.enter="createList"
       />
@@ -110,6 +110,7 @@ import Board from "../components/tasks/Board.vue";
 import OverlayTask from "../components/tasks/OverlayTask.vue";
 import PopupTask from "../components/tasks/PopupTask.vue";
 import BaseDropdown from "../components/BaseDropdown.vue";
+import focusInput from "../directives/focusInput";
 
 export default {
   components: {
@@ -120,14 +121,22 @@ export default {
     OverlayTask,
     BaseDropdown,
   },
+  directives: {
+    focus: focusInput,
+  },
   data() {
     return {
       id: null, //to send id and new order below
       newOrder: null,
+      isAddClicked: false,
       isBtnClicked: false,
       listName: "",
-      rating: null,
-      isLoading: false,
+      desc: null,
+      newRating: 1,
+      newAssignee: null,
+      newReporter: null,
+      newStatus: null,
+      newDate: null,
     };
   },
   computed: {
@@ -136,8 +145,8 @@ export default {
         return this.$store.getters["lists"];
       },
       async set() {
-        this.isLoading = true;
         // this.$store.dispatch("updateBoard", value);
+        this.$Progress.start();
         await axios.post(
           "https://time-tracker.azurewebsites.net/api/Boards/ChangeOrder",
           {
@@ -145,8 +154,8 @@ export default {
             newOrder: this.newOrder,
           }
         );
-        this.$store.dispatch("getLists");
-        this.isLoading = false;
+        await this.$store.dispatch("getLists");
+        this.$Progress.finish();
       },
     },
     lists() {
@@ -158,19 +167,49 @@ export default {
     getMaxOrder() {
       return this.$store.getters.getMaxOrder;
     },
+    users() {
+      return this.$store.getters["users"];
+    },
+    usersNames() {
+      return this.users.map((user) => `${user.firstName} ${user.lastName}`);
+    },
+    statusNames() {
+      return this.lists.map((list) => list.name);
+    },
   },
   methods: {
-    getOption(opt) {
-      console.log(opt);
+    toggleAddBtn() {
+      this.isAddClicked = true;
+    },
+    getAssignee(val) {
+      const first = val.substr(0, val.indexOf(" "));
+      this.newAssignee = this.users
+        .filter((user) => user.firstName === first)
+        .map((user) => user.id)[0];
+    },
+    getReporter(val) {
+      const first = val.substr(0, val.indexOf(" "));
+      this.newReporter = this.users
+        .filter((user) => user.firstName === first)
+        .map((user) => user.id)[0];
+    },
+    getStatus(val) {
+      const i = this.lists
+        .filter((list) => list.name === val)
+        .map((list) => list.id);
+      this.newStatus = i[0];
     },
     async createList() {
       if (this.listName !== "") {
         // this.$store.dispatch("createList", this.listName);
+        this.$Progress.start();
         await axios.post("https://time-tracker.azurewebsites.net/api/Boards", {
           name: this.listName,
           order: this.getMaxOrder,
         });
         this.$store.dispatch("getLists");
+        this.$Progress.finish();
+        this.isAddClicked = false;
         this.listName = "";
       }
     },
@@ -181,13 +220,42 @@ export default {
       // console.log("Future index: " + evt.draggedContext.futureIndex);
       // console.log("element: " + evt.draggedContext.element.name);
     },
+    async addTask() {
+      if (
+        this.desc &&
+        this.newAssignee &&
+        this.newReporter &&
+        this.newStatus &&
+        this.newDate
+      ) {
+        this.$Progress.start();
+        await axios.post("https://time-tracker.azurewebsites.net/api/Tasks", {
+          description: this.desc,
+          priority: this.newRating,
+          deadline: this.newDate + "T00:00:00",
+          createdBy: 4,
+          statusId: this.newStatus,
+          userId: this.newAssignee,
+          reporterId: this.newReporter,
+        });
+        await this.$store.dispatch("getCards");
+        this.$Progress.finish();
+      } else {
+        alert("hello");
+      }
+      this.close();
+    },
     close() {
       this.isBtnClicked = false;
     },
   },
   created() {
+    this.$Progress.start();
     this.$store.dispatch("getLists");
     this.$store.dispatch("getUsers");
+  },
+  mounted() {
+    this.$Progress.finish();
   },
 };
 </script>
@@ -231,6 +299,19 @@ export default {
 }
 .div3 {
   grid-area: 3 / 3 / 4 / 5;
+}
+.div3 input {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  font-size: 14px;
+  line-height: 34px;
+  background: #f2f3f6;
+  border-radius: 25px;
+  border: 1px solid rgba(67, 97, 238, 0.35);
+  color: rgb(68, 68, 68);
+  padding: 0 1rem;
 }
 .div4 {
   grid-area: 4 / 1 / 5 / 3;
@@ -349,18 +430,35 @@ header {
   padding: 10px;
   border-radius: 5px;
   background-color: rgba(235, 236, 240, 0.5);
-  width: 260px;
+  min-width: 260px;
 }
 
 .input-new-list::placeholder {
-  color: #444;
+  color: rgba(68, 68, 68, 0.8);
   font-family: "Poppins", sans-serif;
 }
-
 .list-card {
   position: relative;
   display: flex;
   flex-direction: column;
   height: auto;
+}
+.plus {
+  width: 36px;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  box-shadow: 2px -0.5px 2px 1px #dddfe0;
+}
+.plus span {
+  background: #f2f3f6;
+  font-size: 24px;
+  padding: 2px 10px;
+  color: rgba(24, 43, 77, 1);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.plus span:hover {
+  background: #dddfe0;
 }
 </style>

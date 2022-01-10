@@ -39,7 +39,7 @@
   <div class="list-header">
     <label v-if="isLabel" @dblclick="changeLabel">{{ name }}</label>
     <span @click.stop="clickDots" id="three-dots"
-      ><img src="../../assets/dots.png" alt=""
+      ><img src="../../assets/trash.svg" alt=""
     /></span>
     <input
       v-if="!isLabel"
@@ -48,6 +48,7 @@
       type="text"
       class="label-name"
       v-model="labelName"
+      placeholder="New status name here ..."
       autofocus
     />
   </div>
@@ -75,7 +76,7 @@ export default {
       isLabel: true,
       openDelete: false,
       moveId: null,
-      labelName: "",
+      labelName: this.name,
     };
   },
   computed: {
@@ -94,11 +95,13 @@ export default {
     },
     async changeLabelName() {
       if (this.labelName !== "") {
+        this.$Progress.start();
         await axios.put("https://time-tracker.azurewebsites.net/api/Boards", {
           id: this.id,
           newName: this.labelName,
         });
         await this.$store.dispatch("getLists");
+        this.$Progress.finish();
         this.isLabel = true;
       }
     },
@@ -115,12 +118,20 @@ export default {
       this.moveId = arr[0];
     },
     async deleteBoard() {
+      this.$Progress.start();
       await axios.delete(
         `https://time-tracker.azurewebsites.net/api/Boards/${this.id}/${this.moveId}`
       );
       await this.$store.dispatch("getLists");
+      await this.$store.dispatch("getCards");
+      this.$Progress.finish();
       this.close();
     },
+  },
+  mounted() {
+    this.moveId = this.lists
+      .filter((list) => list.id !== this.id)
+      .map((list) => list.id)[0];
   },
 };
 </script>
@@ -130,8 +141,6 @@ export default {
   position: relative;
   display: flex;
   justify-content: center;
-  word-break: break-all;
-  align-items: center;
   min-width: 280px;
   max-width: 280px;
   line-height: 50px;
@@ -154,7 +163,7 @@ export default {
   max-width: 280px;
   height: auto;
   background-color: rgba(235, 236, 240, 1);
-  padding: 0px 10px 0px 10px;
+  padding: 5px 10px 0px 10px;
   box-shadow: 1.5px 1.5px 1.5px 0.1px rgba(255, 255, 255, 0.1);
   color: rgba(24, 43, 77, 1);
 }
@@ -165,6 +174,7 @@ export default {
   line-height: 50px;
   padding: 0px 10px 0px 1.2rem;
   background-color: rgba(235, 236, 240, 1);
+  font-family: "Poppins", sans-serif;
   /* border-radius: 10px 10px 0px 0px; */
   color: #444;
 }
@@ -182,10 +192,13 @@ export default {
 }
 #three-dots {
   position: absolute;
-  right: 1%;
-  top: 10%;
+  right: 5%;
+  top: 6%;
   display: none;
   transition: all 0.3s ease;
+}
+#three-dots:hover img {
+  background: #e0e4e9;
 }
 .form-task * {
   color: #444;

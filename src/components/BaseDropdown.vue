@@ -26,6 +26,9 @@ export default {
       type: Array,
       required: true,
     },
+    defaultVal: {
+      required: false,
+    },
     default: {
       type: String,
       required: false,
@@ -92,12 +95,8 @@ export default {
 .custom-select .items {
   color: rgb(68, 68, 68);
   border-radius: 0px 0px 6px 6px;
-  /* overflow: hidden; */
-  /* border-right: 1px solid #ad8225;
-  border-left: 1px solid #ad8225;
-  border-bottom: 1px solid #ad8225; */
   position: absolute;
-  background-color: rgb(206, 203, 203);
+  background-color: rgb(241, 232, 232);
   left: 0;
   right: 0;
   z-index: 100;
@@ -105,13 +104,15 @@ export default {
 
 .custom-select .items div {
   color: rgb(68, 68, 68);
+  border-top: 0.1px solid rgba(68, 68, 68, 0.1);
   padding-left: 1em;
+  transition: all 0.2s ease;
   cursor: pointer;
   user-select: none;
 }
 
 .custom-select .items div:hover {
-  background-color: rgba(19, 23, 40, 0.4);
+  background-color: rgba(19, 23, 40, 0.1);
 }
 
 .selectHide {

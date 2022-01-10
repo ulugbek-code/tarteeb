@@ -5,29 +5,32 @@
         <h2>Edit the task</h2>
         <div class="parent">
           <div class="input-wrapper div1">
-            <textarea rows="4" :placeholder="obj.description"></textarea>
+            <textarea rows="4" v-model="newDesc"></textarea>
           </div>
           <div class="div2">
+            <span id="reporter">Assignee</span>
             <base-dropdown
-              :options="['Assignee', 'Task 2', 'Task 3', 'Task 4']"
+              :options="getUsers"
+              :default="obj.assignee.firstName + ' ' + obj.assignee.lastName"
               @input="getAssignee"
             ></base-dropdown>
           </div>
           <div class="div3">
-            {{ date }}
             <input v-model="date" type="date" name="" id="" />
           </div>
-
           <div class="div4">
             <span id="reporter">Reporter</span>
             <base-dropdown
-              :options="['John Doe', 'Task 2', 'Task 3', 'Task 4']"
+              :options="getUsers"
+              :default="obj.reporter.firstName + ' ' + obj.reporter.lastName"
               @input="getReporter"
             ></base-dropdown>
           </div>
           <div class="div5">
+            <span id="reporter">Status</span>
             <base-dropdown
               :options="listsName"
+              :default="obj.status.name"
               @input="getStatus"
             ></base-dropdown>
           </div>
@@ -45,10 +48,38 @@
     </template>
     <template #actions>
       <div class="btn-wrapper">
-        <the-button :green="true" class="form-btn">Save</the-button>
+        <the-button @click="sendEdit" :green="true" class="form-btn"
+          >Save</the-button
+        >
         <the-button :red="true" @click="close" class="form-btn"
           >Cancel</the-button
         >
+      </div>
+    </template>
+  </base-dialog>
+  <!-- delete pop up -->
+  <base-dialog
+    v-if="isDeleteClicked"
+    color="#fff"
+    width="480px"
+    @close="closeDelete"
+  >
+    <template #default>
+      <form class="form-deleting">
+        <h4>Delete TT-{{ deletingId }}?</h4>
+        <p>
+          You are about to permanently delete this task and its associated
+          comments, data, and attachments.
+        </p>
+        <p>Instead, you can choose to decide or close it.</p>
+      </form>
+    </template>
+    <template #actions>
+      <div class="btn-wrapper">
+        <the-button @click="deleteTask" :red="true" class="form-btn"
+          >Delete</the-button
+        >
+        <the-button @click="closeDelete" class="form-btn">Cancel</the-button>
       </div>
     </template>
   </base-dialog>
@@ -59,12 +90,17 @@
       :key="card.id"
       @click="togglePopup(card.id)"
     >
-      <p>{{ card.description }}</p>
+      <div class="desc">
+        <p>{{ card.description }}</p>
+        <span @click.stop="toggleDelete(card.id)" id="three-dots">
+          <img src="../../assets/trash.svg" alt="" />
+        </span>
+      </div>
       <div class="priority">
         <p>TT-{{ card.id }}</p>
         <star-rating
           :rating="card.priority"
-          :star-size="15"
+          :star-size="13"
           :max-rating="3"
           :show-rating="false"
           :read-only="true"
@@ -88,39 +124,87 @@ export default {
   data() {
     return {
       isBtnClicked: false,
+      isDeleteClicked: false,
+      deletingId: null,
       rating: null,
       date: null,
+      newDesc: null,
+      assignee: null,
+      reporter: null,
+      statusName: null,
       obj: {},
     };
   },
   methods: {
+    toggleDelete(id) {
+      this.isDeleteClicked = true;
+      this.deletingId = id;
+    },
+    async deleteTask() {
+      this.$Progress.start();
+      await axios.delete(
+        `https://time-tracker.azurewebsites.net/api/Tasks/${this.deletingId}`
+      );
+      await this.$store.dispatch("getCards");
+      this.$Progress.finish();
+      this.isDeleteClicked = false;
+      this.deletingId = null;
+    },
+    closeDelete() {
+      this.isDeleteClicked = false;
+    },
     getAssignee(val) {
-      console.log(val);
+      const users = this.$store.getters["users"];
+      const first = val.substr(0, val.indexOf(" "));
+      this.assignee = users
+        .filter((user) => user.firstName === first)
+        .map((user) => user.id)[0];
+      // console.log(this.assignee);
     },
-    getDate(val) {
-      console.log(val);
-    },
+    // getDate(val) {
+    //   this.date = val;
+    // },
     getReporter(val) {
-      console.log(val);
+      const users = this.$store.getters["users"];
+      const first = val.substr(0, val.indexOf(" "));
+      this.reporter = users
+        .filter((user) => user.firstName === first)
+        .map((user) => user.id)[0];
+      // console.log(this.reporter);
     },
     getStatus(val) {
-      console.log(val);
+      const i = this.getLists
+        .filter((list) => list.name === val)
+        .map((list) => list.id);
+      this.statusName = i[0];
+    },
+    async sendEdit() {
+      const sendObj = {
+        description: this.newDesc,
+        priority: this.rating,
+        deadline: this.date + "T00:00:00", //"2022-01-10T14:24:03.485Z",
+        updatedBy: 4,
+        statusId: this.statusName,
+        userId: this.assignee, //assignee
+        reporterId: this.reporter,
+      };
+      // console.log(sendObj);
+      this.$Progress.start();
+      await axios.put(
+        `https://time-tracker.azurewebsites.net/api/Tasks/${this.obj.id}`,
+        sendObj
+      );
+      await this.$store.dispatch("getCards");
+      this.$Progress.finish();
+      this.close();
     },
     async togglePopup(id) {
       const res = await axios.get(
         `https://time-tracker.azurewebsites.net/api/Tasks/${id}`
       );
       this.obj = res.data;
-      console.log(this.obj);
+      // console.log(this.obj);
       this.isBtnClicked = true;
-      // const currentData = {
-      //   listId: this.listId,
-      //   listName: this.listName,
-      //   id: data.id,
-      //   name: data.description,
-      // };
-      // this.$store.dispatch("toggleOverlay");
-      // this.$store.dispatch("openForm", currentData);
     },
     close() {
       this.isBtnClicked = false;
@@ -143,16 +227,10 @@ export default {
     listsName() {
       return this.getLists.map((list) => list.name);
     },
-    // cards() {
-    //   const cardFilteredByListId = this.$store.getters["cards"];
-    //   return cardFilteredByListId.filter((card) => {
-    //     if (card.listId === this.listId) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   });
-    // },
+    getUsers() {
+      const users = this.$store.getters["users"];
+      return users.map((user) => `${user.firstName} ${user.lastName}`);
+    },
     overlayIsActive() {
       return this.$store.getters["overlay"];
     },
@@ -163,6 +241,11 @@ export default {
   watch: {
     obj(val) {
       this.rating = val.priority;
+      this.newDesc = val.description;
+      this.assignee = val.assigneeId;
+      this.date = val.deadline.substr(0, 10);
+      this.statusName = val.statusId;
+      this.reporter = val.reporterId;
     },
   },
 };
@@ -183,19 +266,40 @@ export default {
   font-size: 15px;
   cursor: pointer;
 }
+.desc,
 .priority {
   display: flex;
-  font-size: 12px;
-  margin-top: 4px;
   justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
 }
-.form-task {
+.desc {
+  min-height: 31px;
+}
+#three-dots {
+  display: none;
+  transition: background 0.2s ease;
+}
+.element-card:hover #three-dots {
+  display: block;
+}
+#three-dots:hover img {
+  background: #f1f1f1;
+}
+.priority {
+  margin-top: 8px;
+  font-size: 11px;
+}
+.form-task,
+.form-deleting {
   width: 100%;
   box-sizing: border-box;
 }
-.form-task * {
+.form-task *,
+.form-deleting * {
   font-family: "Poppins", sans-serif;
   color: #444;
+  font-size: 14px;
 }
 .form-task textarea {
   width: 100%;
@@ -211,12 +315,12 @@ export default {
   grid-column-gap: 12px;
   grid-row-gap: 8px;
 }
-
 .div1 {
   grid-area: 1 / 1 / 3 / 5;
 }
 .div2 {
   grid-area: 3 / 1 / 4 / 3;
+  position: relative;
 }
 .div3 {
   grid-area: 3 / 3 / 4 / 5;
@@ -227,7 +331,7 @@ export default {
   text-align: left;
   outline: none;
   font-size: 14px;
-  line-height: 36px;
+  line-height: 34px;
   background: #f2f3f6;
   border-radius: 25px;
   border: 1px solid rgba(67, 97, 238, 0.35);
@@ -246,6 +350,7 @@ export default {
 }
 .div5 {
   grid-area: 5 / 1 / 6 / 3;
+  position: relative;
 }
 .div6 {
   grid-area: 4 / 3 / 6 / 5;
@@ -261,5 +366,11 @@ export default {
 }
 .btn-wrapper button {
   margin-left: 1rem;
+}
+.form-deleting h4 {
+  margin-bottom: 4px;
+}
+.form-deleting p {
+  margin-top: 8px;
 }
 </style>

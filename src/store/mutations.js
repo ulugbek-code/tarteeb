@@ -10,7 +10,6 @@ export default {
   },
   getUsers(state, payload) {
     state.users = payload.data;
-    console.log(state.users);
   },
   // changeNewBoard(state, payload) {
   //   state.lists = payload;
