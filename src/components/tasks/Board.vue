@@ -36,28 +36,29 @@
       </div>
     </template>
   </base-dialog>
-  <div class="list-header">
-    <label v-if="isLabel" @dblclick="changeLabel">{{ name }}</label>
-    <span @click.stop="clickDots" id="three-dots"
-      ><img src="../../assets/trash.svg" alt=""
-    /></span>
-    <input
-      v-if="!isLabel"
-      @dblclick="changeLabel"
-      @keyup.enter="changeLabelName"
-      type="text"
-      class="label-name"
-      v-model="labelName"
-      placeholder="New status name here ..."
-      autofocus
-    />
-  </div>
-
-  <div class="list-content">
-    <CardsList :listId="id" :listName="name" />
-  </div>
-  <div class="list-footer">
-    <card-task :listId="id"></card-task>
+  <div class="list-body">
+    <div class="list-header">
+      <label v-if="isLabel" @dblclick="changeLabel">{{ name }}</label>
+      <span @click.stop="clickDots" id="three-dots"
+        ><img src="../../assets/trash.svg" alt=""
+      /></span>
+      <input
+        v-if="!isLabel"
+        @dblclick="changeLabel"
+        @keyup.enter="changeLabelName"
+        type="text"
+        class="label-name"
+        v-model="labelName"
+        placeholder="New status name here ..."
+        v-focus
+      />
+    </div>
+    <div class="list-content">
+      <CardsList :listId="id" :listName="name" />
+    </div>
+    <div class="list-footer">
+      <card-task :listId="id"></card-task>
+    </div>
   </div>
 </template>
 
@@ -65,11 +66,16 @@
 import axios from "axios";
 import CardsList from "./CardList.vue";
 import CardTask from "./CardTask.vue";
+import focusInput from "../../directives/focusInput";
+
 export default {
   props: ["id", "name"],
   components: {
     CardsList,
     CardTask,
+  },
+  directives: {
+    focus: focusInput,
   },
   data() {
     return {
@@ -137,6 +143,12 @@ export default {
 </script>
 
 <style scoped>
+.list-body:hover .list-footer {
+  display: block;
+}
+.list-body:hover .list-content {
+  border-bottom-left-radius: 0;
+}
 .list-header {
   position: relative;
   display: flex;
@@ -166,6 +178,7 @@ export default {
   padding: 5px 10px 0px 10px;
   box-shadow: 1.5px 1.5px 1.5px 0.1px rgba(255, 255, 255, 0.1);
   color: rgba(24, 43, 77, 1);
+  border-bottom-left-radius: 10px;
 }
 .label-name {
   outline: none;
@@ -178,17 +191,17 @@ export default {
   /* border-radius: 10px 10px 0px 0px; */
   color: #444;
 }
+
 .list-footer {
+  display: none;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 280px;
   background-color: rgba(235, 236, 240, 1);
   border-radius: 0px 0px 10px 10px;
   color: white;
   border-top: 0.5px solid rgba(255, 255, 255, 0.25);
   padding: 0px 10px 10px 10px;
+  transition: all 3s ease;
 }
 #three-dots {
   position: absolute;

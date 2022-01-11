@@ -2,25 +2,12 @@
   <div id="not-found-box">
     <h2>Whoops, that page is gone.</h2>
     <h1>404</h1>
-    <router-link to="/" @click="back"> to Dashboard</router-link>
+    <router-link to="/"> to Dashboard</router-link>
   </div>
 </template>
 
 <script>
-export default {
-  // methods: {
-  //   back() {
-  //     this.$store.commit('makeActive');
-  //     this.$store.commit('refreshOffset');
-  //   }
-  // }
-  // beforeMount() {
-  //   window.addEventListener(
-  //     'beforeunload',
-  //     this.$store.commit('toggleActivity')
-  //   );
-  // }
-};
+export default {};
 </script>
 <style scoped>
 #not-found-box {

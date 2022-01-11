@@ -28,10 +28,10 @@ export default {
           description: this.cardName,
           priority: 1,
           deadline: tomorrow,
-          createdBy: 4,
+          createdBy: this.$store.getters.loginUser.id,
           statusId: this.listId,
           userId: 4,
-          reporterId: 4,
+          reporterId: this.$store.getters.loginUser.id,
         };
         // console.log(res);
         const headers = {

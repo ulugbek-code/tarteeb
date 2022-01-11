@@ -28,6 +28,9 @@ export default {
     width: {
       required: false,
     },
+    isOpen: {
+      required: false,
+    },
   },
   emits: ["close"],
 };

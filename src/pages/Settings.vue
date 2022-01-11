@@ -1,4 +1,5 @@
 <template>
+  <the-navigation></the-navigation>
   <div :class="[!isNavOpened ? 'nav' : '']" class="settings">
     <h1>Settings</h1>
   </div>

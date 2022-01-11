@@ -58,6 +58,7 @@
       </div>
     </template>
   </base-dialog>
+  <the-navigation></the-navigation>
   <header :class="[!isNavOpened ? 'nav' : '']" class="box">
     <h2>Tasks</h2>
     <div class="flex">
@@ -233,7 +234,7 @@ export default {
           description: this.desc,
           priority: this.newRating,
           deadline: this.newDate + "T00:00:00",
-          createdBy: 4,
+          createdBy: this.$store.getters.loginUser.id,
           statusId: this.newStatus,
           userId: this.newAssignee,
           reporterId: this.newReporter,
@@ -261,6 +262,9 @@ export default {
 </script>
 
 <style scoped>
+.load {
+  margin-left: 400px;
+}
 .box {
   transition: all 0.4s ease;
 }

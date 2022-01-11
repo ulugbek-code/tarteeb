@@ -1,5 +1,5 @@
 <template>
-  <!-- <the-navigation></the-navigation> -->
+  <the-navigation></the-navigation>
   <div :class="[!isNavOpened ? 'nav' : '']" class="box">
     <div id="header-dashboard">
       <div class="header-box">

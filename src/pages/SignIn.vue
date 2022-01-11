@@ -7,7 +7,7 @@
     <form @submit.prevent="signIn" class="form">
       <div class="input-container">
         <input
-          v-model="phoneNumber"
+          v-model="userData.phoneNumber"
           @input="enforcePhoneFormat()"
           type="tel"
           required
@@ -15,7 +15,7 @@
         <span>Phone number</span>
       </div>
       <div class="input-container">
-        <input v-model.trim="password" type="password" required />
+        <input v-model.trim="userData.password" type="password" required />
         <span>Password</span>
       </div>
       <button class="btn">Sign In</button>
@@ -31,57 +31,51 @@ import axios from "axios";
 export default {
   data() {
     return {
-      phoneNumber: "",
-      password: "",
+      userData: {
+        phoneNumber: "",
+        password: "",
+      },
     };
+  },
+  computed: {
+    loginUser() {
+      return this.$store.getters["loginUser"];
+    },
   },
   methods: {
     enforcePhoneFormat() {
-      let x = this.phoneNumber
+      let x = this.userData.phoneNumber
         .replace(/\D/g, "")
         .match(/(\d{0,2})(\d{0,3})(\d{0,4})/);
-      this.phoneNumber = !x[2]
+      this.userData.phoneNumber = !x[2]
         ? x[1]
         : "(" + x[1] + ") " + x[2] + (x[3] ? "-" + x[3] : "");
-      if (this.phoneNumber.length > 11) {
-        this.phoneNumber =
-          this.phoneNumber.substring(0, 11) +
+      if (this.userData.phoneNumber.length > 11) {
+        this.userData.phoneNumber =
+          this.userData.phoneNumber.substring(0, 11) +
           "-" +
-          this.phoneNumber.substring(11);
+          this.userData.phoneNumber.substring(11);
       }
     },
-    signIn() {
-      // const str = JSON.stringify({ login: "998914490133", password: "test" });
-      // const headers = {
-      //   "Content-Type": "application/json;charset=UTF-8",
-      //   "Access-Control-Allow-Origin": "*",
-      // };
-      console.log(this.password, this.phoneNumber);
-      axios
-        .post(
-          "https://time-tracker.azurewebsites.net/api/user/login",
-          {
-            login: "998914490133",
-            password: "test",
+    async signIn() {
+      // console.log(this.password, this.phoneNumber);
+      this.$Progress.start();
+      const response = await axios.post(
+        "https://time-tracker.azurewebsites.net/api/user/login",
+        {
+          phone: "998914490133",
+          password: "test",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              accept: "*/*",
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log("AXIOS ERROR: ", err);
-        });
+        }
+      );
+      this.$Progress.finish();
+      localStorage.setItem("loginUser", JSON.stringify(response.data));
+      this.$router.replace("/");
     },
-  },
-  async mounted() {
-    await this.signIn();
   },
 };
 </script>

@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import router from "./router.js";
+import TheNavigation from "./components/TheNavigation.vue";
 import store from "./store/index.js";
 import VueApexCharts from "vue3-apexcharts";
 import VueProgressBar from "@aacassandra/vue3-progressbar";
@@ -27,6 +28,7 @@ app.use(VueApexCharts);
 app.use(router);
 app.use(store);
 app.use(VueProgressBar, options);
+app.component("the-navigation", TheNavigation);
 app.component("the-button", TheButton);
 app.component("base-dialog", BaseDialog);
 app.component("base-dropdown", BaseDropdown);

@@ -11,6 +11,9 @@ export default {
   getUsers(state, payload) {
     state.users = payload.data;
   },
+  // getLoginUser(state, payload) {
+  //   state.loginUser = payload;
+  // },
   // changeNewBoard(state, payload) {
   //   state.lists = payload;
   // },

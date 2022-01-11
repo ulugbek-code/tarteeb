@@ -34,6 +34,7 @@ const store = createStore({
       ],
       cardss: [],
       users: [],
+      loginUser: JSON.parse(localStorage.getItem("loginUser")) || null, //Object.keys(obj).length === 0;
     };
   },
   mutations: rootMutations,

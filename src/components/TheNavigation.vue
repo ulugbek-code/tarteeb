@@ -1,4 +1,19 @@
 <template>
+  <base-dialog v-if="isLogOut" color="#fff" width="480px" @close="close">
+    <template #default>
+      <form class="form-deleting">
+        <h4>Do you really want to log out</h4>
+      </form>
+    </template>
+    <template #actions>
+      <div class="btn-wrapper">
+        <the-button @click="deleteToken" :red="true" class="form-btn"
+          >Log out</the-button
+        >
+        <the-button @click="close" class="form-btn">Cancel</the-button>
+      </div>
+    </template>
+  </base-dialog>
   <nav :class="!isNavOpened ? 'openedSideBar' : ''">
     <div
       @click="toggleHamburgerMenu"
@@ -175,6 +190,8 @@ export default {
   data() {
     return {
       userInfo: {},
+      isLogOut: false,
+      haveAuth: null,
       // isNavOpened: true,
     };
   },
@@ -193,6 +210,17 @@ export default {
   methods: {
     toggleHamburgerMenu() {
       this.$store.dispatch("toggleNavbar");
+    },
+    close() {
+      this.isLogOut = false;
+    },
+    logOut() {
+      this.isLogOut = true;
+    },
+    deleteToken() {
+      localStorage.removeItem("loginUser");
+      this.close();
+      this.$router.replace("/signIn");
     },
   },
 };
@@ -219,7 +247,7 @@ nav {
   overflow-x: hidden;
   background: rgba(19, 23, 40, 1);
   padding-left: 1.5rem;
-  transition: all 0.35s ease;
+  transition: all 0.4s ease;
 }
 .nav-li {
   position: relative;
@@ -230,9 +258,10 @@ nav.openedSideBar {
 }
 nav p,
 .sub-info {
-  position: relative;
-  left: -150px;
-  animation: slide 0.5s forwards;
+  position: absolute;
+  left: 20%;
+  transition: all 0.2s ease;
+  /* animation: slide 1s forwards; */
 }
 nav.openedSideBar p,
 nav.openedSideBar .sub-info {
@@ -291,8 +320,9 @@ nav h1 {
   margin-right: 1rem;
 }
 .info {
+  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 2rem 1rem 2rem 0;
 }
 .info img {
@@ -305,10 +335,9 @@ nav h1 {
   z-index: 9;
 }
 .sub-info {
+  top: 15%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  left: 40%;
   margin-left: 1rem;
 }
 .sub-info h3 {
@@ -318,9 +347,11 @@ nav h1 {
   margin-bottom: 5px;
 }
 .sub-info p {
+  left: 10%;
   font-size: 14px;
   color: rgba(153, 153, 153, 1);
   font-weight: 300;
+  /* background: aqua; */
 }
 .icons {
   position: relative;
@@ -328,6 +359,7 @@ nav h1 {
   font-size: 18px;
   width: 20px;
   margin-right: 1.5rem;
+  margin-bottom: 2px;
 }
 .svg-icons {
   stroke: chocolate;
@@ -340,6 +372,7 @@ nav h1 {
   overflow: hidden;
 }
 .log-out {
+  width: 80%;
   position: absolute;
   bottom: 5%;
   left: 10%;
@@ -369,6 +402,15 @@ a.router-link-active .icons {
   color: #fff;
   stroke: #fff;
 }
+.btn-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.btn-wrapper button {
+  margin: 0 8px;
+}
+
 /* @keyframes coming {
   0% {
     transform: translateX(-150%);
@@ -377,9 +419,9 @@ a.router-link-active .icons {
     transform: translateX(0);
   }
 } */
-@keyframes slide {
+/* @keyframes slide {
   100% {
     left: 0;
   }
-}
+} */
 </style>

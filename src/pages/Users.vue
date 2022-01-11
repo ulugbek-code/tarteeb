@@ -1,4 +1,5 @@
 <template>
+  <the-navigation></the-navigation>
   <div :class="[!isNavOpened ? 'nav' : '']" id="users-container">
     <base-dialog v-if="isBtnClicked" title="Register new user" @close="close">
       <template #default>

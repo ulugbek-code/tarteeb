@@ -1,4 +1,5 @@
 <template>
+  <the-navigation></the-navigation>
   <div :class="[!isNavOpened ? 'nav' : '']" id="records-container">
     <div class="header-wrapper">
       <div class="tasks-header">

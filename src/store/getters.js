@@ -10,6 +10,9 @@ export default {
   users(state) {
     return state.users;
   },
+  loginUser(state) {
+    return state.loginUser;
+  },
   lastListId(state) {
     return state.lastListId;
   },

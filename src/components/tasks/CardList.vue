@@ -97,14 +97,19 @@
         </span>
       </div>
       <div class="priority">
-        <p>TT-{{ card.id }}</p>
-        <star-rating
-          :rating="card.priority"
-          :star-size="13"
-          :max-rating="3"
-          :show-rating="false"
-          :read-only="true"
-        ></star-rating>
+        <div>
+          <p>TT-{{ card.id }}</p>
+          <star-rating
+            :rating="card.priority"
+            :star-size="13"
+            :max-rating="3"
+            :show-rating="false"
+            :read-only="true"
+          ></star-rating>
+        </div>
+        <p id="fullname">
+          {{ card.assignee.firstName[0] }}{{ card.assignee.lastName[0] }}
+        </p>
       </div>
     </div>
   </draggable>
@@ -256,7 +261,6 @@ export default {
   position: relative;
   background-color: white;
   height: auto;
-
   padding: 10px;
   border-radius: 5px;
   min-height: 30px;
@@ -289,6 +293,18 @@ export default {
 .priority {
   margin-top: 8px;
   font-size: 11px;
+}
+.priority div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+  /* background: black; */
+}
+#fullname {
+  background: rgb(236, 233, 233);
+  padding: 2px 3px;
+  border-radius: 50%;
 }
 .form-task,
 .form-deleting {

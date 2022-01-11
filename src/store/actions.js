@@ -21,11 +21,11 @@ export default {
       "https://time-tracker.azurewebsites.net/api/user/getUsersByManagerId",
       {
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0IiwiZ2l2ZW5fbmFtZSI6IkVsYmVrIiwidW5pcXVlX25hbWUiOiJOb3JtdXJvZG92Iiwicm9sZSI6Ik1hbmFnZXIiLCJuYmYiOjE2NDE3MDc5NTcsImV4cCI6MTY0MTg4MDc1NywiaWF0IjoxNjQxNzA3OTU3fQ.x6Wp5QxCu3-kIiw6yxAWCwpUzJk1HJ_iUs40gn234wk",
+          Authorization: `Bearer ${context.state.loginUser.token}`,
         },
       }
     );
+
     context.commit("getUsers", res);
   },
   // updateBoard(context, payload) {
