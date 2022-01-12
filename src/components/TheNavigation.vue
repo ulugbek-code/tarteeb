@@ -30,12 +30,12 @@
     <div class="info">
       <img src="../assets/unknown.png" alt="" />
       <div class="sub-info">
-        <h3>John Doe</h3>
-        <p>Admin</p>
+        <h3>{{ decoded.given_name }} {{ decoded.unique_name }}</h3>
+        <p>{{ decoded.role }}</p>
       </div>
     </div>
     <div class="nav-li">
-      <router-link class="nav-link" to="/">
+      <!-- <router-link class="nav-link" to="/">
         <div @click="offseting" class="items">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,8 +57,8 @@
           </svg>
           <p>Dashboard</p>
         </div>
-      </router-link>
-      <router-link class="nav-link" to="/records">
+      </router-link> -->
+      <!-- <router-link class="nav-link" to="/records">
         <div @click="offseting" class="items">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -80,8 +80,8 @@
           </svg>
           <p>Time</p>
         </div>
-      </router-link>
-      <router-link class="nav-link" to="/tasks">
+      </router-link> -->
+      <router-link class="nav-link" to="/">
         <div @click="offseting" class="items">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +107,7 @@
           <p>Tasks</p>
         </div>
       </router-link>
-      <router-link class="nav-link" to="/users">
+      <!-- <router-link class="nav-link" to="/users">
         <div @click="offseting" class="items">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -129,8 +129,8 @@
           </svg>
           <p>Employees</p>
         </div>
-      </router-link>
-      <router-link class="nav-link" to="/settings">
+      </router-link> -->
+      <!-- <router-link class="nav-link" to="/settings">
         <div @click="offseting" class="items">
           <svg
             class="icons"
@@ -158,7 +158,7 @@
           </svg>
           <p>Settings</p>
         </div>
-      </router-link>
+      </router-link> -->
       <!-- <div :style="{ top: getOffset + 'px' }" id="marker"></div> -->
     </div>
     <div @click="logOut" class="log-out items">
@@ -202,6 +202,9 @@ export default {
       } else {
         return "TT";
       }
+    },
+    decoded() {
+      return JSON.parse(localStorage.getItem("decodedToken"));
     },
     isNavOpened() {
       return this.$store.getters.isNavOpened;
@@ -260,7 +263,7 @@ nav p,
 .sub-info {
   position: absolute;
   left: 20%;
-  transition: all 0.2s ease;
+  transition: all 0.5s ease;
   /* animation: slide 1s forwards; */
 }
 nav.openedSideBar p,
@@ -337,17 +340,20 @@ nav h1 {
 .sub-info {
   top: 15%;
   width: 100%;
-  left: 40%;
+  left: 30%;
   margin-left: 1rem;
 }
 .sub-info h3 {
+  position: absolute;
   font-size: 16px;
   color: #fff;
   font-weight: 500;
   margin-bottom: 5px;
+  overflow: hidden;
 }
 .sub-info p {
-  left: 10%;
+  top: 24px;
+  left: 0;
   font-size: 14px;
   color: rgba(153, 153, 153, 1);
   font-weight: 300;

@@ -1,7 +1,7 @@
 <template>
   <base-dialog v-if="isBtnClicked" color="#fff" width="680px" @close="close">
     <template #default>
-      <form class="form-task">
+      <form @click="toggleInvalid" class="form-task">
         <h2>Add new task</h2>
         <div class="parent">
           <div class="input-wrapper div1">
@@ -49,6 +49,7 @@
     </template>
     <template #actions>
       <div class="btn-wrapper">
+        <small v-if="isInvalid">Please fill all required fields!</small>
         <the-button @click="addTask" :green="true" class="form-btn"
           >Add</the-button
         >
@@ -105,6 +106,7 @@
 
 <script>
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 import { VueDraggableNext } from "vue-draggable-next";
 import StarRating from "vue-star-rating";
 import Board from "../components/tasks/Board.vue";
@@ -131,6 +133,7 @@ export default {
       newOrder: null,
       isAddClicked: false,
       isBtnClicked: false,
+      isInvalid: false,
       listName: "",
       desc: null,
       newRating: 1,
@@ -171,6 +174,9 @@ export default {
     users() {
       return this.$store.getters["users"];
     },
+    loginUser() {
+      return this.$store.getters["loginUser"];
+    },
     usersNames() {
       return this.users.map((user) => `${user.firstName} ${user.lastName}`);
     },
@@ -179,6 +185,10 @@ export default {
     },
   },
   methods: {
+    decodeToken() {
+      let decoded = jwt_decode(this.loginUser.token);
+      localStorage.setItem("decodedToken", JSON.stringify(decoded));
+    },
     toggleAddBtn() {
       this.isAddClicked = true;
     },
@@ -241,22 +251,30 @@ export default {
         });
         await this.$store.dispatch("getCards");
         this.$Progress.finish();
+        (this.desc = null),
+          (this.newRating = 1),
+          (this.newAssignee = null),
+          (this.newReporter = null),
+          (this.newStatus = null),
+          (this.newDate = null);
+        this.close();
       } else {
-        alert("hello");
+        this.isInvalid = true;
       }
-      this.close();
+    },
+    toggleInvalid() {
+      this.isInvalid = false;
     },
     close() {
       this.isBtnClicked = false;
+      this.toggleInvalid();
     },
   },
   created() {
-    this.$Progress.start();
     this.$store.dispatch("getLists");
     this.$store.dispatch("getUsers");
-  },
-  mounted() {
-    this.$Progress.finish();
+
+    this.decodeToken();
   },
 };
 </script>
@@ -341,6 +359,11 @@ export default {
   width: 95%;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+.btn-wrapper small {
+  color: rgb(193, 58, 58);
+  width: 100%;
 }
 .btn-wrapper button {
   margin-left: 1rem;

@@ -17,19 +17,30 @@
             <p>{{ name }}</p>
           </div>
           <div class="second-board">
-            <p>New task layout:</p>
-            <span><img src="../../assets/next.png" alt="" /></span
-            ><base-dropdown
-              :options="getBoardsNames"
-              @input="getInput"
-            ></base-dropdown>
+            <template v-if="getBoardsNames.length">
+              <p>New task layout:</p>
+              <span><img src="../../assets/next.png" alt="" /></span>
+
+              <base-dropdown
+                :options="getBoardsNames"
+                @input="getInput"
+              ></base-dropdown>
+            </template>
+            <div v-else>
+              <p>No other columns have</p>
+              <img src="../../assets/none.png" alt="" />
+            </div>
           </div>
         </div>
       </form>
     </template>
     <template #actions>
       <div class="btn-wrapper">
-        <the-button @click="deleteBoard" :red="true" class="form-btn"
+        <the-button
+          v-if="getBoardsNames.length"
+          @click="deleteBoard"
+          :red="true"
+          class="form-btn"
           >Delete</the-button
         >
         <the-button @click="close" class="form-btn">Cancel</the-button>

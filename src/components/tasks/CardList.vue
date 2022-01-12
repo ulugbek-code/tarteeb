@@ -240,8 +240,12 @@ export default {
       return this.$store.getters["overlay"];
     },
   },
-  created() {
-    this.$store.dispatch("getCards");
+  async created() {
+    this.$Progress.start();
+    await this.$store.dispatch("getCards");
+  },
+  mounted() {
+    this.$Progress.finish();
   },
   watch: {
     obj(val) {

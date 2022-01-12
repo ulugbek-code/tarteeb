@@ -72,9 +72,9 @@ export default {
           },
         }
       );
-      this.$Progress.finish();
       localStorage.setItem("loginUser", JSON.stringify(response.data));
       this.$router.replace("/");
+      this.$Progress.finish();
     },
   },
 };

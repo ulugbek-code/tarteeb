@@ -2,7 +2,7 @@
   <div id="not-found-box">
     <h2>Whoops, that page is gone.</h2>
     <h1>404</h1>
-    <router-link to="/"> to Dashboard</router-link>
+    <router-link to="/"> to Tasks page</router-link>
   </div>
 </template>
 
