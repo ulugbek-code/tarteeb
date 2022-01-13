@@ -1,107 +1,122 @@
 <template>
-  <base-dialog v-if="isBtnClicked" color="#fff" width="680px" @close="close">
-    <template #default>
-      <form @click="toggleInvalid" class="form-task">
-        <h2>Add new task</h2>
-        <div class="parent">
-          <div class="input-wrapper div1">
-            <textarea
-              v-model="desc"
-              rows="4"
-              placeholder="Task description goes here..."
-            ></textarea>
+  <div>
+    <base-dialog :show="isBtnClicked" color="#fff" width="680px" @close="close">
+      <template #default>
+        <form @click="toggleInvalid" class="form-task">
+          <h2>Add new task</h2>
+          <div class="parent">
+            <div class="input-wrapper div1">
+              <textarea
+                v-model="desc"
+                rows="4"
+                placeholder="Task description goes here..."
+              ></textarea>
+            </div>
+            <div class="div2">
+              <base-dropdown
+                :options="usersNames"
+                default="Assignee here..."
+                @input="getAssignee"
+              ></base-dropdown>
+            </div>
+            <div class="div3">
+              <input v-model="newDate" type="date" name="" id="" />
+            </div>
+            <div class="div4">
+              <base-dropdown
+                :options="usersNames"
+                default="Reporter here..."
+                @input="getReporter"
+              ></base-dropdown>
+            </div>
+            <div class="div5">
+              <base-dropdown
+                :options="statusNames"
+                default="Status..."
+                @input="getStatus"
+              ></base-dropdown>
+            </div>
+            <div class="div6">
+              <p>Priority<span>*</span></p>
+              <star-rating
+                v-model:rating="newRating"
+                :star-size="25"
+                :max-rating="3"
+                :show-rating="false"
+              ></star-rating>
+            </div>
           </div>
-          <div class="div2">
-            <base-dropdown
-              :options="usersNames"
-              default="Assignee here..."
-              @input="getAssignee"
-            ></base-dropdown>
-          </div>
-          <div class="div3">
-            <input v-model="newDate" type="date" name="" id="" />
-          </div>
-          <div class="div4">
-            <base-dropdown
-              :options="usersNames"
-              default="Reporter here..."
-              @input="getReporter"
-            ></base-dropdown>
-          </div>
-          <div class="div5">
-            <base-dropdown
-              :options="statusNames"
-              default="Status..."
-              @input="getStatus"
-            ></base-dropdown>
-          </div>
-          <div class="div6">
-            <p>Priority<span>*</span></p>
-            <star-rating
-              v-model:rating="newRating"
-              :star-size="25"
-              :max-rating="3"
-              :show-rating="false"
-            ></star-rating>
-          </div>
+        </form>
+      </template>
+      <template #actions>
+        <div class="btn-wrapper">
+          <small v-if="isInvalid">Please fill all required fields!</small>
+          <the-button @click="addTask" :green="true" class="form-btn"
+            >Add</the-button
+          >
+          <the-button :red="true" @click="close" class="form-btn"
+            >Cancel</the-button
+          >
         </div>
-      </form>
-    </template>
-    <template #actions>
-      <div class="btn-wrapper">
-        <small v-if="isInvalid">Please fill all required fields!</small>
-        <the-button @click="addTask" :green="true" class="form-btn"
-          >Add</the-button
-        >
-        <the-button :red="true" @click="close" class="form-btn"
-          >Cancel</the-button
-        >
-      </div>
-    </template>
-  </base-dialog>
-  <the-navigation></the-navigation>
-  <header :class="[!isNavOpened ? 'nav' : '']" class="box">
-    <h2>Tasks</h2>
-    <div class="flex">
-      <div class="search-input">
-        <img src="../assets/search.png" alt="" />
-        <input type="text" placeholder="Search..." />
-      </div>
-      <div class="box-header">
-        <button @click="isBtnClicked = !isBtnClicked">Add Task</button>
-      </div>
-    </div>
-  </header>
-  <main :class="[!isNavOpened ? 'nav' : '']" class="list-container">
-    <overlay-task></overlay-task>
-    <popup-task></popup-task>
-    <section class="list-wrapper">
-      <draggable
-        :options="{ group: 'lists' }"
-        group="lists"
-        ghostClass="ghost"
-        class="list-draggable"
-        :move="checkMove"
-        v-model="myLists"
-      >
-        <div class="list-card" v-for="list in lists" :key="list.id">
-          <Board :id="list.id" :name="list.name" />
+      </template>
+    </base-dialog>
+    <!-- error modal -->
+    <base-dialog :show="isError" color="#fff" width="480px" @close="closeError">
+      <template #default>
+        <div class="form-task">
+          <h3>Oops! Something went wrong! Please, contact the developers...</h3>
         </div>
-      </draggable>
-      <div v-if="!isAddClicked" class="plus">
-        <span @click="toggleAddBtn">+</span>
+      </template>
+      <template #actions>
+        <div class="btn-wrapper">
+          <the-button @click="closeError" class="form-btn">Close</the-button>
+        </div>
+      </template>
+    </base-dialog>
+    <the-navigation></the-navigation>
+    <header :class="[!isNavOpened ? 'nav' : '']" class="box">
+      <h2>Tasks</h2>
+      <div class="flex">
+        <div class="search-input">
+          <img src="../assets/search.png" alt="" />
+          <input type="text" placeholder="Search..." />
+        </div>
+        <div class="box-header">
+          <button @click="isBtnClicked = !isBtnClicked">Add Task</button>
+        </div>
       </div>
-      <input
-        v-else
-        v-focus
-        type="text"
-        class="input-new-list"
-        placeholder="Create a List..."
-        v-model="listName"
-        @keyup.enter="createList"
-      />
-    </section>
-  </main>
+    </header>
+    <main :class="[!isNavOpened ? 'nav' : '']" class="list-container">
+      <overlay-task></overlay-task>
+      <popup-task></popup-task>
+      <section class="list-wrapper">
+        <draggable
+          :options="{ group: 'lists' }"
+          group="lists"
+          ghostClass="ghost"
+          class="list-draggable"
+          :move="checkMove"
+          v-model="myLists"
+        >
+          <div class="list-card" v-for="list in lists" :key="list.id">
+            <Board :id="list.id" :name="list.name" />
+          </div>
+        </draggable>
+        <div v-if="!isAddClicked" class="plus">
+          <span @click="toggleAddBtn">+</span>
+        </div>
+        <input
+          v-else
+          v-focus
+          type="text"
+          class="input-new-list"
+          placeholder="Create a List..."
+          v-model="listName"
+          @keyup.enter="createList"
+        />
+      </section>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -133,6 +148,7 @@ export default {
       isAddClicked: false,
       isBtnClicked: false,
       isInvalid: false,
+      isError: false,
       listName: "",
       desc: null,
       newRating: 1,
@@ -149,16 +165,21 @@ export default {
       },
       async set() {
         // this.$store.dispatch("updateBoard", value);
-        this.$Progress.start();
-        await axios.post(
-          "https://time-tracker.azurewebsites.net/api/Boards/ChangeOrder",
-          {
-            id: this.id,
-            newOrder: this.newOrder,
-          }
-        );
-        await this.$store.dispatch("getLists");
-        this.$Progress.finish();
+        try {
+          this.$Progress.start();
+          await axios.post(
+            "https://time-tracker.azurewebsites.net/api/Boards/ChangeOrder",
+            {
+              id: this.id,
+              newOrder: this.newOrder,
+            }
+          );
+          await this.$store.dispatch("getLists");
+          this.$Progress.finish();
+        } catch (e) {
+          this.$Progress.fail();
+          this.isError = true;
+        }
       },
     },
     lists() {
@@ -184,6 +205,9 @@ export default {
     },
   },
   methods: {
+    closeError() {
+      this.isError = false;
+    },
     toggleAddBtn() {
       this.isAddClicked = true;
     },
@@ -208,15 +232,23 @@ export default {
     async createList() {
       if (this.listName !== "") {
         // this.$store.dispatch("createList", this.listName);
-        this.$Progress.start();
-        await axios.post("https://time-tracker.azurewebsites.net/api/Boards", {
-          name: this.listName,
-          order: this.getMaxOrder,
-        });
-        this.$store.dispatch("getLists");
-        this.$Progress.finish();
-        this.isAddClicked = false;
-        this.listName = "";
+        try {
+          this.$Progress.start();
+          await axios.post(
+            "https://time-tracker.azurewebsites.net/api/Boards",
+            {
+              name: this.listName,
+              order: this.getMaxOrder,
+            }
+          );
+          this.$store.dispatch("getLists");
+          this.$Progress.finish();
+          this.isAddClicked = false;
+          this.listName = "";
+        } catch (e) {
+          this.$Progress.fail();
+          this.isError = true;
+        }
       }
     },
     checkMove(evt) {
@@ -249,8 +281,9 @@ export default {
           this.$Progress.finish();
           this.close();
         } catch (err) {
+          this.isBtnClicked = false;
           this.$Progress.fail();
-          console.log(err.message);
+          this.isError = true;
         }
       } else {
         this.isInvalid = true;

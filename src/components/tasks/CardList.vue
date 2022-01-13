@@ -1,5 +1,5 @@
 <template>
-  <base-dialog v-if="isBtnClicked" color="#fff" width="680px" @close="close">
+  <base-dialog :show="isBtnClicked" color="#fff" width="680px" @close="close">
     <template #default>
       <form class="form-task">
         <h2>Edit the task</h2>
@@ -59,7 +59,7 @@
   </base-dialog>
   <!-- delete pop up -->
   <base-dialog
-    v-if="isDeleteClicked"
+    :show="isDeleteClicked"
     color="#fff"
     width="480px"
     @close="closeDelete"
@@ -80,6 +80,19 @@
           >Delete</the-button
         >
         <the-button @click="closeDelete" class="form-btn">Cancel</the-button>
+      </div>
+    </template>
+  </base-dialog>
+  <!-- error modal -->
+  <base-dialog :show="isError" color="#fff" width="480px" @close="closeError">
+    <template #default>
+      <div class="form-task">
+        <h3>Oops! Something went wrong! Please, contact the developers...</h3>
+      </div>
+    </template>
+    <template #actions>
+      <div class="btn-wrapper">
+        <the-button @click="closeError" class="form-btn">Close</the-button>
       </div>
     </template>
   </base-dialog>
@@ -130,6 +143,7 @@ export default {
     return {
       isBtnClicked: false,
       isDeleteClicked: false,
+      isError: false,
       deletingId: null,
       rating: null,
       date: null,
@@ -144,6 +158,9 @@ export default {
     toggleDelete(id) {
       this.isDeleteClicked = true;
       this.deletingId = id;
+    },
+    closeError() {
+      this.isError = false;
     },
     async deleteTask() {
       this.$Progress.start();
@@ -194,22 +211,35 @@ export default {
         reporterId: this.reporter,
       };
       // console.log(sendObj);
-      this.$Progress.start();
-      await axios.put(
-        `https://time-tracker.azurewebsites.net/api/Tasks/${this.obj.id}`,
-        sendObj
-      );
-      await this.$store.dispatch("getCards");
-      this.$Progress.finish();
+      try {
+        this.$Progress.start();
+        await axios.put(
+          `https://time-tracker.azurewebsites.net/api/Tasks/${this.obj.id}`,
+          sendObj
+        );
+        await this.$store.dispatch("getCards");
+        this.$Progress.finish();
+      } catch (e) {
+        this.$Progress.fail();
+        this.isError = true;
+      }
+
       this.close();
     },
     async togglePopup(id) {
-      const res = await axios.get(
-        `https://time-tracker.azurewebsites.net/api/Tasks/${id}`
-      );
-      this.obj = res.data;
-      // console.log(this.obj);
-      this.isBtnClicked = true;
+      try {
+        this.$Progress.start();
+        const res = await axios.get(
+          `https://time-tracker.azurewebsites.net/api/Tasks/${id}`
+        );
+        this.obj = res.data;
+        // console.log(this.obj);
+        this.isBtnClicked = true;
+        this.$Progress.finish();
+      } catch (e) {
+        this.$Progress.fail();
+        this.isError = true;
+      }
     },
     close() {
       this.isBtnClicked = false;

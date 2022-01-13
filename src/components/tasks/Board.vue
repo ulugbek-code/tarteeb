@@ -1,5 +1,5 @@
 <template>
-  <base-dialog v-if="openDelete" color="#fff" width="480px" @close="close">
+  <base-dialog :show="openDelete" color="#fff" width="480px" @close="close">
     <template #default>
       <form class="form-task">
         <h4>
@@ -44,6 +44,19 @@
           >Delete</the-button
         >
         <the-button @click="close" class="form-btn">Cancel</the-button>
+      </div>
+    </template>
+  </base-dialog>
+  <!-- error modal -->
+  <base-dialog :show="isError" color="#fff" width="480px" @close="closeError">
+    <template #default>
+      <div class="form-task">
+        <h3>Oops! Something went wrong! Please, contact the developers...</h3>
+      </div>
+    </template>
+    <template #actions>
+      <div class="btn-wrapper">
+        <the-button @click="closeError" class="form-btn">Close</the-button>
       </div>
     </template>
   </base-dialog>
@@ -94,6 +107,7 @@ export default {
       openDelete: false,
       moveId: null,
       labelName: this.name,
+      isError: false,
     };
   },
   computed: {
@@ -123,9 +137,12 @@ export default {
           this.isLabel = true;
         } catch ({ response }) {
           this.$Progress.fail();
-          console.log(response.data.detail);
+          this.isError = true;
         }
       }
+    },
+    closeError() {
+      this.isError = false;
     },
     clickDots() {
       this.openDelete = true;
@@ -147,10 +164,11 @@ export default {
         );
         await this.$store.dispatch("getLists");
         await this.$store.dispatch("getCards");
-        this.$Progress.finish();
         this.close();
-      } catch ({ response }) {
-        console.log(response.statusText);
+        this.$Progress.finish();
+      } catch (e) {
+        this.openDelete = false;
+        this.isError = true;
         this.$Progress.fail();
       }
     },

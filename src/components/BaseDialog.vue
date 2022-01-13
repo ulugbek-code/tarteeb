@@ -1,18 +1,22 @@
 <template>
-  <div @click="$emit('close')"></div>
-  <dialog open :style="{ background: color, width: width }">
-    <header v-if="title">
-      <slot name="header">
-        <h2>{{ title }}</h2>
-      </slot>
-    </header>
-    <section>
-      <slot></slot>
-    </section>
-    <ul>
-      <slot name="actions"> </slot>
-    </ul>
-  </dialog>
+  <teleport to="body">
+    <div v-if="show" @click="$emit('close')"></div>
+    <transition name="dialog">
+      <dialog open v-if="show" :style="{ background: color, width: width }">
+        <header v-if="title">
+          <slot name="header">
+            <h2>{{ title }}</h2>
+          </slot>
+        </header>
+        <section>
+          <slot></slot>
+        </section>
+        <ul>
+          <slot name="actions"> </slot>
+        </ul>
+      </dialog>
+    </transition>
+  </teleport>
 </template>
 
 <script>
@@ -28,8 +32,8 @@ export default {
     width: {
       required: false,
     },
-    isOpen: {
-      required: false,
+    show: {
+      required: true,
     },
   },
   emits: ["close"],
@@ -43,11 +47,11 @@ div {
   left: 0;
   height: 100vh;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.55);
   z-index: 100;
 }
 
-dialog {
+/* dialog {
   position: fixed;
   top: 30%;
   left: 50%;
@@ -60,7 +64,21 @@ dialog {
   padding: 0;
   margin: 0;
   background: hsla(0, 0%, 86%, 1);
-  /* overflow: hidden; */
+  overflow: hidden;
+} */
+dialog {
+  position: fixed;
+  top: 18vh;
+  left: 30%;
+  width: 80%;
+  z-index: 100;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background-color: white;
 }
 
 header {
@@ -90,6 +108,20 @@ button {
   outline: none;
   border: none;
   cursor: pointer;
+}
+.dialog-enter-from,
+.dialog-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+.dialog-enter-to,
+.dialog-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: all 0.35s ease;
 }
 </style>
 

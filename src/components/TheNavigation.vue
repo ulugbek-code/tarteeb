@@ -1,5 +1,5 @@
 <template>
-  <base-dialog v-if="isLogOut" color="#fff" width="480px" @close="close">
+  <base-dialog :show="isLogOut" color="#fff" width="480px" @close="close">
     <template #default>
       <form class="form-deleting">
         <h4>Do you really want to log out</h4>
@@ -110,6 +110,29 @@
           <p>Tasks</p>
         </div>
       </router-link>
+      <a class="nav-link" href="http://Loom.com" target="_blank">
+        <div @click="offseting" class="items">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icons"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="#aaa"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <circle cx="12" cy="12" r="9" />
+            <circle cx="12" cy="12" r="1" />
+            <line x1="13.41" y1="10.59" x2="16" y2="8" />
+            <path d="M7 12a5 5 0 0 1 5 -5" />
+          </svg>
+          <p>Loom</p>
+        </div>
+      </a>
       <!-- <router-link class="nav-link" to="/users">
         <div @click="offseting" class="items">
           <svg

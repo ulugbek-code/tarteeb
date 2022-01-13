@@ -1,4 +1,17 @@
 <template>
+  <!-- error modal -->
+  <base-dialog :show="isError" color="#fff" width="480px" @close="closeError">
+    <template #default>
+      <div class="form-task">
+        <h3>Oops! Something went wrong! Please, contact the developers...</h3>
+      </div>
+    </template>
+    <template #actions>
+      <div class="btn-wrapper">
+        <the-button @click="closeError" class="form-btn">Close</the-button>
+      </div>
+    </template>
+  </base-dialog>
   <input
     class="input-card"
     type="text"
@@ -15,43 +28,52 @@ export default {
   data() {
     return {
       cardName: "",
+      isError: false,
     };
   },
   methods: {
+    closeError() {
+      this.isError = false;
+    },
     async createCard() {
       if (this.cardName !== "") {
-        let tomorrow = new Date(
-          new Date().setDate(new Date().getDate() + 2)
-        ).toISOString();
+        try {
+          let tomorrow = new Date(
+            new Date().setDate(new Date().getDate() + 2)
+          ).toISOString();
 
-        const res = {
-          description: this.cardName,
-          priority: 1,
-          deadline: tomorrow,
-          createdBy: this.$store.getters.loginUser.id,
-          statusId: this.listId,
-          userId: 4,
-          reporterId: this.$store.getters.loginUser.id,
-        };
-        // console.log(res);
-        const headers = {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        };
-        this.$Progress.start();
-        await axios.post(
-          "https://time-tracker.azurewebsites.net/api/Tasks",
-          res,
-          { headers }
-        );
-        // const card = {
-        //   listId: this.listId,
-        //   name: this.cardName,
-        // };
-        // this.$store.dispatch("createCard", card);
-        this.cardName = "";
-        this.$store.dispatch("getCards");
-        this.$Progress.finish();
+          const res = {
+            description: this.cardName,
+            priority: 1,
+            deadline: tomorrow,
+            createdBy: this.$store.getters.loginUser.id,
+            statusId: this.listId,
+            userId: 4, //assignee
+            reporterId: this.$store.getters.loginUser.id,
+          };
+          // console.log(res);
+          const headers = {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          };
+          this.$Progress.start();
+          await axios.post(
+            "https://time-tracker.azurewebsites.net/api/Tasks",
+            res,
+            { headers }
+          );
+          // const card = {
+          //   listId: this.listId,
+          //   name: this.cardName,
+          // };
+          // this.$store.dispatch("createCard", card);
+          this.cardName = "";
+          this.$store.dispatch("getCards");
+          this.$Progress.finish();
+        } catch (e) {
+          this.$Progress.fail();
+          this.isError = true;
+        }
       }
     },
   },
@@ -59,6 +81,9 @@ export default {
 </script>
 
 <style scoped>
+.form-task * {
+  color: #444;
+}
 .input-card {
   position: relative;
   background-color: white;

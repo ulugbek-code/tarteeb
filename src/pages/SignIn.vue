@@ -1,38 +1,40 @@
 <template>
-  <div class="sign-in">
-    <div class="form-img">
-      <img src="../assets/SignInHat.svg" alt="" />
+  <div id="sign-in-wrapper">
+    <div @click="toggleError" class="sign-in">
+      <div class="form-img">
+        <img src="../assets/SignInHat.svg" alt="" />
+      </div>
+      <h3>Log in to your account</h3>
+      <form @submit.prevent="" class="form">
+        <div class="input-container">
+          <input
+            v-model="userData.phoneNumber"
+            @input="enforcePhoneFormat()"
+            @keydown.enter="signIn"
+            type="tel"
+            required
+          />
+          <span>Phone number</span>
+        </div>
+        <div class="input-container">
+          <input
+            v-model.trim="userData.password"
+            @keydown.enter="signIn"
+            :type="typeOf"
+            required
+          />
+          <span id="place">Password</span>
+          <small @click.stop="toggleType">{{
+            typeOf === "password" ? "show" : "hide"
+          }}</small>
+        </div>
+        <p id="error" v-if="error">{{ error }}</p>
+        <button @click="signIn" class="btn">Sign In</button>
+      </form>
+      <!-- <p>Don't have an account yet? <router-link to="/signUp">Sign Up</router-link></p> -->
     </div>
-    <h3>Log in to your account</h3>
-    <form @submit.prevent="" class="form">
-      <div class="input-container">
-        <input
-          v-model="userData.phoneNumber"
-          @input="enforcePhoneFormat()"
-          @keydown.enter="signIn"
-          type="tel"
-          required
-        />
-        <span>Phone number</span>
-      </div>
-      <div class="input-container">
-        <input
-          v-model.trim="userData.password"
-          @keydown.enter="signIn"
-          :type="typeOf"
-          required
-        />
-        <span id="place">Password</span>
-        <small @click.stop="toggleType">{{
-          typeOf === "password" ? "show" : "hide"
-        }}</small>
-      </div>
-      <p id="error" v-if="error">{{ error }}</p>
-      <button @click="signIn" class="btn">Sign In</button>
-    </form>
-    <!-- <p>Don't have an account yet? <router-link to="/signUp">Sign Up</router-link></p> -->
+    <img class="back" src="../assets/SignInBG.svg" alt="" />
   </div>
-  <img class="back" src="../assets/SignInBG.svg" alt="" />
 </template>
 
 <script>
@@ -59,6 +61,9 @@ export default {
     },
   },
   methods: {
+    toggleError() {
+      this.error = null;
+    },
     toggleType() {
       if (this.typeOf === "password") {
         this.typeOf = "text";
@@ -107,8 +112,6 @@ export default {
           this.error = err.response.data.title;
           this.$Progress.fail();
         }
-      } else {
-        alert("eh");
       }
     },
   },
@@ -116,11 +119,18 @@ export default {
 </script>
 
 <style scoped>
+#sign-in-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .sign-in {
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
   border-radius: 25px;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.08);
   padding: 3rem;
@@ -245,21 +255,5 @@ small {
   margin: 0;
   text-align: center;
   color: rgb(221, 78, 78);
-}
-@-moz-keyframes spin {
-  100% {
-    -moz-transform: rotate(-360deg);
-  }
-}
-@-webkit-keyframes spin {
-  100% {
-    -webkit-transform: rotate(-360deg);
-  }
-}
-@keyframes spin {
-  100% {
-    -webkit-transform: rotate(-360deg);
-    transform: rotate(-360deg);
-  }
 }
 </style>
