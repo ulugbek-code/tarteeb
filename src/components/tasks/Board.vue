@@ -112,14 +112,19 @@ export default {
     },
     async changeLabelName() {
       if (this.labelName !== "") {
-        this.$Progress.start();
-        await axios.put("https://time-tracker.azurewebsites.net/api/Boards", {
-          id: this.id,
-          newName: this.labelName,
-        });
-        await this.$store.dispatch("getLists");
-        this.$Progress.finish();
-        this.isLabel = true;
+        try {
+          this.$Progress.start();
+          await axios.put("https://time-tracker.azurewebsites.net/api/Boards", {
+            id: this.id,
+            newName: this.labelName,
+          });
+          await this.$store.dispatch("getLists");
+          this.$Progress.finish();
+          this.isLabel = true;
+        } catch ({ response }) {
+          this.$Progress.fail();
+          console.log(response.data.detail);
+        }
       }
     },
     clickDots() {
@@ -135,14 +140,19 @@ export default {
       this.moveId = arr[0];
     },
     async deleteBoard() {
-      this.$Progress.start();
-      await axios.delete(
-        `https://time-tracker.azurewebsites.net/api/Boards/${this.id}/${this.moveId}`
-      );
-      await this.$store.dispatch("getLists");
-      await this.$store.dispatch("getCards");
-      this.$Progress.finish();
-      this.close();
+      try {
+        this.$Progress.start();
+        await axios.delete(
+          `https://time-tracker.azurewebsites.net/api/Boards/${this.id}/${this.moveId}`
+        );
+        await this.$store.dispatch("getLists");
+        await this.$store.dispatch("getCards");
+        this.$Progress.finish();
+        this.close();
+      } catch ({ response }) {
+        console.log(response.statusText);
+        this.$Progress.fail();
+      }
     },
   },
   mounted() {
