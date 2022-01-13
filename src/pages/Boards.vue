@@ -106,7 +106,6 @@
 
 <script>
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 import { VueDraggableNext } from "vue-draggable-next";
 import StarRating from "vue-star-rating";
 import Board from "../components/tasks/Board.vue";
@@ -185,10 +184,6 @@ export default {
     },
   },
   methods: {
-    decodeToken() {
-      let decoded = jwt_decode(this.loginUser.token);
-      localStorage.setItem("decodedToken", JSON.stringify(decoded));
-    },
     toggleAddBtn() {
       this.isAddClicked = true;
     },
@@ -273,8 +268,6 @@ export default {
   created() {
     this.$store.dispatch("getLists");
     this.$store.dispatch("getUsers");
-
-    this.decodeToken();
   },
 };
 </script>
@@ -457,12 +450,12 @@ header {
   padding: 10px;
   border-radius: 5px;
   background-color: rgba(235, 236, 240, 0.5);
+  color: rgba(24, 43, 77, 1);
+  font-family: "Poppins", sans-serif;
   min-width: 260px;
 }
-
 .input-new-list::placeholder {
   color: rgba(68, 68, 68, 0.8);
-  font-family: "Poppins", sans-serif;
 }
 .list-card {
   position: relative;

@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+// import jwt_decode from "jwt-decode";
 
 export default {
   data() {
@@ -57,24 +58,27 @@ export default {
           this.userData.phoneNumber.substring(11);
       }
     },
-    async signIn() {
-      // console.log(this.password, this.phoneNumber);
-      this.$Progress.start();
-      const response = await axios.post(
-        "https://time-tracker.azurewebsites.net/api/user/login",
-        {
-          phone: "998914490133",
-          password: "test",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      localStorage.setItem("loginUser", JSON.stringify(response.data));
-      this.$router.replace("/");
-      this.$Progress.finish();
+    signIn() {
+      console.log(this.userData.phoneNumber);
+
+      // this.$Progress.start();
+      // const response = await axios.post(
+      //   "https://time-tracker.azurewebsites.net/api/user/login",
+      //   {
+      //     phone: "998914490133",
+      //     password: "test",
+      //   },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      // this.$Progress.finish();
+      // await localStorage.setItem("loginUser", JSON.stringify(response.data));
+      // let decoded = jwt_decode(this.loginUser.token);
+      // localStorage.setItem("decodedToken", JSON.stringify(decoded));
+      // this.$router.replace("/");
     },
   },
 };

@@ -30,8 +30,11 @@
     <div class="info">
       <img src="../assets/unknown.png" alt="" />
       <div class="sub-info">
-        <h3>{{ decoded.given_name }} {{ decoded.unique_name }}</h3>
-        <p>{{ decoded.role }}</p>
+        <h3>
+          {{ decoded ? decoded.given_name : "Firstname" }}
+          {{ decoded ? decoded.unique_name.substr(0, 1) : "L" }}.
+        </h3>
+        <p>{{ decoded ? decoded.role : "Admin" }}</p>
       </div>
     </div>
     <div class="nav-li">
@@ -221,7 +224,8 @@ export default {
       this.isLogOut = true;
     },
     deleteToken() {
-      localStorage.removeItem("loginUser");
+      // localStorage.removeItem("loginUser");
+      localStorage.clear();
       this.close();
       this.$router.replace("/signIn");
     },
