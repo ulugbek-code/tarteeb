@@ -4,21 +4,31 @@
       <img src="../assets/SignInHat.svg" alt="" />
     </div>
     <h3>Log in to your account</h3>
-    <form @submit.prevent="signIn" class="form">
+    <form @submit.prevent="" class="form">
       <div class="input-container">
         <input
           v-model="userData.phoneNumber"
           @input="enforcePhoneFormat()"
+          @keydown.enter="signIn"
           type="tel"
           required
         />
         <span>Phone number</span>
       </div>
       <div class="input-container">
-        <input v-model.trim="userData.password" type="password" required />
-        <span>Password</span>
+        <input
+          v-model.trim="userData.password"
+          @keydown.enter="signIn"
+          :type="typeOf"
+          required
+        />
+        <span id="place">Password</span>
+        <small @click.stop="toggleType">{{
+          typeOf === "password" ? "show" : "hide"
+        }}</small>
       </div>
-      <button class="btn">Sign In</button>
+      <p id="error" v-if="error">{{ error }}</p>
+      <button @click="signIn" class="btn">Sign In</button>
     </form>
     <!-- <p>Don't have an account yet? <router-link to="/signUp">Sign Up</router-link></p> -->
   </div>
@@ -26,12 +36,14 @@
 </template>
 
 <script>
-// import axios from "axios";
-// import jwt_decode from "jwt-decode";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 export default {
   data() {
     return {
+      typeOf: "password",
+      error: null,
       userData: {
         phoneNumber: "",
         password: "",
@@ -42,8 +54,18 @@ export default {
     loginUser() {
       return this.$store.getters["loginUser"];
     },
+    resolvedNumber() {
+      return "998" + this.userData.phoneNumber.replace(/[() \s-]+/g, "");
+    },
   },
   methods: {
+    toggleType() {
+      if (this.typeOf === "password") {
+        this.typeOf = "text";
+      } else {
+        this.typeOf = "password";
+      }
+    },
     enforcePhoneFormat() {
       let x = this.userData.phoneNumber
         .replace(/\D/g, "")
@@ -58,27 +80,36 @@ export default {
           this.userData.phoneNumber.substring(11);
       }
     },
-    signIn() {
-      console.log(this.userData.phoneNumber);
-
-      // this.$Progress.start();
-      // const response = await axios.post(
-      //   "https://time-tracker.azurewebsites.net/api/user/login",
-      //   {
-      //     phone: "998914490133",
-      //     password: "test",
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      // this.$Progress.finish();
-      // await localStorage.setItem("loginUser", JSON.stringify(response.data));
-      // let decoded = jwt_decode(this.loginUser.token);
-      // localStorage.setItem("decodedToken", JSON.stringify(decoded));
-      // this.$router.replace("/");
+    async signIn() {
+      // console.log(this.resolvedNumber);
+      if (this.userData.phoneNumber !== "" && this.userData.password !== "") {
+        try {
+          this.$Progress.start();
+          const response = await axios.post(
+            "https://time-tracker.azurewebsites.net/api/user/login",
+            {
+              phone: this.resolvedNumber, //"998914490133",
+              password: this.userData.password,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          localStorage.setItem("loginUser", JSON.stringify(response.data));
+          const token = await JSON.parse(localStorage.getItem("loginUser"));
+          let decoded = jwt_decode(token.token);
+          localStorage.setItem("decodedToken", JSON.stringify(decoded));
+          this.$router.replace("/");
+          this.$Progress.finish();
+        } catch (err) {
+          this.error = err.response.data.title;
+          this.$Progress.fail();
+        }
+      } else {
+        alert("eh");
+      }
     },
   },
 };
@@ -174,19 +205,6 @@ export default {
   transform: translate(-50%, 0);
   z-index: 0;
 }
-div.invalid input {
-  border: 1px solid red;
-  margin-bottom: 30px;
-}
-div.invalid span,
-div.invalid small {
-  color: red;
-}
-div.invalid small {
-  position: absolute;
-  bottom: 0;
-  left: 25%;
-}
 .input-container span {
   color: rgba(68, 68, 68, 0.6);
   position: absolute;
@@ -214,6 +232,19 @@ div.invalid small {
   -moz-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
   /* background: #4361EE; */
+}
+small {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  right: 0;
+  top: 35%;
+  cursor: pointer;
+}
+#error {
+  margin: 0;
+  text-align: center;
+  color: rgb(221, 78, 78);
 }
 @-moz-keyframes spin {
   100% {

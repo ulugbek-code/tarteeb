@@ -234,25 +234,30 @@ export default {
         this.newStatus &&
         this.newDate
       ) {
-        this.$Progress.start();
-        await axios.post("https://time-tracker.azurewebsites.net/api/Tasks", {
-          description: this.desc,
-          priority: this.newRating,
-          deadline: this.newDate + "T00:00:00",
-          createdBy: this.$store.getters.loginUser.id,
-          statusId: this.newStatus,
-          userId: this.newAssignee,
-          reporterId: this.newReporter,
-        });
-        await this.$store.dispatch("getCards");
-        this.$Progress.finish();
-        (this.desc = null),
-          (this.newRating = 1),
-          (this.newAssignee = null),
-          (this.newReporter = null),
-          (this.newStatus = null),
-          (this.newDate = null);
-        this.close();
+        try {
+          this.$Progress.start();
+          await axios.post("https://time-tracker.azurewebsites.net/api/Task", {
+            description: this.desc,
+            priority: this.newRating,
+            deadline: this.newDate + "T00:00:00",
+            createdBy: this.$store.getters.loginUser.id,
+            statusId: this.newStatus,
+            userId: this.newAssignee,
+            reporterId: this.newReporter,
+          });
+          await this.$store.dispatch("getCards");
+          this.$Progress.finish();
+          (this.desc = null),
+            (this.newRating = 1),
+            (this.newAssignee = null),
+            (this.newReporter = null),
+            (this.newStatus = null),
+            (this.newDate = null);
+          this.close();
+        } catch (err) {
+          this.$Progress.fail();
+          console.log(err.response.status);
+        }
       } else {
         this.isInvalid = true;
       }

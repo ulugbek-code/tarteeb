@@ -21,7 +21,9 @@ export default {
       "https://time-tracker.azurewebsites.net/api/user/getUsersByManagerId",
       {
         headers: {
-          Authorization: `Bearer ${context.state.loginUser.token}`,
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("loginUser")).token
+          }`,
         },
       }
     );
