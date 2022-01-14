@@ -148,6 +148,7 @@ export default {
   margin-bottom: 0.2rem;
 }
 .sign-in h3 {
+  color: rgb(34, 34, 34);
   text-align: center;
   font-family: "Poppins", "sans-serif";
   margin: 0.9rem 0 0.6rem;

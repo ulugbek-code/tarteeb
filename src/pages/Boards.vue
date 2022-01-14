@@ -505,13 +505,13 @@ header {
   width: 36px;
   text-align: center;
   cursor: pointer;
-  background: transparent;
-  box-shadow: 2px -0.5px 2px 1px #dddfe0;
+  /* background: transparent;
+  box-shadow: 2px -0.5px 2px 1px #dddfe0; */
 }
 .plus span {
   background: #f2f3f6;
   font-size: 24px;
-  padding: 2px 10px;
+  padding: 2px 12px;
   color: rgba(24, 43, 77, 1);
   border-radius: 4px;
   transition: all 0.2s ease;

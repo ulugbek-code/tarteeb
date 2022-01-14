@@ -1,5 +1,5 @@
 <template>
-  <base-dialog :show="isLogOut" color="#fff" width="480px" @close="close">
+  <base-dialog :show="isLogOut" color="#fff" width="580px" @close="close">
     <template #default>
       <form class="form-deleting">
         <h4>Do you really want to log out</h4>
@@ -107,6 +107,7 @@
             />
             <path d="M16 7h4" />
           </svg>
+          <span class="tooltiptext">Tasks</span>
           <p>Tasks</p>
         </div>
       </router-link>
@@ -130,6 +131,7 @@
             <line x1="13.41" y1="10.59" x2="16" y2="8" />
             <path d="M7 12a5 5 0 0 1 5 -5" />
           </svg>
+          <span class="tooltiptext">Loom</span>
           <p>Loom</p>
         </div>
       </a>
@@ -206,6 +208,7 @@
         />
         <path d="M7 12h14l-3 -3m0 6l3 -3" />
       </svg>
+      <span class="tooltiptext">Log Out</span>
       <p>Log Out</p>
     </div>
   </nav>
@@ -257,6 +260,19 @@ export default {
 </script>
 
 <style scoped>
+.tooltiptext {
+  visibility: hidden;
+  background-color: rgb(99, 101, 111);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px;
+  width: fit-content;
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  z-index: 1;
+}
 #marker {
   position: absolute;
   left: -10%;
@@ -274,7 +290,7 @@ nav {
   z-index: 10;
   top: 0;
   left: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   background: rgba(19, 23, 40, 1);
   padding-left: 1.5rem;
   transition: all 0.4s ease;
@@ -302,8 +318,11 @@ nav.openedSideBar h1 {
   display: flex;
   justify-content: center;
 }
+nav.openedSideBar .items:hover .tooltiptext {
+  visibility: visible;
+}
 nav.openedSideBar .log-out {
-  left: 40%;
+  left: 22%;
 }
 nav.openedSideBar .hamburger-menu {
   margin-left: 1rem;
@@ -399,10 +418,12 @@ nav h1 {
 }
 .items {
   display: flex;
+  align-items: center;
+  position: relative;
   font-size: 16px;
   margin: 1rem 0;
   font-weight: 300;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .log-out {
   width: 80%;
@@ -412,6 +433,7 @@ nav h1 {
   color: rgba(255, 185, 62, 1);
   font-weight: 300;
   cursor: pointer;
+  /* background: chartreuse; */
   /* animation: coming 0.6s ease; */
 }
 .log-out .icons {
