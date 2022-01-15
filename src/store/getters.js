@@ -22,16 +22,10 @@ export default {
   lists(state) {
     return state.lists;
   },
-  cards(state) {
-    return state.cards;
-  },
   cardss(state) {
     return state.cardss;
   },
-  overlay(state) {
-    return state.overlay;
-  },
-  currentData(state) {
-    return state.currentData;
-  },
+  // currentData(state) {
+  //   return state.currentData;
+  // },
 };

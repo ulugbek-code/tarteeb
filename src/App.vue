@@ -27,8 +27,28 @@ html {
 }
 input {
   border: none;
-  /* font-size: 15px; */
   outline: none;
+}
+/* width */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #eeeeee;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cecdcd;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(187, 183, 183);
 }
 .route-enter-from {
   opacity: 0;

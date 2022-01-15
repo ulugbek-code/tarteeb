@@ -20,7 +20,6 @@
             <template v-if="getBoardsNames.length">
               <p>New task layout:</p>
               <span><img src="../../assets/next.png" alt="" /></span>
-
               <base-dropdown
                 :options="getBoardsNames"
                 @input="getInput"
@@ -78,7 +77,7 @@
       />
     </div>
     <div class="list-content">
-      <CardsList :listId="id" :listName="name" />
+      <CardsList :listId="id" :listName="name" :searchInput="search" />
     </div>
     <div class="list-footer">
       <card-task :listId="id"></card-task>
@@ -93,7 +92,7 @@ import CardTask from "./CardTask.vue";
 import focusInput from "../../directives/focusInput";
 
 export default {
-  props: ["id", "name"],
+  props: ["id", "name", "search"],
   components: {
     CardsList,
     CardTask,
@@ -214,7 +213,8 @@ export default {
   flex-direction: column;
   min-width: 280px;
   max-width: 280px;
-  height: 30rem;
+  min-height: 30rem;
+  height: 69vh;
   background-color: rgba(235, 236, 240, 1);
   padding: 5px 10px 0px 10px;
   box-shadow: 1.5px 1.5px 1.5px 0.1px rgba(255, 255, 255, 0.1);
@@ -222,6 +222,9 @@ export default {
   border-bottom-left-radius: 10px;
   overflow-y: scroll;
 }
+/* ::-webkit-scrollbar {
+  display: none;
+} */
 .label-name {
   outline: none;
   min-width: 280px;

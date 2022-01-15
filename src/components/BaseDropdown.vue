@@ -4,17 +4,28 @@
       {{ selected }}
     </div>
     <div class="items" :class="{ selectHide: !open }">
-      <div
-        v-for="(option, i) of options"
-        :key="i"
-        @click="
-          selected = option;
-          open = false;
-          $emit('input', option);
-        "
-      >
-        {{ option }}
-      </div>
+      <template v-if="!withObj">
+        <div
+          v-for="(option, i) of options"
+          :key="i"
+          @click="
+            selected = option;
+            open = false;
+            $emit('input', option);
+          "
+        >
+          {{ option }}
+        </div>
+      </template>
+      <template v-else>
+        <div
+          v-for="option of options"
+          :key="option.id"
+          @click="sendData(option)"
+        >
+          {{ `${option.firstName} ${option.lastName}` }}
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -39,6 +50,9 @@ export default {
       required: false,
       default: 0,
     },
+    withObj: {
+      required: false,
+    },
   },
   data() {
     return {
@@ -49,6 +63,13 @@ export default {
         : null,
       open: false,
     };
+  },
+  methods: {
+    sendData(option) {
+      this.selected = `${option.firstName} ${option.lastName}`;
+      this.open = false;
+      this.$emit("input", option.id);
+    },
   },
   // mounted() {
   //   this.$emit("input", this.selected);
@@ -93,6 +114,8 @@ export default {
 }
 
 .custom-select .items {
+  max-height: 14rem;
+  overflow-y: scroll;
   color: rgb(68, 68, 68);
   border-radius: 0px 0px 6px 6px;
   position: absolute;
@@ -101,7 +124,9 @@ export default {
   right: 0;
   z-index: 100;
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 .custom-select .items div {
   color: rgb(68, 68, 68);
   border-top: 0.1px solid rgba(68, 68, 68, 0.1);

@@ -15,6 +15,7 @@
             <div class="div2">
               <base-dropdown
                 :options="usersNames"
+                :withObj="true"
                 default="Assignee here..."
                 @input="getAssignee"
               ></base-dropdown>
@@ -25,6 +26,7 @@
             <div class="div4">
               <base-dropdown
                 :options="usersNames"
+                :withObj="true"
                 default="Reporter here..."
                 @input="getReporter"
               ></base-dropdown>
@@ -79,7 +81,7 @@
       <div class="flex">
         <div class="search-input">
           <img src="../assets/search.png" alt="" />
-          <input type="text" placeholder="Search..." />
+          <input v-model="search" type="text" placeholder="Search..." />
         </div>
         <div class="box-header">
           <button @click="isBtnClicked = !isBtnClicked">Add Task</button>
@@ -99,7 +101,7 @@
           v-model="myLists"
         >
           <div class="list-card" v-for="list in lists" :key="list.id">
-            <Board :id="list.id" :name="list.name" />
+            <Board :search="search" :id="list.id" :name="list.name" />
           </div>
         </draggable>
         <div v-if="!isAddClicked" class="plus">
@@ -156,6 +158,7 @@ export default {
       newReporter: null,
       newStatus: null,
       newDate: null,
+      search: "",
     };
   },
   computed: {
@@ -194,11 +197,20 @@ export default {
     users() {
       return this.$store.getters["users"];
     },
-    loginUser() {
-      return this.$store.getters["loginUser"];
+    getLoginUser() {
+      let login = JSON.parse(localStorage.getItem("decodedToken"));
+      let login2 = {
+        id: parseInt(login.nameid),
+        firstName: login.given_name,
+        lastName: login.unique_name,
+      };
+      return login2;
     },
     usersNames() {
-      return this.users.map((user) => `${user.firstName} ${user.lastName}`);
+      // return this.users.map((user) => `${user.firstName} ${user.lastName}`);
+      let users = this.$store.getters["users"];
+      users.push(this.getLoginUser);
+      return users;
     },
     statusNames() {
       return this.lists.map((list) => list.name);
@@ -212,16 +224,10 @@ export default {
       this.isAddClicked = true;
     },
     getAssignee(val) {
-      const first = val.substr(0, val.indexOf(" "));
-      this.newAssignee = this.users
-        .filter((user) => user.firstName === first)
-        .map((user) => user.id)[0];
+      this.newAssignee = val;
     },
     getReporter(val) {
-      const first = val.substr(0, val.indexOf(" "));
-      this.newReporter = this.users
-        .filter((user) => user.firstName === first)
-        .map((user) => user.id)[0];
+      this.newReporter = val;
     },
     getStatus(val) {
       const i = this.lists

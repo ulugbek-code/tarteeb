@@ -12,6 +12,7 @@
             <base-dropdown
               :options="getUsers"
               :default="obj.assignee.firstName + ' ' + obj.assignee.lastName"
+              :withObj="true"
               @input="getAssignee"
             ></base-dropdown>
           </div>
@@ -23,6 +24,7 @@
             <base-dropdown
               :options="getUsers"
               :default="obj.reporter.firstName + ' ' + obj.reporter.lastName"
+              :withObj="true"
               @input="getReporter"
             ></base-dropdown>
           </div>
@@ -96,10 +98,14 @@
       </div>
     </template>
   </base-dialog>
-  <draggable :options="{ group: 'cardss' }" group="cardss" ghostClass="ghost">
+  <draggable
+    :options="{ group: 'filteredCards' }"
+    group="filteredCards"
+    ghostClass="ghost"
+  >
     <div
       class="element-card"
-      v-for="card in cardss"
+      v-for="card in filteredCards"
       :key="card.id"
       @click="togglePopup(card.id)"
     >
@@ -134,7 +140,7 @@ import { VueDraggableNext } from "vue-draggable-next";
 import StarRating from "vue-star-rating";
 
 export default {
-  props: ["listId", "listName"],
+  props: ["listId", "listName", "searchInput"],
   components: {
     draggable: VueDraggableNext,
     StarRating,
@@ -176,39 +182,12 @@ export default {
       this.isDeleteClicked = false;
     },
     getAssignee(val) {
-      const users = this.$store.getters["users"];
-      const first = val.substr(0, val.indexOf(" "));
-      if (
-        first === JSON.parse(localStorage.getItem("decodedToken")).given_name
-      ) {
-        this.assignee = +JSON.parse(localStorage.getItem("decodedToken"))
-          .nameid;
-        // console.log(this.assignee);
-      } else {
-        this.assignee = users
-          .filter((user) => user.firstName === first)
-          .map((user) => user.id)[0];
-        // console.log(this.assignee);
-      }
+      // console.log(val);
+      this.assignee = val;
     },
-    // getDate(val) {
-    //   this.date = val;
-    // },
     getReporter(val) {
-      const users = this.$store.getters["users"];
-      const first = val.substr(0, val.indexOf(" "));
-      if (
-        first === JSON.parse(localStorage.getItem("decodedToken")).given_name
-      ) {
-        this.reporter = +JSON.parse(localStorage.getItem("decodedToken"))
-          .nameid;
-        console.log(this.reporter);
-      } else {
-        this.reporter = users
-          .filter((user) => user.firstName === first)
-          .map((user) => user.id)[0];
-        console.log(this.reporter);
-      }
+      // console.log(val);
+      this.reporter = val;
     },
     getStatus(val) {
       const i = this.getLists
@@ -262,6 +241,12 @@ export default {
     },
   },
   computed: {
+    filteredCards() {
+      // I used filteredCards instead of cardss
+      return this.cardss.filter((card) =>
+        card.description.match(this.searchInput)
+      );
+    },
     cardss() {
       const cards = this.$store.getters["cardss"];
       return cards.filter((card) => {
@@ -279,12 +264,16 @@ export default {
       return this.getLists.map((list) => list.name);
     },
     getLoginUser() {
-      const login = JSON.parse(localStorage.getItem("decodedToken"));
-      return login.given_name + " " + login.unique_name;
+      let login = JSON.parse(localStorage.getItem("decodedToken"));
+      let login2 = {
+        id: parseInt(login.nameid),
+        firstName: login.given_name,
+        lastName: login.unique_name,
+      };
+      return login2;
     },
     getUsers() {
       let users = this.$store.getters["users"];
-      users = users.map((user) => `${user.firstName} ${user.lastName}`);
       users.push(this.getLoginUser);
       return users;
     },
