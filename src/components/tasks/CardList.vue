@@ -178,10 +178,18 @@ export default {
     getAssignee(val) {
       const users = this.$store.getters["users"];
       const first = val.substr(0, val.indexOf(" "));
-      this.assignee = users
-        .filter((user) => user.firstName === first)
-        .map((user) => user.id)[0];
-      // console.log(this.assignee);
+      if (
+        first === JSON.parse(localStorage.getItem("decodedToken")).given_name
+      ) {
+        this.assignee = +JSON.parse(localStorage.getItem("decodedToken"))
+          .nameid;
+        // console.log(this.assignee);
+      } else {
+        this.assignee = users
+          .filter((user) => user.firstName === first)
+          .map((user) => user.id)[0];
+        // console.log(this.assignee);
+      }
     },
     // getDate(val) {
     //   this.date = val;
@@ -189,10 +197,18 @@ export default {
     getReporter(val) {
       const users = this.$store.getters["users"];
       const first = val.substr(0, val.indexOf(" "));
-      this.reporter = users
-        .filter((user) => user.firstName === first)
-        .map((user) => user.id)[0];
-      // console.log(this.reporter);
+      if (
+        first === JSON.parse(localStorage.getItem("decodedToken")).given_name
+      ) {
+        this.reporter = +JSON.parse(localStorage.getItem("decodedToken"))
+          .nameid;
+        console.log(this.reporter);
+      } else {
+        this.reporter = users
+          .filter((user) => user.firstName === first)
+          .map((user) => user.id)[0];
+        console.log(this.reporter);
+      }
     },
     getStatus(val) {
       const i = this.getLists
@@ -262,9 +278,15 @@ export default {
     listsName() {
       return this.getLists.map((list) => list.name);
     },
+    getLoginUser() {
+      const login = JSON.parse(localStorage.getItem("decodedToken"));
+      return login.given_name + " " + login.unique_name;
+    },
     getUsers() {
-      const users = this.$store.getters["users"];
-      return users.map((user) => `${user.firstName} ${user.lastName}`);
+      let users = this.$store.getters["users"];
+      users = users.map((user) => `${user.firstName} ${user.lastName}`);
+      users.push(this.getLoginUser);
+      return users;
     },
     overlayIsActive() {
       return this.$store.getters["overlay"];
@@ -299,7 +321,7 @@ export default {
   border-radius: 5px;
   min-height: 30px;
   margin-bottom: 10px;
-  word-break: break-all;
+  word-break: break-word;
   text-align: left;
   font-size: 15px;
   cursor: pointer;
@@ -313,6 +335,9 @@ export default {
 }
 .desc {
   min-height: 31px;
+}
+.desc p {
+  width: 85%;
 }
 #three-dots {
   display: none;

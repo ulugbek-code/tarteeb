@@ -182,6 +182,9 @@ export default {
 </script>
 
 <style scoped>
+/* .list-body {
+  overflow-y: scroll;
+} */
 .list-body:hover .list-footer {
   display: block;
 }
@@ -206,18 +209,18 @@ export default {
   display: initial;
 }
 .list-content {
-  overflow-y: scroll;
   position: relative;
   display: flex;
   flex-direction: column;
   min-width: 280px;
   max-width: 280px;
-  height: auto;
+  height: 30rem;
   background-color: rgba(235, 236, 240, 1);
   padding: 5px 10px 0px 10px;
   box-shadow: 1.5px 1.5px 1.5px 0.1px rgba(255, 255, 255, 0.1);
   color: rgba(24, 43, 77, 1);
   border-bottom-left-radius: 10px;
+  overflow-y: scroll;
 }
 .label-name {
   outline: none;

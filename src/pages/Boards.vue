@@ -87,8 +87,8 @@
       </div>
     </header>
     <main :class="[!isNavOpened ? 'nav' : '']" class="list-container">
-      <overlay-task></overlay-task>
-      <popup-task></popup-task>
+      <!-- <overlay-task></overlay-task>
+      <popup-task></popup-task> -->
       <section class="list-wrapper">
         <draggable
           :options="{ group: 'lists' }"
@@ -124,8 +124,8 @@ import axios from "axios";
 import { VueDraggableNext } from "vue-draggable-next";
 import StarRating from "vue-star-rating";
 import Board from "../components/tasks/Board.vue";
-import OverlayTask from "../components/tasks/OverlayTask.vue";
-import PopupTask from "../components/tasks/PopupTask.vue";
+// import OverlayTask from "../components/tasks/OverlayTask.vue";
+// import PopupTask from "../components/tasks/PopupTask.vue";
 import BaseDropdown from "../components/BaseDropdown.vue";
 import focusInput from "../directives/focusInput";
 
@@ -134,8 +134,8 @@ export default {
     draggable: VueDraggableNext,
     StarRating,
     Board,
-    PopupTask,
-    OverlayTask,
+    // PopupTask,
+    // OverlayTask,
     BaseDropdown,
   },
   directives: {

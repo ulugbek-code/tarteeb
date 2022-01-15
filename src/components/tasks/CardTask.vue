@@ -15,7 +15,7 @@
   <input
     class="input-card"
     type="text"
-    placeholder="Create a Card"
+    placeholder="+ Add new task..."
     v-model.trim="cardName"
     @keyup.enter="createCard"
   />
@@ -86,7 +86,8 @@ export default {
 }
 .input-card {
   position: relative;
-  background-color: white;
+  color: rgb(56, 60, 84);
+  background-color: rgb(199, 209, 241);
   min-height: 30px;
   width: 100%;
   display: flex;
