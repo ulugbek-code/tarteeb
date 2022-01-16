@@ -103,34 +103,36 @@
     group="filteredCards"
     ghostClass="ghost"
   >
-    <div
-      class="element-card"
-      v-for="card in filteredCards"
-      :key="card.id"
-      @click="togglePopup(card.id)"
-    >
-      <div class="desc">
-        <p>{{ card.description }}</p>
-        <span @click.stop="toggleDelete(card.id)" id="three-dots">
-          <img src="../../assets/trash.svg" alt="" />
-        </span>
-      </div>
-      <div class="priority">
-        <div>
-          <p>TT-{{ card.id }}</p>
-          <star-rating
-            :rating="card.priority"
-            :star-size="13"
-            :max-rating="3"
-            :show-rating="false"
-            :read-only="true"
-          ></star-rating>
+    <transition-group tag="div" class="card-parent" name="card" mode="in-out">
+      <div
+        class="element-card"
+        v-for="card in filteredCards"
+        :key="card.id"
+        @click="togglePopup(card.id)"
+      >
+        <div class="desc">
+          <p>{{ card.description }}</p>
+          <span @click.stop="toggleDelete(card.id)" id="three-dots">
+            <img src="../../assets/trash.svg" alt="" />
+          </span>
         </div>
-        <p id="fullname">
-          {{ card.assignee.firstName[0] }}{{ card.assignee.lastName[0] }}
-        </p>
+        <div class="priority">
+          <div>
+            <p>TT-{{ card.id }}</p>
+            <star-rating
+              :rating="card.priority"
+              :star-size="13"
+              :max-rating="3"
+              :show-rating="false"
+              :read-only="true"
+            ></star-rating>
+          </div>
+          <p id="fullname">
+            {{ card.assignee.firstName[0] }}{{ card.assignee.lastName[0] }}
+          </p>
+        </div>
       </div>
-    </div>
+    </transition-group>
   </draggable>
 </template>
 
@@ -265,17 +267,22 @@ export default {
     },
     getLoginUser() {
       let login = JSON.parse(localStorage.getItem("decodedToken"));
-      let login2 = {
+      let loginTwo = {
         id: parseInt(login.nameid),
         firstName: login.given_name,
         lastName: login.unique_name,
       };
-      return login2;
+      // console.log(loginTwo);
+      return loginTwo;
     },
     getUsers() {
-      let users = this.$store.getters["users"];
-      users.push(this.getLoginUser);
-      return users;
+      let users = this.$store.getters["users"].map((user) =>
+        JSON.parse(JSON.stringify(user))
+      );
+      // console.log(users);
+      let finalUsers = [...users, this.getLoginUser];
+      // console.log(finalUsers);
+      return finalUsers;
     },
     overlayIsActive() {
       return this.$store.getters["overlay"];
@@ -436,5 +443,31 @@ export default {
 }
 .form-deleting p {
   margin-top: 8px;
+}
+.card-parent {
+  position: relative;
+}
+/* transition */
+.card-enter-from,
+.card-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.card-enter-active,
+.card-move {
+  transition: all 0.4s ease-out 0.1s;
+}
+.card-leave-active {
+  transition: all 0.4s ease-in;
+  position: absolute;
+}
+.card-enter-to,
+.card-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+.card-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

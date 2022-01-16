@@ -208,9 +208,12 @@ export default {
     },
     usersNames() {
       // return this.users.map((user) => `${user.firstName} ${user.lastName}`);
-      let users = this.$store.getters["users"];
-      users.push(this.getLoginUser);
-      return users;
+      let users = this.$store.getters["users"].map((user) =>
+        JSON.parse(JSON.stringify(user))
+      );
+      let finalUsers = [...users, this.getLoginUser];
+      // console.log(finalUsers);
+      return finalUsers;
     },
     statusNames() {
       return this.lists.map((list) => list.name);

@@ -17,18 +17,24 @@ export default {
     context.commit("getCards", res);
   },
   async getUsers(context) {
-    const res = await axios.get(
-      "https://time-tracker.azurewebsites.net/api/user/getUsersByManagerId",
-      {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("loginUser")).token
-          }`,
-        },
+    try {
+      const res = await axios.get(
+        "https://time-tracker.azurewebsites.net/api/user/getUsersByManagerId",
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("loginUser")).token
+            }`,
+          },
+        }
+      );
+      context.commit("getUsers", res);
+    } catch (e) {
+      if (e.response.status == 401) {
+        localStorage.clear();
+        this.$router.replace("/signIn");
       }
-    );
-
-    context.commit("getUsers", res);
+    }
   },
   // updateBoard(context, payload) {
   //   context.commit("changeNewBoard", payload);
