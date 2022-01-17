@@ -312,7 +312,11 @@ export default {
       this.toggleInvalid();
     },
   },
+  mounted() {
+    this.$Progress.finish();
+  },
   created() {
+    this.$Progress.start();
     this.$store.dispatch("getLists");
     this.$store.dispatch("getUsers");
   },

@@ -18,7 +18,7 @@
       <span>h</span>
     </div>
     <div class="time-wrapper">
-      <textarea placeholder="Type your comment here..."></textarea>
+      <input type="text" placeholder="Some description here..." />
       <div class="btn-wrapper">
         <img id="done" src="../../assets/done.svg" alt="" />
         <img id="cancel" src="../../assets/wrong.svg" alt="" />
@@ -27,24 +27,19 @@
   </div>
   <div v-if="isTimeOpened" class="tasks-wrapper">
     <div v-for="a in array" :key="a.task" class="tasks">
-      <p>{{ a.task }}</p>
-      <p>{{ a.hour }} h</p>
-      <p>
-        {{ a.desc }}
-      </p>
-      <div class="task-btn-wrapper">
-        <img id="trash" src="../../assets/trash.svg" alt="" />
-        <img id="edit" src="../../assets/edit.svg" alt="" />
-      </div>
+      <record-task :task="a"></record-task>
     </div>
   </div>
 </template>
 
 <script>
-// import BaseDropdown from "../components/BaseDropdown.vue";
+import RecordTask from "./RecordTask.vue";
 
 export default {
   props: ["day"],
+  components: {
+    RecordTask,
+  },
   data() {
     return {
       isTimeOpened: false,
@@ -59,6 +54,11 @@ export default {
           task: "task 2",
           hour: 8,
           desc: "When set to true, the rating cannot be edited.",
+        },
+        {
+          task: "task 2",
+          hour: 8,
+          desc: "When set to true, the rating cannot be edited. s adadaa da sdada ada",
         },
       ],
     };
@@ -82,34 +82,30 @@ export default {
 <style scoped>
 .day,
 .form-time,
-.form-time div:nth-child(2),
 .tasks {
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .tasks {
   border-top: 0.8px solid rgba(0, 0, 0, 0.2);
 }
 .day p:first-child,
-.form-time .time-wrapper:first-child,
-.tasks p:first-child {
+.form-time .time-wrapper:first-child {
   width: 35%;
 }
 .day p:nth-child(2),
-.form-time .time-wrapper:nth-child(2),
-.tasks p:nth-child(2) {
+.form-time .time-wrapper:nth-child(2) {
   justify-content: center;
-  width: 8%;
+  width: 10%;
 }
-.day p:nth-child(2),
-.tasks p:nth-child(2) {
+.day p:nth-child(2) {
   text-align: center;
 }
 .day .time-btn-wrapper,
-.form-time .time-wrapper:last-child,
-.tasks p:last-child {
-  width: 57%;
+.form-time .time-wrapper:last-child {
+  width: 55%;
 }
 .time-btn-wrapper {
   display: flex;
@@ -119,6 +115,7 @@ export default {
   margin-top: 6px;
   border-radius: 12px 12px 0 0;
   background: #fff;
+  box-shadow: 0 -5px 5px -5px rgb(132, 131, 131);
 }
 .day p,
 .day .time-btn-wrapper {
@@ -150,10 +147,18 @@ export default {
 .time-wrapper input {
   width: 40px;
   height: 35px;
-  padding: 1px;
+  padding: 8px;
+  color: #444;
   background: #f2f3f6;
+  font-family: "Poppins", sans-serif;
   border: 1px solid rgba(67, 97, 238, 0.35);
   outline: none;
+}
+.time-wrapper:nth-child(3) input {
+  width: 90%;
+  display: inline-block;
+  border-radius: 25px;
+  font-size: 13px;
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -161,24 +166,16 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .time-wrapper {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
 }
 .time-wrapper:last-child {
   padding-right: 0;
 }
-.time-wrapper textarea {
-  width: 100%;
-  background: #f2f3f6;
-  padding: 8px 12px;
-  border-radius: 25px;
-  outline: none;
-  border: 1px solid rgba(67, 97, 238, 0.35);
-  color: #444;
-  font-family: "Poppins", sans-serif;
-  resize: none;
-}
+
 .time-wrapper .btn-wrapper {
   max-width: 30px;
+  display: flex;
   flex-direction: column;
   border-radius: 0 12px 12px 0;
   cursor: pointer;
@@ -187,46 +184,6 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 100%;
   height: 100%;
   padding: 10px;
-  /* background:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa chartreuse; */
-}
-.task-btn-wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 30px;
-  max-height: 3.4rem;
-  /* padding: 12px; */
-  position: absolute;
-  right: 0;
-}
-#done {
-  background: #18cc2abf;
-  border-top-right-radius: 12px;
-}
-#cancel {
-  background: #43e4eebf;
-  border-bottom-right-radius: 12px;
-}
-#trash {
-  width: 100%;
-  padding: 4px;
-  background: #cc1818bf;
-  border-top-right-radius: 12px;
-}
-#edit {
-  width: 100%;
-  /* height: 20px; */
-  padding: 4px;
-  background: #4361eebf;
-  border-bottom-right-radius: 12px;
-}
-.tasks-wrapper {
-  padding-bottom: 6px;
-  background: #fff;
-  border-radius: 12px;
-  margin-bottom: 6px;
-}
-.tasks {
-  min-height: 3.4rem;
 }
 .day {
   transition: all 0.1s ease;
@@ -239,6 +196,27 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .day.changedDay:hover {
   border-radius: 12px 12px 0 0;
-  box-shadow: none;
+  box-shadow: 0 -5px 5px -5px rgb(132, 131, 131);
+}
+.tasks-wrapper {
+  padding-bottom: 6px;
+  background: #fff;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  box-shadow: 0 5px 5px -5px rgb(132, 131, 131);
+}
+#done {
+  background: #18cc2abf;
+  border-top-right-radius: 12px;
+}
+#done:hover {
+  background: #3fec50bf;
+}
+#cancel {
+  background: #43e4eebf;
+  border-bottom-right-radius: 12px;
+}
+#cancel:hover {
+  background: #04bdcbbf;
 }
 </style>
