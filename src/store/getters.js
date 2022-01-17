@@ -25,7 +25,4 @@ export default {
   cardss(state) {
     return state.cardss;
   },
-  // currentData(state) {
-  //   return state.currentData;
-  // },
 };

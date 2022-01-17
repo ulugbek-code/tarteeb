@@ -1,38 +1,41 @@
 <template>
-  <the-navigation></the-navigation>
-  <div :class="[!isNavOpened ? 'nav' : '']" id="records-container">
-    <div class="header-wrapper">
-      <div class="tasks-header">
-        <h2>Weekly time sheet</h2>
-
-        <p>
-          <span><img src="../assets/left1.png" alt="" /></span> 03 January - 09
-          January <span><img src="../assets/right-arrow.png" alt="" /></span>
-        </p>
+  <div>
+    <the-navigation></the-navigation>
+    <div :class="[!isNavOpened ? 'nav' : '']" id="records-container">
+      <div class="header-wrapper">
+        <div class="tasks-header">
+          <h2>Weekly time sheet</h2>
+          <p>
+            <span><img src="../assets/left1.png" alt="" /></span>
+            {{ firstDay }} -
+            {{ lastDay }}
+            <span><img src="../assets/right-arrow.png" alt="" /></span>
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="body-wrapper">
-      <div class="first-r">
-        <table>
-          <tr>
-            <th>DATE</th>
-            <th>TOTAL</th>
-            <th>ACTION</th>
-          </tr>
+      <div class="body-wrapper">
+        <div class="first-r">
+          <!-- <div class="time-wrapper"> -->
+          <div class="time-flex">
+            <h4>DATE</h4>
+            <h4>TOTAL</h4>
+            <h4>ACTION</h4>
+          </div>
           <template v-for="day in days" :key="day">
             <Record :day="day" />
           </template>
-        </table>
-      </div>
-      <div class="second-r">
-        <bulk-insert></bulk-insert>
+          <!-- </div> -->
+        </div>
+        <div class="second-r">
+          <bulk-insert></bulk-insert>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Record from "../components/Record.vue";
+import Record from "../components/records/Record.vue";
 import BulkInsert from "../components/records/BulkInsert.vue";
 export default {
   components: {
@@ -45,6 +48,16 @@ export default {
     };
   },
   computed: {
+    firstDay() {
+      return this.days[0].substr(0, 2) + " " + this.days[0].substr(3, 3);
+    },
+    lastDay() {
+      return (
+        this.days[this.days.length - 1].substr(0, 2) +
+        " " +
+        this.days[this.days.length - 1].substr(3, 3)
+      );
+    },
     isNavOpened() {
       return this.$store.getters.isNavOpened;
     },
@@ -91,6 +104,7 @@ export default {
 }
 .tasks-header img {
   width: 12px;
+  cursor: pointer;
 }
 .body-wrapper {
   display: flex;
@@ -101,6 +115,8 @@ export default {
 }
 .first-r {
   width: 68%;
+  height: 82vh;
+  overflow-y: scroll;
   background: hsla(0, 0%, 86.7%, 0.4);
   padding: 1rem;
   border-radius: 12px;
@@ -108,12 +124,23 @@ export default {
 .second-r {
   width: 30%;
 }
-table {
-  border-collapse: collapse;
+.time-flex {
   width: 100%;
+  display: flex;
+  margin-bottom: 4px;
 }
-table th {
-  text-align: left;
-  padding-left: 1rem;
+.time-flex h4:nth-child(1) {
+  width: 35%;
+}
+.time-flex h4:nth-child(2) {
+  width: 10%;
+}
+.time-flex h4:last-child {
+  width: 55%;
+}
+.time-flex h4 {
+  text-align: center;
+  /* padding-left: 1rem; */
+  font-size: 14px;
 }
 </style>

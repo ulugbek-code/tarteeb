@@ -102,8 +102,10 @@
     :options="{ group: 'filteredCards' }"
     group="filteredCards"
     ghostClass="ghost"
+    tag="div"
+    class="card-parent"
   >
-    <transition-group tag="div" class="card-parent" name="card" mode="in-out">
+    <transition-group name="card">
       <div
         class="element-card"
         v-for="card in filteredCards"

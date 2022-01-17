@@ -36,13 +36,4 @@ export default {
       }
     }
   },
-  // updateBoard(context, payload) {
-  //   context.commit("changeNewBoard", payload);
-  // },
-  // getMove(context, payload) {
-  //   context.commit("getMovedEl", payload);
-  // },
-  // createList(context, payload) {
-  //   context.commit("createNewList", payload);
-  // },
 };
