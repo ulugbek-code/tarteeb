@@ -4,7 +4,26 @@
       {{ selected }}
     </div>
     <div class="items" :class="{ selectHide: !open }">
-      <template v-if="!withObj">
+      <template v-if="withObj">
+        <div
+          v-for="option of options"
+          :key="option.id"
+          @click="sendData(option)"
+        >
+          {{ `${option.firstName} ${option.lastName}` }}
+        </div>
+      </template>
+      <template v-else-if="withTask">
+        <div
+          v-for="option of options"
+          :key="option.id"
+          @click="sendData(option)"
+        >
+          TT-{{ option.id }}
+          <!-- <span class="tooltiptext">{{ option.desc }}</span> -->
+        </div>
+      </template>
+      <template v-else>
         <div
           v-for="(option, i) of options"
           :key="i"
@@ -15,15 +34,6 @@
           "
         >
           {{ option }}
-        </div>
-      </template>
-      <template v-else>
-        <div
-          v-for="option of options"
-          :key="option.id"
-          @click="sendData(option)"
-        >
-          {{ `${option.firstName} ${option.lastName}` }}
         </div>
       </template>
     </div>
@@ -53,6 +63,12 @@ export default {
     withObj: {
       required: false,
     },
+    withTask: {
+      required: false,
+    },
+    submitted: {
+      required: false,
+    },
   },
   data() {
     return {
@@ -66,18 +82,43 @@ export default {
   },
   methods: {
     sendData(option) {
-      this.selected = `${option.firstName} ${option.lastName}`;
+      if (this.withTask) {
+        this.selected = `TT-${option.id}`;
+      } else {
+        this.selected = `${option.firstName} ${option.lastName}`;
+      }
       this.open = false;
       this.$emit("input", option.id);
     },
   },
-  // mounted() {
-  //   this.$emit("input", this.selected);
-  // },
+  watch: {
+    submitted() {
+      if (this.submitted === true) {
+        this.selected = this.default;
+        this.$emit("changee");
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
+.tooltiptext {
+  visibility: hidden;
+  background-color: rgb(99, 101, 111);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px;
+  /* width: fit-content; */
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  z-index: 200;
+}
+.items div:hover .tooltiptext {
+  visibility: visible;
+}
 .custom-select {
   position: relative;
   width: 100%;
@@ -128,6 +169,7 @@ export default {
   display: none;
 }
 .custom-select .items div {
+  position: relative;
   color: rgb(68, 68, 68);
   border-top: 0.1px solid rgba(68, 68, 68, 0.1);
   padding-left: 1em;

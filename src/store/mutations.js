@@ -11,4 +11,16 @@ export default {
   getUsers(state, payload) {
     state.users = payload.data;
   },
+  getAllDays(state, payload) {
+    state.allDays = payload;
+  },
+  getDays(state, payload) {
+    state.days = payload;
+  },
+  getOrgDays(state, payload) {
+    state.orgDays = payload;
+  },
+  getTimes(state, payload) {
+    state.times = payload;
+  },
 };

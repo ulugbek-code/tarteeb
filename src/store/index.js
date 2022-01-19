@@ -9,9 +9,17 @@ const store = createStore({
     return {
       isNavOpened: true, //for hamburger menu
       lastListId: null, //for creating new board
+      first: null, //first day of the week
+      last: null, //last day of the week
+      firstDay: null, //first day and week name
+      lastDay: null, //last day and week
       lists: [],
       cardss: [],
       users: [],
+      allDays: [],
+      days: [], //week days
+      orgDays: [], //'2022-01-02T04:29:05.845Z'
+      times: [],
       loginUser: JSON.parse(localStorage.getItem("loginUser")) || null, //Object.keys(obj).length === 0;
     };
   },

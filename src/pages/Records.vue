@@ -21,8 +21,8 @@
             <h4>TOTAL</h4>
             <h4>ACTION</h4>
           </div>
-          <template v-for="day in days" :key="day">
-            <Record :day="day" />
+          <template v-for="day in allDays" :key="day">
+            <Record :day="day" :tasks="tasks" />
           </template>
           <!-- </div> -->
         </div>
@@ -42,47 +42,48 @@ export default {
     Record,
     BulkInsert,
   },
-  data() {
-    return {
-      days: [],
-    };
-  },
   computed: {
+    tasks() {
+      const cards = this.$store.getters["cardss"];
+      return cards.map((card) => {
+        return {
+          id: card.id,
+          desc: card.description,
+        };
+      });
+    },
+    allDays() {
+      return this.$store.getters.allDays;
+    },
+    days() {
+      return this.$store.getters.days;
+    },
+    // orgDays() {
+    //   return this.$store.getters.orgDays;
+    // },
+    first() {
+      return this.$store.getters.first;
+    },
+    last() {
+      return this.$store.getters.last;
+    },
     firstDay() {
-      return this.days[0].substr(0, 2) + " " + this.days[0].substr(3, 3);
+      return this.$store.getters.firstDay;
     },
     lastDay() {
-      return (
-        this.days[this.days.length - 1].substr(0, 2) +
-        " " +
-        this.days[this.days.length - 1].substr(3, 3)
-      );
+      return this.$store.getters.lastDay;
     },
     isNavOpened() {
       return this.$store.getters.isNavOpened;
     },
   },
-  methods: {
-    getCurentWeek() {
-      let curr = new Date();
-      let week = [];
-
-      for (let i = 1; i <= 7; i++) {
-        let first = curr.getDate() - curr.getDay() + i;
-        let day = new Date(curr.setDate(first)).toDateString(); //.slice(0, 10)
-        day =
-          day.substring(8, 10) +
-          "−" +
-          day.substring(4, 7) +
-          ", " +
-          day.substring(0, 3);
-        week.push(day);
-      }
-      this.days = week;
-    },
+  async created() {
+    this.$Progress.start();
+    this.$store.dispatch("getDays");
+    await this.$store.dispatch("getCards");
   },
-  created() {
-    this.getCurentWeek();
+  mounted() {
+    this.$Progress.finish();
   },
 };
 </script>

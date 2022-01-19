@@ -1,6 +1,6 @@
 <template>
   <div @click="openForm" :class="{ changedDay: isTimeOpened }" class="day">
-    <p>{{ day.replace(/-/g, "/") }}</p>
+    <p>{{ day.date.replace(/-/g, "/") }}</p>
     <p>0 h</p>
     <div class="time-btn-wrapper">
       <button @click="write" class="btn">Deadlines for the day</button>
@@ -11,85 +11,113 @@
 
   <div v-if="isTimeOpened" class="form-time">
     <div class="time-wrapper">
-      <base-dropdown :options="['task1', 'task2']"></base-dropdown>
+      <base-dropdown
+        :options="tasks"
+        :withTask="true"
+        :submitted="isCancelled"
+        default="Tasks..."
+        @input="getTask"
+        @changee="isCancelled = false"
+      ></base-dropdown>
     </div>
     <div class="time-wrapper">
-      <input type="number" />
+      <input v-model="hours" type="number" />
       <span>h</span>
     </div>
     <div class="time-wrapper">
-      <input type="text" placeholder="Some description here..." />
+      <input
+        v-model="desc"
+        type="text"
+        placeholder="Some description here..."
+      />
       <div class="btn-wrapper">
-        <img id="done" src="../../assets/done.svg" alt="" />
-        <img id="cancel" src="../../assets/wrong.svg" alt="" />
+        <img @click="sendData" id="done" src="../../assets/done.svg" alt="" />
+        <img @click="cancel" id="cancel" src="../../assets/wrong.svg" alt="" />
       </div>
     </div>
   </div>
   <div v-if="isTimeOpened" class="tasks-wrapper">
-    <div v-for="a in array" :key="a.task" class="tasks">
-      <record-task :task="a"></record-task>
+    <div v-for="time in times" :key="time.id">
+      <record-task :dateOrg="day.dateOrg" :task="time"></record-task>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import RecordTask from "./RecordTask.vue";
 
 export default {
-  props: ["day"],
+  props: ["day", "tasks"],
   components: {
     RecordTask,
   },
   data() {
     return {
       isTimeOpened: false,
-      option: "Task 1",
-      array: [
-        {
-          task: "task 1",
-          hour: 12,
-          desc: "The points defining a custom star shape.",
-        },
-        {
-          task: "task 2",
-          hour: 8,
-          desc: "When set to true, the rating cannot be edited.",
-        },
-        {
-          task: "task 2",
-          hour: 8,
-          desc: "When set to true, the rating cannot be edited. s adadaa da sdada ada",
-        },
-      ],
+      isCancelled: false,
+      taskId: null,
+      hours: null,
+      desc: null,
     };
   },
+  computed: {
+    times() {
+      return this.$store.getters.times;
+    },
+  },
   methods: {
+    async sendData() {
+      if (this.taskId && this.hours && this.desc) {
+        try {
+          this.$Progress.start();
+          await axios.post("https://time-tracker.azurewebsites.net/api/Times", {
+            taskId: this.taskId,
+            userId: this.$store.getters.loginUser.id,
+            date: this.day.dateOrg,
+            hoursWorked: this.hours,
+            comment: this.desc,
+          });
+          await this.$store.dispatch("getTimes");
+          this.$Progress.finish();
+          this.cancel();
+        } catch (e) {
+          console.log(e);
+          this.$Progress.fail();
+        }
+      }
+    },
     openForm() {
+      // const el = this.$refs.scrollToMe;
       this.isTimeOpened = !this.isTimeOpened;
     },
-    getOption(opt) {
-      this.option = opt;
+    getTask(id) {
+      this.taskId = id;
     },
     cancel() {
-      this.hour = "";
-      this.desc = "";
-      this.overTime = "";
+      this.hours = null;
+      this.desc = null;
+      this.taskId = null;
+      this.isCancelled = true;
     },
+  },
+  async created() {
+    this.$Progress.start();
+    await this.$store.dispatch("getTimes");
+  },
+  mounted() {
+    this.$Progress.finish();
   },
 };
 </script>
 
 <style scoped>
 .day,
-.form-time,
-.tasks {
+.form-time {
   /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-.tasks {
-  border-top: 0.8px solid rgba(0, 0, 0, 0.2);
 }
 .day p:first-child,
 .form-time .time-wrapper:first-child {
@@ -134,13 +162,11 @@ export default {
   margin-right: 1rem;
   cursor: pointer;
 }
-.form-time,
-.tasks {
+.form-time {
   position: relative;
   background: #fff;
 }
-.time-wrapper,
-.tasks {
+.time-wrapper {
   padding: 10px 16px;
   font-size: 14px;
 }

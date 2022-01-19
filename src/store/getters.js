@@ -25,4 +25,28 @@ export default {
   cardss(state) {
     return state.cardss;
   },
+  days(state) {
+    return state.days;
+  },
+  orgDays(state) {
+    return state.orgDays;
+  },
+  allDays(state) {
+    return state.allDays;
+  },
+  first(state) {
+    return state.days[0].substr(0, 2);
+  },
+  last(state) {
+    return state.days[state.days.length - 1].substr(0, 2);
+  },
+  firstDay(state, getters) {
+    return getters.first + " " + state.days[0].substr(3, 3);
+  },
+  lastDay(state, getters) {
+    return getters.last + " " + state.days[state.days.length - 1].substr(3, 3);
+  },
+  times(state) {
+    return state.times;
+  },
 };

@@ -1,21 +1,27 @@
 <template>
-  <p>{{ task.task }}</p>
-  <p>{{ task.hour }} h</p>
-  <p>
-    {{ task.desc }}
-    <span @click="edit" class="task-btn-wrapper">
-      <img src="../../assets/more.svg" alt="" />
-    </span>
-    <span :class="{ trash: isEdit }" id="edit">
-      <small>Edit</small>
-      <small>Delete</small>
-    </span>
-  </p>
+  <div v-if="dateOrg === task.date" @click="edit" class="tasks">
+    <p>TT-{{ task.taskId }}</p>
+    <p>{{ task.hoursWorked }} h</p>
+    <p>
+      {{ task.comment }}
+      <span @click.stop="edit" class="task-btn-wrapper">
+        <img src="../../assets/more.svg" alt="" />
+      </span>
+      <span :class="{ trash: isEdit }" id="edit">
+        <small>Edit</small>
+        <small @click="deleteTask(task.id)">Delete</small>
+      </span>
+    </p>
+  </div>
+  <!-- <div></div> -->
+  <!-- {{ dateOrg }}={{ task.date }} -->
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  props: ["task"],
+  props: ["dateOrg", "task"],
   data() {
     return {
       isEdit: false,
@@ -25,11 +31,36 @@ export default {
     edit() {
       this.isEdit = !this.isEdit;
     },
+    async deleteTask(id) {
+      try {
+        this.$Progress.start();
+        const res = await axios.delete(
+          `https://time-tracker.azurewebsites.net/api/Times/${id}`
+        );
+        console.log(res);
+        await this.$store.dispatch("getTimes");
+        this.$Progress.finish();
+      } catch (e) {
+        console.log(e);
+        this.$Progress.fail();
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.tasks {
+  /* width: 100%; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 0.8px solid rgba(0, 0, 0, 0.2);
+  position: relative;
+  background: #fff;
+  padding: 10px 16px;
+  font-size: 14px;
+}
 p:first-child {
   width: 35%;
 }
