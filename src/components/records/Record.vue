@@ -1,11 +1,11 @@
 <template>
   <div @click="openForm" :class="{ changedDay: isTimeOpened }" class="day">
+    <!-- {{ day.dateOrg }} -->
     <p>{{ day.date.replace(/-/g, "/") }}</p>
-    <p>0 h</p>
+    <p>{{ totalHours }} h</p>
     <div class="time-btn-wrapper">
-      <button @click="write" class="btn">Deadlines for the day</button>
-      <button @click="write" class="btn">Show tasks</button>
-      <button @click="write" class="btn">Enter my time</button>
+      <button class="btn">Show tasks</button>
+      <button class="btn">Enter my time</button>
     </div>
   </div>
 
@@ -38,7 +38,11 @@
   </div>
   <div v-if="isTimeOpened" class="tasks-wrapper">
     <div v-for="time in times" :key="time.id">
-      <record-task :dateOrg="day.dateOrg" :task="time"></record-task>
+      <record-task
+        :dateOrg="day.dateOrg"
+        :task="time"
+        :tasks="tasks"
+      ></record-task>
     </div>
   </div>
 </template>
@@ -64,6 +68,13 @@ export default {
   computed: {
     times() {
       return this.$store.getters.times;
+    },
+    totalHours() {
+      // console.log("hello"); working too much
+      return this.times
+        .filter((time) => time.date === this.day.dateOrg)
+        .map((time) => time.hoursWorked)
+        .reduce((a, b) => a + b, 0);
     },
   },
   methods: {
@@ -114,7 +125,6 @@ export default {
 <style scoped>
 .day,
 .form-time {
-  /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -137,6 +147,7 @@ export default {
 }
 .time-btn-wrapper {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .day.changedDay {

@@ -23,4 +23,18 @@ export default {
   getTimes(state, payload) {
     state.times = payload;
   },
+  plusPrev(state) {
+    state.prev++;
+    state.next = 1;
+    // console.log(state.prev);
+  },
+  plusNext(state) {
+    state.next++;
+    state.prev = 1;
+    // console.log(state.next);
+  },
+  getCurr(state, payload) {
+    state.curr = payload;
+    console.log(state.curr);
+  },
 };

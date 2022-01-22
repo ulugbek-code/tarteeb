@@ -6,10 +6,12 @@
         <div class="tasks-header">
           <h2>Weekly time sheet</h2>
           <p>
-            <span><img src="../assets/left1.png" alt="" /></span>
+            <span @click="prev"><img src="../assets/left1.png" alt="" /></span>
             {{ firstDay }} -
             {{ lastDay }}
-            <span><img src="../assets/right-arrow.png" alt="" /></span>
+            <span @click="next"
+              ><img src="../assets/right-arrow.png" alt=""
+            /></span>
           </p>
         </div>
       </div>
@@ -58,9 +60,6 @@ export default {
     days() {
       return this.$store.getters.days;
     },
-    // orgDays() {
-    //   return this.$store.getters.orgDays;
-    // },
     first() {
       return this.$store.getters.first;
     },
@@ -75,6 +74,16 @@ export default {
     },
     isNavOpened() {
       return this.$store.getters.isNavOpened;
+    },
+  },
+  methods: {
+    prev() {
+      console.log("prev");
+      // this.$store.dispatch("getDays", "prev");
+    },
+    next() {
+      console.log("next");
+      // this.$store.dispatch("getDays", "next");
     },
   },
   async created() {

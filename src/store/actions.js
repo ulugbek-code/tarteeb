@@ -1,4 +1,5 @@
 import axios from "axios";
+// import moment from "moment";
 
 export default {
   toggleNavbar(context) {
@@ -11,10 +12,14 @@ export default {
     context.commit("getLists", res);
   },
   async getCards(context) {
-    const res = await axios.get(
-      "https://time-tracker.azurewebsites.net/api/Tasks"
-    );
-    context.commit("getCards", res);
+    try {
+      const res = await axios.get(
+        "https://time-tracker.azurewebsites.net/api/Tasks"
+      );
+      context.commit("getCards", res);
+    } catch (e) {
+      console.log(e.message); //Network error
+    }
   },
   async getUsers(context) {
     try {
@@ -34,16 +39,29 @@ export default {
         localStorage.clear();
         this.$router.replace("/signIn");
       }
+      console.log(e.response);
     }
   },
   getDays(context) {
-    let curr = new Date();
+    let curr = null;
+    curr = new Date();
     let week = [];
     let weekOrg = [];
     let fullArray = [];
+    // const l = moment().day();
+    // console.log(l);
 
+    // if (payload === "next") {
+    //   curr = new Date(new Date().getTime() + 604800000 * context.state.next);
+    //   context.commit("plusNext");
+    // } else if (payload === "prev") {
+    //   curr = new Date(new Date().getTime() - 604800000 * context.state.prev);
+    //   console.log(curr);
+    //   context.commit("plusPrev");
+    // }
     for (let i = 1; i <= 7; i++) {
       let first = curr.getDate() - curr.getDay() + i;
+      // console.log(first); // to find first day of the week
       let day = new Date(curr.setDate(first)).toDateString(); //.slice(0, 10)
       day =
         day.substring(8, 10) +
@@ -63,7 +81,22 @@ export default {
       weekOrg.push(dayOrg);
       fullArray.push(obj);
     }
-    context.commit("getAllDays", fullArray);
+    //
+
+    // if (payload === "prev") {
+    //   curr = new Date(
+    //     new Date(weekOrg[0]).getTime() - 604800000 * context.state.prev
+    //   );
+    //   context.commit("plusPrev");
+    //   console.log(curr);
+    // } else if (payload === "next") {
+    //   curr = new Date(
+    //     new Date(weekOrg[0]).getTime() + 604800000 * context.state.next
+    //   );
+    //   context.commit("plusNext");
+    //   console.log(curr);
+    // }
+    context.commit("getAllDays", fullArray); //clean the code!!!
     context.commit("getDays", week);
     context.commit("getOrgDays", weekOrg);
   },
@@ -78,7 +111,7 @@ export default {
       );
       context.commit("getTimes", res.data);
     } catch (e) {
-      console.log(e);
+      console.log(e.message); //Network error
     }
   },
 };
