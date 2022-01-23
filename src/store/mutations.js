@@ -24,13 +24,13 @@ export default {
     state.times = payload;
   },
   plusPrev(state) {
-    state.prev++;
-    state.next = 1;
+    state.offset = state.offset - 1;
+
     // console.log(state.prev);
   },
   plusNext(state) {
-    state.next++;
-    state.prev = 1;
+    state.offset = state.offset + 1;
+
     // console.log(state.next);
   },
   getCurr(state, payload) {

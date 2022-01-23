@@ -2,7 +2,8 @@
   <div @click="openForm" :class="{ changedDay: isTimeOpened }" class="day">
     <!-- {{ day.dateOrg }} -->
     <p>{{ day.date.replace(/-/g, "/") }}</p>
-    <p>{{ totalHours }} h</p>
+    <animate-number :number="totalHours"></animate-number>
+    <!-- <p>{{ totalHours }} h</p> -->
     <div class="time-btn-wrapper">
       <button class="btn">Show tasks</button>
       <button class="btn">Enter my time</button>
@@ -50,11 +51,13 @@
 <script>
 import axios from "axios";
 import RecordTask from "./RecordTask.vue";
+import AnimateNumber from "./AnimateNumber.vue";
 
 export default {
   props: ["day", "tasks"],
   components: {
     RecordTask,
+    AnimateNumber,
   },
   data() {
     return {
@@ -70,7 +73,7 @@ export default {
       return this.$store.getters.times;
     },
     totalHours() {
-      // console.log("hello"); working too much
+      //  working too much
       return this.times
         .filter((time) => time.date === this.day.dateOrg)
         .map((time) => time.hoursWorked)

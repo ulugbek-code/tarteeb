@@ -78,12 +78,10 @@ export default {
   },
   methods: {
     prev() {
-      console.log("prev");
-      // this.$store.dispatch("getDays", "prev");
+      this.$store.dispatch("getDays", "prev");
     },
     next() {
-      console.log("next");
-      // this.$store.dispatch("getDays", "next");
+      this.$store.dispatch("getDays", "next");
     },
   },
   async created() {

@@ -1,5 +1,4 @@
 import axios from "axios";
-// import moment from "moment";
 
 export default {
   toggleNavbar(context) {
@@ -42,27 +41,25 @@ export default {
       console.log(e.response);
     }
   },
-  getDays(context) {
-    let curr = null;
+  getDays(context, payload) {
+    let curr, first, day;
     curr = new Date();
+    let dayOfWeekOffset = curr.getDay();
     let week = [];
     let weekOrg = [];
     let fullArray = [];
-    // const l = moment().day();
-    // console.log(l);
 
-    // if (payload === "next") {
-    //   curr = new Date(new Date().getTime() + 604800000 * context.state.next);
-    //   context.commit("plusNext");
-    // } else if (payload === "prev") {
-    //   curr = new Date(new Date().getTime() - 604800000 * context.state.prev);
-    //   console.log(curr);
-    //   context.commit("plusPrev");
-    // }
+    if (payload === "next") {
+      context.commit("plusNext");
+    } else if (payload === "prev") {
+      context.commit("plusPrev");
+    }
     for (let i = 1; i <= 7; i++) {
-      let first = curr.getDate() - curr.getDay() + i;
-      // console.log(first); // to find first day of the week
-      let day = new Date(curr.setDate(first)).toDateString(); //.slice(0, 10)
+      first = new Date();
+      first.setDate(
+        first.getDate() - dayOfWeekOffset + context.state.offset * 7 + i
+      );
+      day = new Date(first).toDateString(); //.slice(0, 10)
       day =
         day.substring(8, 10) +
         "−" +
@@ -70,7 +67,7 @@ export default {
         ", " +
         day.substring(0, 3);
       let dayOrg =
-        new Date(curr.setDate(first)).toISOString().slice(0, 8) +
+        new Date(first).toISOString().slice(0, 8) +
         day.slice(0, 2) +
         "T00:00:00";
       let obj = {};
@@ -81,21 +78,7 @@ export default {
       weekOrg.push(dayOrg);
       fullArray.push(obj);
     }
-    //
 
-    // if (payload === "prev") {
-    //   curr = new Date(
-    //     new Date(weekOrg[0]).getTime() - 604800000 * context.state.prev
-    //   );
-    //   context.commit("plusPrev");
-    //   console.log(curr);
-    // } else if (payload === "next") {
-    //   curr = new Date(
-    //     new Date(weekOrg[0]).getTime() + 604800000 * context.state.next
-    //   );
-    //   context.commit("plusNext");
-    //   console.log(curr);
-    // }
     context.commit("getAllDays", fullArray); //clean the code!!!
     context.commit("getDays", week);
     context.commit("getOrgDays", weekOrg);

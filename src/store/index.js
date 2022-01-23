@@ -13,9 +13,7 @@ const store = createStore({
       last: null, //last day of the week
       firstDay: null, //first day and week name
       lastDay: null, //last day and week
-      prev: 1,
-      next: 1,
-      curr: null,
+      offset: 0,
       lists: [],
       cardss: [],
       users: [],
