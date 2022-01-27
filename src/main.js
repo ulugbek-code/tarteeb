@@ -16,7 +16,7 @@ const options = {
   transition: {
     speed: "0.2s",
     opacity: "0.5s",
-    termination: 200,
+    termination: 300,
   },
   autoRevert: true,
   location: "top",

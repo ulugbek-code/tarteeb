@@ -115,6 +115,7 @@
           placeholder="Create a List..."
           v-model="listName"
           @keyup.enter="createList"
+          @blur="isAddClicked = false"
         />
       </section>
     </main>
@@ -196,6 +197,9 @@ export default {
     },
     users() {
       return this.$store.getters["users"];
+    },
+    isManager() {
+      return this.$store.getters.isManager;
     },
     getLoginUser() {
       let login = JSON.parse(localStorage.getItem("decodedToken"));
@@ -318,7 +322,9 @@ export default {
   created() {
     this.$Progress.start();
     this.$store.dispatch("getLists");
-    this.$store.dispatch("getUsers");
+    if (this.isManager) {
+      this.$store.dispatch("getUsers");
+    }
   },
 };
 </script>

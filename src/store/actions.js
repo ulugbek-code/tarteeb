@@ -32,13 +32,15 @@ export default {
           },
         }
       );
+
       context.commit("getUsers", res);
     } catch (e) {
       if (e.response.status == 401) {
         localStorage.clear();
         this.$router.replace("/signIn");
       }
-      console.log(e.response);
+      console.log("hello");
+      console.log(e.message);
     }
   },
   getDays(context, payload) {

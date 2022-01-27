@@ -22,6 +22,21 @@ const store = createStore({
       orgDays: [], //'2022-01-02T04:29:05.845Z'
       times: [],
       loginUser: JSON.parse(localStorage.getItem("loginUser")) || null, //Object.keys(obj).length === 0;
+      decodedUser: JSON.parse(localStorage.getItem("decodedToken")) || null,
+      months: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ],
     };
   },
   mutations: rootMutations,
