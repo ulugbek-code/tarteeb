@@ -100,10 +100,13 @@
   </base-dialog>
   <draggable
     :options="{ group: 'filteredCards' }"
-    group="filteredCards"
     ghostClass="ghost"
+    group="filteredCards"
     tag="div"
+    :sort="true"
     class="card-parent"
+    :move="checkMove"
+    v-model="myCards"
   >
     <transition-group name="card">
       <div
@@ -134,6 +137,19 @@
           </p>
         </div>
       </div>
+      <div v-if="filteredCards.length == 0">
+        <draggable
+          class="dragArea list-group w-full"
+          :list="fakeArray"
+          group="filteredCards"
+        >
+          <div class="ele">
+            <div class="desc">
+              <p>{{ fakeArray[0].listId }}</p>
+            </div>
+          </div>
+        </draggable>
+      </div>
     </transition-group>
   </draggable>
 </template>
@@ -151,6 +167,8 @@ export default {
   },
   data() {
     return {
+      currObj: {},
+      nextStatusId: null,
       isBtnClicked: false,
       isDeleteClicked: false,
       isError: false,
@@ -162,9 +180,92 @@ export default {
       reporter: null,
       statusName: null,
       obj: {},
+      fakeArray: [
+        {
+          listId: this.listId,
+        },
+      ],
     };
   },
+  computed: {
+    myCards: {
+      get() {
+        return this.filteredCards; //filteredCards
+      },
+      async set() {
+        const sendObj = {
+          description: this.currObj.description,
+          priority: this.currObj.priority,
+          deadline: this.currObj.deadline, //"2022-01-10T00:00:00",
+          updatedBy: this.$store.getters.loginUser.id,
+          statusId: this.nextStatusId, // sometimes it is undefined
+          userId: this.currObj.assigneeId, //assignee
+          reporterId: this.currObj.reporterId,
+        };
+        // console.log(sendObj);
+        if (
+          this.currObj.id &&
+          this.nextStatusId &&
+          this.currObj.statusId !== this.nextStatusId
+        ) {
+          try {
+            this.$Progress.start();
+            await axios.put(
+              `https://time-tracker.azurewebsites.net/api/Tasks/${this.currObj.id}`,
+              sendObj
+            );
+            await this.$store.dispatch("getCards");
+            this.$Progress.finish();
+          } catch (e) {
+            this.$Progress.fail();
+          }
+        }
+      },
+    },
+    filteredCards() {
+      // I used filteredCards instead of cardss
+      return this.cardss.filter((card) =>
+        card.description.match(this.searchInput)
+      );
+    },
+    cardss() {
+      const cards = this.$store.getters["cardss"];
+      return cards.filter((card) => {
+        if (card.status.id === this.listId) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
+    getLists() {
+      return this.$store.getters["lists"];
+    },
+    listsName() {
+      return this.getLists.map((list) => list.name);
+    },
+    getUsers() {
+      let users = this.$store.getters["users"].map((user) =>
+        JSON.parse(JSON.stringify(user))
+      );
+      // console.log(users);
+      // let finalUsers = [...users, this.getLoginUser];
+      // console.log(finalUsers);
+      return users;
+    },
+    overlayIsActive() {
+      return this.$store.getters["overlay"];
+    },
+  },
   methods: {
+    checkMove(evt) {
+      this.currObj = evt.draggedContext.element;
+      if (evt.relatedContext.element) {
+        this.nextStatusId = evt.relatedContext.element.statusId;
+      } else {
+        this.nextStatusId = evt.relatedContext.list[0].listId; //.element.statusId;
+      }
+    },
     toggleDelete(id) {
       this.isDeleteClicked = true;
       this.deletingId = id;
@@ -204,12 +305,12 @@ export default {
         description: this.newDesc,
         priority: this.rating,
         deadline: this.date + "T00:00:00", //"2022-01-10T14:24:03.485Z",
-        updatedBy: 4,
+        updatedBy: this.$store.getters.loginUser.id, //changed-------
         statusId: this.statusName,
         userId: this.assignee, //assignee
         reporterId: this.reporter,
       };
-      // console.log(sendObj);
+      console.log(sendObj);
       try {
         this.$Progress.start();
         await axios.put(
@@ -244,52 +345,6 @@ export default {
       this.isBtnClicked = false;
     },
   },
-  computed: {
-    filteredCards() {
-      // I used filteredCards instead of cardss
-      return this.cardss.filter((card) =>
-        card.description.match(this.searchInput)
-      );
-    },
-    cardss() {
-      const cards = this.$store.getters["cardss"];
-      return cards.filter((card) => {
-        if (card.status.id === this.listId) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    },
-    getLists() {
-      return this.$store.getters["lists"];
-    },
-    listsName() {
-      return this.getLists.map((list) => list.name);
-    },
-    getLoginUser() {
-      let login = JSON.parse(localStorage.getItem("decodedToken"));
-      let loginTwo = {
-        id: parseInt(login.nameid),
-        firstName: login.given_name,
-        lastName: login.unique_name,
-      };
-      // console.log(loginTwo);
-      return loginTwo;
-    },
-    getUsers() {
-      let users = this.$store.getters["users"].map((user) =>
-        JSON.parse(JSON.stringify(user))
-      );
-      // console.log(users);
-      let finalUsers = [...users, this.getLoginUser];
-      // console.log(finalUsers);
-      return finalUsers;
-    },
-    overlayIsActive() {
-      return this.$store.getters["overlay"];
-    },
-  },
   async created() {
     this.$Progress.start();
     await this.$store.dispatch("getCards");
@@ -311,6 +366,9 @@ export default {
 </script>
 
 <style scoped>
+.ele {
+  display: none;
+}
 .element-card {
   position: relative;
   background-color: white;

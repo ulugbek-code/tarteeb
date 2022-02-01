@@ -10,9 +10,9 @@
     <table>
       <tr>
         <th>Id</th>
-        <th>Name</th>
+        <th>First Name</th>
+        <th>Last Name</th>
         <th>Phone</th>
-        <!-- <th>Month</th> -->
       </tr>
       <employee-each-list
         :search="search"
@@ -115,7 +115,7 @@ tr {
   border-radius: 24px;
 }
 th {
-  text-align: center;
+  text-align: left;
   padding: 12px;
   background: #fff;
 }

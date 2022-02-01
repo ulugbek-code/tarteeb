@@ -39,7 +39,7 @@
         <!-- new Date('2022-01-20T00:00:00').toDateString() -->
         <!-- new Date('2022-01-20T00:00:00').getMonth() -->
       </div>
-      <div v-else>
+      <div v-else-if="noUser && times.length === 0">
         <img src="../../assets/warn.png" alt="" />
         <p>There are not any records for this employee yet...</p>
       </div>

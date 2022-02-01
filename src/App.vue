@@ -1,5 +1,6 @@
 <template>
   <vue-progress-bar></vue-progress-bar>
+  <the-navigation v-if="isAuth || loginUser"></the-navigation>
   <router-view v-slot="slotProps">
     <transition name="route" mode="out-in">
       <component :is="slotProps.Component"></component>
@@ -10,6 +11,14 @@
 <script>
 export default {
   name: "App",
+  computed: {
+    isAuth() {
+      return this.$store.getters.getAuth;
+    },
+    loginUser() {
+      return this.$store.state.loginUser;
+    },
+  },
 };
 </script>
 
@@ -21,7 +30,6 @@ export default {
   margin: 0;
   padding: 0;
 }
-
 html {
   font-family: "Poppins", sans-serif;
 }
@@ -34,18 +42,15 @@ input {
   height: 8px;
   width: 8px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
   background: #eeeeee;
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #cecdcd;
   border-radius: 10px;
 }
-
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(187, 183, 183);

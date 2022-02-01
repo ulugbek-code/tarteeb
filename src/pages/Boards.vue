@@ -75,7 +75,6 @@
         </div>
       </template>
     </base-dialog>
-    <the-navigation></the-navigation>
     <header :class="[!isNavOpened ? 'nav' : '']" class="box">
       <h2>Tasks</h2>
       <div class="flex">

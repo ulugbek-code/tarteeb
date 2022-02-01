@@ -7,6 +7,7 @@ import rootGetters from "./getters.js";
 const store = createStore({
   state() {
     return {
+      isAuth: false,
       isNavOpened: true, //for hamburger menu
       lastListId: null, //for creating new board
       first: null, //first day of the week

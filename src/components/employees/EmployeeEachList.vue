@@ -6,7 +6,8 @@
     :class="{ active: activeId == user.id }"
   >
     <td>{{ user.id }}</td>
-    <td>{{ user.firstName }} {{ user.lastName }}</td>
+    <td>{{ user.firstName }}</td>
+    <td>{{ user.lastName }}</td>
     <td>{{ user.phone }}</td>
     <!-- <td width="25%">
       <base-dropdown
@@ -63,7 +64,6 @@ tr {
   border-radius: 24px;
 }
 td {
-  text-align: center;
   padding: 12px;
   font-size: 14px;
 }

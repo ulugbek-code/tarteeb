@@ -1,6 +1,5 @@
 <template>
   <div>
-    <the-navigation></the-navigation>
     <div :class="[!isNavOpened ? 'nav' : '']" id="users-container">
       <base-dialog
         :show="isBtnClicked"

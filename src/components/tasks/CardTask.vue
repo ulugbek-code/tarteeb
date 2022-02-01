@@ -48,7 +48,7 @@ export default {
             deadline: tomorrow,
             createdBy: this.$store.getters.loginUser.id,
             statusId: this.listId,
-            userId: 4, //assignee
+            userId: this.$store.getters.loginUser.id, //assignee was changed
             reporterId: this.$store.getters.loginUser.id,
           };
           // console.log(res);

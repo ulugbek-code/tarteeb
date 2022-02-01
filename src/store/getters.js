@@ -10,13 +10,13 @@ export default {
   users(state) {
     return state.users;
   },
-  isManager(state) {
-    if (state.decodedUser.role === "Manager") {
-      return true;
-    } else {
-      return false;
-    }
-  },
+  // isManager(state) {
+  //   if (state.decodedUser.role === "Manager") {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // },
   loginUser(state) {
     return state.loginUser;
   },
@@ -58,5 +58,8 @@ export default {
   },
   months(state) {
     return state.months;
+  },
+  getAuth(state) {
+    return state.isAuth;
   },
 };

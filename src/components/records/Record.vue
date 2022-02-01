@@ -69,6 +69,9 @@ export default {
     };
   },
   computed: {
+    loginUser() {
+      return this.$store.getters.loginUser;
+    },
     times() {
       return this.$store.getters.times;
     },

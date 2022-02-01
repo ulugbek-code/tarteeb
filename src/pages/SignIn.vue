@@ -106,7 +106,10 @@ export default {
           const token = await JSON.parse(localStorage.getItem("loginUser"));
           let decoded = jwt_decode(token.token);
           localStorage.setItem("decodedToken", JSON.stringify(decoded));
+
           this.$router.replace("/");
+          this.$store.dispatch("changeAuth");
+          // this.$forceUpdate();
           this.$Progress.finish();
         } catch (err) {
           this.error = err.response.data.title;
@@ -125,6 +128,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: #fff; */
 }
 .sign-in {
   /* position: absolute;

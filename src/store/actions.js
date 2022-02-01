@@ -37,6 +37,7 @@ export default {
     } catch (e) {
       if (e.response.status == 401) {
         localStorage.clear();
+        context.commit("clearState");
         this.$router.replace("/signIn");
       }
       console.log("hello");
@@ -86,6 +87,7 @@ export default {
     context.commit("getOrgDays", weekOrg);
   },
   async getTimes(context) {
+    // console.log(context.state.loginUser.id);
     try {
       const res = await axios.get(
         `https://time-tracker.azurewebsites.net/api/Times/${
@@ -98,5 +100,8 @@ export default {
     } catch (e) {
       console.log(e.message); //Network error
     }
+  },
+  changeAuth(context) {
+    context.commit("changeAuth");
   },
 };

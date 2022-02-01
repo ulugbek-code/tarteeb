@@ -62,7 +62,7 @@
         </div>
       </router-link> -->
       <router-link
-        v-if="decoded.role === 'Manager'"
+        v-if="decoded ? decoded.role === 'Manager' : null"
         class="nav-link"
         to="/users"
       >
@@ -238,7 +238,8 @@ export default {
       }
     },
     decoded() {
-      return JSON.parse(localStorage.getItem("decodedToken"));
+      // return JSON.parse(localStorage.getItem("decodedToken"));
+      return this.$store.state.decodedUser;
     },
     isNavOpened() {
       return this.$store.getters.isNavOpened;
@@ -257,6 +258,7 @@ export default {
     deleteToken() {
       // localStorage.removeItem("loginUser");
       localStorage.clear();
+      this.$store.commit("clearState");
       this.close();
       this.$router.replace("/signIn");
     },

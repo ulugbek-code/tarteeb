@@ -25,16 +25,19 @@ export default {
   },
   plusPrev(state) {
     state.offset = state.offset - 1;
-
-    // console.log(state.prev);
   },
   plusNext(state) {
     state.offset = state.offset + 1;
-
-    // console.log(state.next);
   },
-  getCurr(state, payload) {
-    state.curr = payload;
-    console.log(state.curr);
+  clearState(state) {
+    state.loginUser = null;
+    state.decodedUser = null;
+    state.isAuth = false;
+  },
+  changeAuth(state) {
+    state.isAuth = true;
+    // this.$forceUpdate();
+    state.loginUser = JSON.parse(localStorage.getItem("loginUser"));
+    state.decodedUser = JSON.parse(localStorage.getItem("decodedToken"));
   },
 };
