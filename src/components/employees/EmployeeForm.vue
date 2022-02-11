@@ -76,7 +76,7 @@ export default {
   methods: {
     async getTimesById() {
       const res = await axios.get(
-        `https://time-tracker.azurewebsites.net/api/Times/${this.userId}`
+        `https://api-tarteeb.azurewebsites.net/api/Times/${this.userId}`
       );
       this.times = res.data;
       if (!this.times.length) {

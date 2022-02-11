@@ -127,7 +127,7 @@ export default {
       if (this.labelName !== "") {
         try {
           this.$Progress.start();
-          await axios.put("https://time-tracker.azurewebsites.net/api/Boards", {
+          await axios.put("https://api-tarteeb.azurewebsites.net/api/Boards", {
             id: this.id,
             newName: this.labelName,
           });
@@ -159,7 +159,7 @@ export default {
       try {
         this.$Progress.start();
         await axios.delete(
-          `https://time-tracker.azurewebsites.net/api/Boards/${this.id}/${this.moveId}`
+          `https://api-tarteeb.azurewebsites.net/api/Boards/${this.id}/${this.moveId}`
         );
         await this.$store.dispatch("getLists");
         await this.$store.dispatch("getCards");

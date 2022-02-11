@@ -171,7 +171,7 @@ export default {
         try {
           this.$Progress.start();
           await axios.post(
-            "https://time-tracker.azurewebsites.net/api/Boards/ChangeOrder",
+            "https://api-tarteeb.azurewebsites.net/api/Boards/ChangeOrder",
             {
               id: this.id,
               newOrder: this.newOrder,
@@ -200,23 +200,23 @@ export default {
     isManager() {
       return this.$store.getters.isManager;
     },
-    getLoginUser() {
-      let login = JSON.parse(localStorage.getItem("decodedToken"));
-      let login2 = {
-        id: parseInt(login.nameid),
-        firstName: login.given_name,
-        lastName: login.unique_name,
-      };
-      return login2;
-    },
+    // getLoginUser() {
+    //   let login = JSON.parse(localStorage.getItem("decodedToken"));
+    //   let login2 = {
+    //     id: parseInt(login.nameid),
+    //     firstName: login.given_name,
+    //     lastName: login.unique_name,
+    //   };
+    //   return login2;
+    // },
     usersNames() {
       // return this.users.map((user) => `${user.firstName} ${user.lastName}`);
       let users = this.$store.getters["users"].map((user) =>
         JSON.parse(JSON.stringify(user))
       );
-      let finalUsers = [...users, this.getLoginUser];
+      // let finalUsers = [...users, this.getLoginUser];
       // console.log(finalUsers);
-      return finalUsers;
+      return users;
     },
     statusNames() {
       return this.lists.map((list) => list.name);
@@ -243,16 +243,12 @@ export default {
     },
     async createList() {
       if (this.listName !== "") {
-        // this.$store.dispatch("createList", this.listName);
         try {
           this.$Progress.start();
-          await axios.post(
-            "https://time-tracker.azurewebsites.net/api/Boards",
-            {
-              name: this.listName,
-              order: this.getMaxOrder,
-            }
-          );
+          await axios.post("https://api-tarteeb.azurewebsites.net/api/Boards", {
+            name: this.listName,
+            order: this.getMaxOrder,
+          });
           this.$store.dispatch("getLists");
           this.$Progress.finish();
           this.isAddClicked = false;
@@ -280,7 +276,7 @@ export default {
       ) {
         try {
           this.$Progress.start();
-          await axios.post("https://time-tracker.azurewebsites.net/api/Tasks", {
+          await axios.post("https://api-tarteeb.azurewebsites.net/api/Tasks", {
             description: this.desc,
             priority: this.newRating,
             deadline: this.newDate + "T00:00:00",

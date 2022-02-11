@@ -211,7 +211,7 @@ export default {
           try {
             this.$Progress.start();
             await axios.put(
-              `https://time-tracker.azurewebsites.net/api/Tasks/${this.currObj.id}`,
+              `https://api-tarteeb.azurewebsites.net/api/Tasks/${this.currObj.id}`,
               sendObj
             );
             await this.$store.dispatch("getCards");
@@ -276,7 +276,7 @@ export default {
     async deleteTask() {
       this.$Progress.start();
       await axios.delete(
-        `https://time-tracker.azurewebsites.net/api/Tasks/${this.deletingId}`
+        `https://api-tarteeb.azurewebsites.net/api/Tasks/${this.deletingId}`
       );
       await this.$store.dispatch("getCards");
       this.$Progress.finish();
@@ -314,7 +314,7 @@ export default {
       try {
         this.$Progress.start();
         await axios.put(
-          `https://time-tracker.azurewebsites.net/api/Tasks/${this.obj.id}`,
+          `https://api-tarteeb.azurewebsites.net/api/Tasks/${this.obj.id}`,
           sendObj
         );
         await this.$store.dispatch("getCards");
@@ -330,7 +330,7 @@ export default {
       try {
         this.$Progress.start();
         const res = await axios.get(
-          `https://time-tracker.azurewebsites.net/api/Tasks/${id}`
+          `https://api-tarteeb.azurewebsites.net/api/Tasks/${id}`
         );
         this.obj = res.data;
         // console.log(this.obj);

@@ -88,7 +88,7 @@ export default {
       if (this.taskId && this.hours && this.desc) {
         try {
           this.$Progress.start();
-          await axios.post("https://time-tracker.azurewebsites.net/api/Times", {
+          await axios.post("https://api-tarteeb.azurewebsites.net/api/Times", {
             taskId: this.taskId,
             userId: this.$store.getters.loginUser.id,
             date: this.day.dateOrg,

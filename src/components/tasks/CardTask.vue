@@ -58,7 +58,7 @@ export default {
           };
           this.$Progress.start();
           await axios.post(
-            "https://time-tracker.azurewebsites.net/api/Tasks",
+            "https://api-tarteeb.azurewebsites.net/api/Tasks",
             res,
             { headers }
           );

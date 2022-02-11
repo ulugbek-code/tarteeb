@@ -6,14 +6,14 @@ export default {
   },
   async getLists(context) {
     const res = await axios.get(
-      "https://time-tracker.azurewebsites.net/api/Boards"
+      "https://api-tarteeb.azurewebsites.net/api/Boards"
     );
     context.commit("getLists", res);
   },
   async getCards(context) {
     try {
       const res = await axios.get(
-        "https://time-tracker.azurewebsites.net/api/Tasks"
+        "https://api-tarteeb.azurewebsites.net/api/Tasks"
       );
       context.commit("getCards", res);
     } catch (e) {
@@ -23,7 +23,7 @@ export default {
   async getUsers(context) {
     try {
       const res = await axios.get(
-        "https://time-tracker.azurewebsites.net/api/user/getUsersByManagerId",
+        "https://api-tarteeb.azurewebsites.net/api/user/getUsersByManagerId",
         {
           headers: {
             Authorization: `Bearer ${
@@ -90,7 +90,7 @@ export default {
     // console.log(context.state.loginUser.id);
     try {
       const res = await axios.get(
-        `https://time-tracker.azurewebsites.net/api/Times/${
+        `https://api-tarteeb.azurewebsites.net/api/Times/${
           context.state.loginUser.id
         }/${context.state.orgDays[0]}/${
           context.state.orgDays[context.state.orgDays.length - 1]
