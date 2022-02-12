@@ -61,7 +61,7 @@
   </base-dialog>
   <div class="list-body">
     <div class="list-header">
-      <label v-if="isLabel" @dblclick="changeLabel">{{ name }} {{ id }}</label>
+      <label v-if="isLabel" @dblclick="changeLabel">{{ name }}</label>
       <span @click.stop="clickDots" id="three-dots"
         ><img src="../../assets/trash.svg" alt=""
       /></span>

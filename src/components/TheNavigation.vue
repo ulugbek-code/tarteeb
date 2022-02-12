@@ -258,9 +258,9 @@ export default {
     deleteToken() {
       // localStorage.removeItem("loginUser");
       localStorage.clear();
-      this.$store.commit("clearState");
       this.close();
       this.$router.replace("/signIn");
+      this.$store.commit("clearState");
     },
   },
 };

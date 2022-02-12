@@ -317,9 +317,9 @@ export default {
   created() {
     this.$Progress.start();
     this.$store.dispatch("getLists");
-    if (this.isManager) {
-      this.$store.dispatch("getUsers");
-    }
+    // if (this.isManager) {
+    // }
+    this.$store.dispatch("getUsers");
   },
 };
 </script>

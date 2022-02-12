@@ -225,7 +225,7 @@ export default {
     filteredCards() {
       // I used filteredCards instead of cardss
       return this.cardss.filter((card) =>
-        card.description.match(this.searchInput)
+        card.description.toLowerCase().match(this.searchInput.toLowerCase())
       );
     },
     cardss() {
@@ -348,6 +348,7 @@ export default {
   async created() {
     this.$Progress.start();
     await this.$store.dispatch("getCards");
+    // await this.$store.dispatch("getUsers");
   },
   mounted() {
     this.$Progress.finish();

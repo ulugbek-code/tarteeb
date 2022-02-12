@@ -27,6 +27,7 @@
     </div>
     <div class="time-wrapper">
       <input
+        @keydown.enter="sendData"
         v-model="desc"
         type="text"
         placeholder="Some description here..."
@@ -86,6 +87,7 @@ export default {
   methods: {
     async sendData() {
       if (this.taskId && this.hours && this.desc) {
+        // console.log("done");
         try {
           this.$Progress.start();
           await axios.post("https://api-tarteeb.azurewebsites.net/api/Times", {

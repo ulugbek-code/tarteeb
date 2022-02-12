@@ -4,7 +4,8 @@
       <button @click="$emit('addEmp')">Add Employee</button>
     </div>
     <div v-if="userId !== null" class="box">
-      <div v-if="!noUser && times.length" class="emp-wrapper">
+      <!-- bottom was !noUser && times.length -->
+      <div class="emp-wrapper">
         <div class="emp-header">
           <div class="emp-header-first">
             <h2>{{ getCurrentUser.firstName }}'s Timesheet</h2>
@@ -13,6 +14,8 @@
                 :options="months"
                 default="Choose a month"
                 @input="getCurrentMonth"
+                :submitted="isCancelled"
+                @changee="isCancelled = false"
               ></base-dropdown>
             </div>
           </div>
@@ -25,23 +28,25 @@
             <h4>HOURS WORKED</h4>
             <h4>COMMENT</h4>
           </div>
-          <div v-for="time in times" :key="time.id" class="emp-body-body">
-            <p>
-              {{ new Date(time.date).toDateString().substr(0, 10) }}
-            </p>
-            <p>TT-{{ time.taskId }}</p>
-            <p>{{ time.hoursWorked }} h</p>
-            <p>
-              {{ time.comment }}
-            </p>
+          <template v-if="!noUser">
+            <div v-for="time in times" :key="time.id" class="emp-body-body">
+              <p>
+                {{ new Date(time.date).toDateString().substr(0, 10) }}
+              </p>
+              <p>TT-{{ time.taskId }}</p>
+              <p>{{ time.hoursWorked }} h</p>
+              <p>
+                {{ time.comment }}
+              </p>
+            </div>
+          </template>
+          <div v-else-if="noUser && times.length === 0">
+            <img src="../../assets/warn.png" alt="" />
+            <p>There are not any records for this employee yet...</p>
           </div>
         </div>
         <!-- new Date('2022-01-20T00:00:00').toDateString() -->
         <!-- new Date('2022-01-20T00:00:00').getMonth() -->
-      </div>
-      <div v-else-if="noUser && times.length === 0">
-        <img src="../../assets/warn.png" alt="" />
-        <p>There are not any records for this employee yet...</p>
       </div>
     </div>
     <div v-else class="box">
@@ -58,9 +63,10 @@ export default {
   props: ["userId", "month"],
   data() {
     return {
-      times: [],
       noUser: false,
-      currentMonth: null,
+      isCancelled: false,
+      times: [],
+      currentMonth: new Date().getMonth(),
     };
   },
   computed: {
@@ -74,35 +80,54 @@ export default {
     },
   },
   methods: {
-    async getTimesById() {
-      const res = await axios.get(
-        `https://api-tarteeb.azurewebsites.net/api/Times/${this.userId}`
-      );
-      this.times = res.data;
-      if (!this.times.length) {
-        this.noUser = true;
+    async getTimesById(mon) {
+      try {
+        this.$Progress.start();
+        const res = await axios.get(
+          `https://api-tarteeb.azurewebsites.net/api/Times/${this.userId}`
+        );
+        this.times = res.data;
+        let timesByMonth;
+        if (mon === undefined) {
+          timesByMonth = this.times.filter(
+            (time) => new Date(time.date).getMonth() == new Date().getMonth()
+          );
+        } else {
+          timesByMonth = this.times.filter(
+            (time) => new Date(time.date).getMonth() == mon
+          );
+        }
+        this.times = timesByMonth;
+
+        if (!this.times.length) {
+          this.noUser = true;
+        }
+        this.$Progress.finish();
+      } catch (e) {
+        console.log(e);
+        this.$Progress.fail();
       }
     },
     async getCurrentMonth(month) {
       this.$Progress.start();
       let currMonth = this.months.indexOf(month);
-      await this.getTimesById();
-      let timesByMonth = this.times.filter(
-        (time) => new Date(time.date).getMonth() == currMonth
-      );
+      await this.getTimesById(currMonth);
+      // let timesByMonth = this.times.filter(
+      //   (time) => new Date(time.date).getMonth() == currMonth
+      // );
 
-      this.times = timesByMonth;
+      // this.times = timesByMonth;
       this.$Progress.finish();
     },
   },
   watch: {
     async userId() {
-      this.$Progress.start();
       await this.getTimesById();
-      this.$Progress.finish();
+      this.isCancelled = true;
     },
     month(val) {
-      this.currentMonth = val;
+      // this.currentMonth = val;
+      console.log(val);
     },
     times() {
       if (this.times.length) {
