@@ -40,4 +40,19 @@ export default {
     state.loginUser = JSON.parse(localStorage.getItem("loginUser"));
     state.decodedUser = JSON.parse(localStorage.getItem("decodedToken"));
   },
+  sortArr(state, payload) {
+    if (payload === "p") {
+      return state.cardss.sort((a, b) => {
+        return b.priority - a.priority;
+      });
+    } else if (payload === "a") {
+      return state.cardss.sort((a, b) =>
+        a.description > b.description ? 1 : -1
+      );
+    } else {
+      return state.cardss.sort((a, b) =>
+        a.description < b.description ? 1 : -1
+      );
+    }
+  },
 };

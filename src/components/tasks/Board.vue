@@ -62,9 +62,10 @@
   <div class="list-body">
     <div class="list-header">
       <label v-if="isLabel" @dblclick="changeLabel">{{ name }}</label>
-      <span @click.stop="clickDots" id="three-dots"
-        ><img src="../../assets/trash.svg" alt=""
-      /></span>
+      <span @click.stop="clickDots" id="three-dots">
+        <img src="../../assets/dots.svg" alt="" />
+        <!-- <img src="../../assets/trash.svg" alt="" /> -->
+      </span>
       <input
         v-if="!isLabel"
         @dblclick="changeLabel"
@@ -75,9 +76,40 @@
         placeholder="New status name here ..."
         v-focus
       />
+      <transition name="fade">
+        <div
+          v-if="openFilter"
+          tabindex="0"
+          @blur="openFilter = false"
+          class="board-filter"
+        >
+          <small><span @click="openFilter = false">&#8594;</span></small>
+          <small @click="sortingArr('a')"
+            ><img src="../../assets/a-z.png" alt="" /> A-Z</small
+          >
+          <small @click="sortingArr('z')"
+            ><img src="../../assets/z-a.png" alt="" /> Z-A</small
+          >
+          <small @click="sortingArr('p')"
+            ><img src="../../assets/star.png" alt="" /> By priority</small
+          >
+          <small @click="changeLabel"
+            ><img src="../../assets/edit-title.svg" alt="" /> Edit the
+            name</small
+          >
+          <small @click="openDelete = true"
+            ><img src="../../assets/trash.svg" alt="" /> Delete</small
+          >
+        </div>
+      </transition>
     </div>
     <div class="list-content">
-      <CardsList :listId="id" :listName="name" :searchInput="search" />
+      <CardsList
+        :listId="id"
+        :listName="name"
+        :searchInput="search"
+        :sortBy="sortBy"
+      />
     </div>
     <div class="list-footer">
       <card-task :listId="id"></card-task>
@@ -103,10 +135,12 @@ export default {
   data() {
     return {
       isLabel: true,
+      openFilter: false,
       openDelete: false,
       moveId: null,
       labelName: this.name,
       isError: false,
+      sortBy: "",
     };
   },
   computed: {
@@ -120,6 +154,9 @@ export default {
     },
   },
   methods: {
+    sortingArr(val) {
+      this.sortBy = val;
+    },
     changeLabel() {
       this.isLabel = !this.isLabel;
     },
@@ -144,7 +181,8 @@ export default {
       this.isError = false;
     },
     clickDots() {
-      this.openDelete = true;
+      this.openFilter = true;
+      // this.openDelete = true;
     },
     close() {
       this.openDelete = false;
@@ -233,6 +271,7 @@ export default {
   padding: 0px 10px 0px 1.2rem;
   background-color: rgba(235, 236, 240, 1);
   font-family: "Poppins", sans-serif;
+  font-size: 16px;
   /* border-radius: 10px 10px 0px 0px; */
   color: #444;
 }
@@ -251,9 +290,12 @@ export default {
 #three-dots {
   position: absolute;
   right: 5%;
-  top: 6%;
+  top: 8%;
   display: none;
   transition: all 0.3s ease;
+}
+#three-dots img {
+  padding-bottom: 4px;
 }
 #three-dots:hover img {
   background: #e0e4e9;
@@ -300,5 +342,53 @@ export default {
 }
 .btn-wrapper button {
   margin-left: 1rem;
+}
+.board-filter {
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  background: rgb(206, 198, 198);
+  border-radius: 10px;
+  z-index: 10;
+}
+.board-filter img {
+  position: absolute;
+  margin-top: 10px;
+  left: 10px;
+}
+.board-filter small:first-child {
+  text-align: right;
+  margin-right: 8px;
+  line-height: 30px;
+}
+.board-filter small:first-child span {
+  padding: 0 6px 3px;
+}
+.board-filter small:first-child span:hover {
+  background: rgba(230, 225, 225, 0.2);
+}
+.board-filter small:not(:nth-child(1)) {
+  width: 100%;
+  line-height: 40px;
+  padding-left: 32px;
+}
+.board-filter small:not(:nth-child(1)):hover {
+  background: rgb(230, 225, 225);
+  border-radius: 10px;
+}
+.fade-enter-active {
+  transition: all 0.4s ease-out;
+}
+
+.fade-leave-active {
+  transition: all 0.4s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

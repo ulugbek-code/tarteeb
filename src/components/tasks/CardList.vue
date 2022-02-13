@@ -160,7 +160,7 @@ import { VueDraggableNext } from "vue-draggable-next";
 import StarRating from "vue-star-rating";
 
 export default {
-  props: ["listId", "listName", "searchInput"],
+  props: ["listId", "listName", "searchInput", "sortBy"],
   components: {
     draggable: VueDraggableNext,
     StarRating,
@@ -258,6 +258,12 @@ export default {
     },
   },
   methods: {
+    sortArr(val) {
+      this.$store.commit("sortArr", val);
+      // return this.filteredCards.sort((a, b) => {
+      //   return a.priority - b.priority;
+      // });
+    },
     checkMove(evt) {
       this.currObj = evt.draggedContext.element;
       if (evt.relatedContext.element) {
@@ -310,7 +316,7 @@ export default {
         userId: this.assignee, //assignee
         reporterId: this.reporter,
       };
-      console.log(sendObj);
+      // console.log(sendObj);
       try {
         this.$Progress.start();
         await axios.put(
@@ -361,6 +367,9 @@ export default {
       this.date = val.deadline.substr(0, 10);
       this.statusName = val.statusId;
       this.reporter = val.reporterId;
+    },
+    sortBy(val) {
+      this.sortArr(val);
     },
   },
 };
