@@ -63,8 +63,22 @@
     <div class="list-header">
       <label v-if="isLabel" @dblclick="changeLabel">{{ name }}</label>
       <span @click.stop="clickDots" id="three-dots">
-        <img src="../../assets/dots.svg" alt="" />
-        <!-- <img src="../../assets/trash.svg" alt="" /> -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="three-dots"
+          fill="#364a6e"
+          x="0px"
+          y="0px"
+          width="22px"
+          height="16px"
+          viewBox="0 0 122.88 1"
+        >
+          <g>
+            <path
+              d="M122.88,14.978c0,8.271-6.708,14.979-14.979,14.979s-14.976-6.708-14.976-14.979 C92.926,6.708,99.631,0,107.901,0S122.88,6.708,122.88,14.978L122.88,14.978z M29.954,14.978c0,8.271-6.708,14.979-14.979,14.979 S0,23.248,0,14.978C0,6.708,6.705,0,14.976,0S29.954,6.708,29.954,14.978L29.954,14.978z M76.417,14.978 c0,8.271-6.708,14.979-14.979,14.979c-8.27,0-14.978-6.708-14.978-14.979C46.46,6.708,53.168,0,61.438,0 C69.709,0,76.417,6.708,76.417,14.978L76.417,14.978z"
+            />
+          </g>
+        </svg>
       </span>
       <input
         v-if="!isLabel"
@@ -83,7 +97,25 @@
           @blur="openFilter = false"
           class="board-filter"
         >
-          <small><span @click="openFilter = false">&#8594;</span></small>
+          <small @click="openFilter = false">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon-tabler"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#2c3e50"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <line x1="13" y1="18" x2="19" y2="12" />
+              <line x1="13" y1="6" x2="19" y2="12" />
+            </svg>
+          </small>
           <small @click="sortingArr('a')"
             ><img src="../../assets/a-z.png" alt="" /> A-Z</small
           >
@@ -290,15 +322,14 @@ export default {
 #three-dots {
   position: absolute;
   right: 5%;
-  top: 8%;
+  top: 0;
   display: none;
-  transition: all 0.3s ease;
 }
-#three-dots img {
-  padding-bottom: 4px;
+.three-dots {
+  transition: all 0.2s ease;
 }
-#three-dots:hover img {
-  background: #e0e4e9;
+#three-dots:hover .three-dots {
+  fill: rgb(117, 135, 228);
 }
 .form-task * {
   color: #444;
@@ -349,7 +380,9 @@ export default {
   flex-direction: column;
   position: absolute;
   right: 0;
-  background: rgb(206, 198, 198);
+  background: rgb(245, 244, 244);
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
   border-radius: 10px;
   z-index: 10;
 }
@@ -359,19 +392,23 @@ export default {
   left: 10px;
 }
 .board-filter small:first-child {
-  text-align: right;
-  margin-right: 8px;
-  line-height: 30px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 25px;
+  padding-right: 12px;
+  /* background: #444; */
 }
-.board-filter small:first-child span {
-  padding: 0 6px 3px;
+.board-filter small:first-child .icon-tabler {
+  transition: all 0.3s ease;
 }
-.board-filter small:first-child span:hover {
-  background: rgba(230, 225, 225, 0.2);
+.board-filter small:first-child:hover .icon-tabler {
+  /* background: rgba(230, 225, 225, 0.9); */
+  stroke: rgb(117, 135, 228);
 }
 .board-filter small:not(:nth-child(1)) {
   width: 100%;
-  line-height: 40px;
+  line-height: 35px;
   padding-left: 32px;
 }
 .board-filter small:not(:nth-child(1)):hover {
@@ -383,7 +420,7 @@ export default {
 }
 
 .fade-leave-active {
-  transition: all 0.4s ease-in;
+  transition: all 0.3s ease-in;
 }
 
 .fade-enter-from,

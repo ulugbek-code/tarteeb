@@ -9,7 +9,7 @@ const store = createStore({
     return {
       isAuth: false,
       isNavOpened: true, //for hamburger menu
-      lastListId: null, //for creating new board
+      lastListId: null || 0, //for creating new board
       first: null, //first day of the week
       last: null, //last day of the week
       firstDay: null, //first day and week name

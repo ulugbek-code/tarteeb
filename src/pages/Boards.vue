@@ -339,7 +339,8 @@ export default {
   width: 100%;
   box-sizing: border-box;
 }
-.form-task * {
+.form-task *,
+h2 {
   font-family: "Poppins", sans-serif;
   color: #444;
 }

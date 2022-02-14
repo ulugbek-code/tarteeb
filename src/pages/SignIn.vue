@@ -232,13 +232,14 @@ export default {
   padding-left: 28px;
   padding-top: 20px;
   font-size: 14px;
-  transition: 0.6s ease-in-out;
+  transition: 0.3s ease-in-out;
   pointer-events: none;
 }
 .form input:focus ~ span,
 .form input:valid ~ span {
   transform: translate(-20%, -70%);
   font-size: 12px;
+  color: #4361ee;
 }
 #load {
   position: absolute;

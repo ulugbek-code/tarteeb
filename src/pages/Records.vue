@@ -5,11 +5,13 @@
         <div class="tasks-header">
           <h2>Weekly time sheet</h2>
           <p>
-            <span @click="prev"><img src="../assets/left1.png" alt="" /></span>
+            <span @click="prev"
+              ><img src="../assets/caret-left.svg" alt=""
+            /></span>
             {{ firstDay }} -
             {{ lastDay }}
             <span @click="next"
-              ><img src="../assets/right-arrow.png" alt=""
+              ><img src="../assets/caret-right.svg" alt=""
             /></span>
           </p>
         </div>
@@ -110,8 +112,14 @@ export default {
   color: #444;
 }
 .tasks-header img {
-  width: 12px;
   cursor: pointer;
+}
+.tasks-header p {
+  display: flex;
+  align-items: center;
+}
+.tasks-header span {
+  margin-top: 5px;
 }
 .body-wrapper {
   display: flex;
