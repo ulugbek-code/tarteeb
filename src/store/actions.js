@@ -38,9 +38,7 @@ export default {
       if (e.response.status == 401) {
         localStorage.clear();
         context.commit("clearState");
-        this.$router.replace("/signIn");
       }
-      console.log("hello");
       console.log(e.message);
     }
   },

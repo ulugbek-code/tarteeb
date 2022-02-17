@@ -1,44 +1,45 @@
 <template>
-  <base-dialog :show="isLogOut" color="#fff" width="580px" @close="close">
-    <template #default>
-      <form class="form-deleting">
-        <h4>Do you really want to log out</h4>
-      </form>
-    </template>
-    <template #actions>
-      <div class="btn-wrapper">
-        <the-button @click="deleteToken" :red="true" class="form-btn"
-          >Log out</the-button
-        >
-        <the-button @click="close" class="form-btn">Cancel</the-button>
+  <div>
+    <base-dialog :show="isLogOut" color="#fff" width="580px" @close="close">
+      <template #default>
+        <form class="form-deleting">
+          <h4>Do you really want to log out</h4>
+        </form>
+      </template>
+      <template #actions>
+        <div class="btn-wrapper">
+          <the-button @click="deleteToken" :red="true" class="form-btn"
+            >Log out</the-button
+          >
+          <the-button @click="close" class="form-btn">Cancel</the-button>
+        </div>
+      </template>
+    </base-dialog>
+    <nav :class="!isNavOpened ? 'openedSideBar' : ''">
+      <div
+        @click="toggleHamburgerMenu"
+        :class="[!isNavOpened ? 'open' : '']"
+        class="hamburger-menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    </template>
-  </base-dialog>
-  <nav :class="!isNavOpened ? 'openedSideBar' : ''">
-    <div
-      @click="toggleHamburgerMenu"
-      :class="[!isNavOpened ? 'open' : '']"
-      class="hamburger-menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <router-link to="/"
-      ><h1>{{ companyName }}</h1></router-link
-    >
-    <div class="info">
-      <img src="../assets/unknown.png" alt="" />
-      <div class="sub-info">
-        <h3>
-          {{ decoded ? decoded.given_name : "Firstname" }}
-          {{ decoded ? decoded.unique_name.substr(0, 1) : "L" }}.
-        </h3>
-        <p>{{ decoded ? decoded.role : "Admin" }}</p>
+      <router-link to="/"
+        ><h1>{{ companyName }}</h1></router-link
+      >
+      <div v-if="decoded" class="info">
+        <img src="../assets/unknown.png" alt="" />
+        <div class="sub-info">
+          <h3>
+            {{ decoded ? decoded.given_name : "Firstname" }}
+            {{ decoded ? decoded.unique_name.substr(0, 1) : "L" }}.
+          </h3>
+          <p>{{ decoded ? decoded.role : "Admin" }}</p>
+        </div>
       </div>
-    </div>
-    <div class="nav-li">
-      <!-- <router-link class="nav-link" to="/">
+      <div class="nav-li">
+        <!-- <router-link class="nav-link" to="/">
         <div @click="offseting" class="items">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -61,109 +62,109 @@
           <p>Dashboard</p>
         </div>
       </router-link> -->
-      <router-link
-        v-if="decoded ? decoded.role === 'Manager' : null"
-        class="nav-link"
-        to="/users"
-      >
-        <div @click="offseting" class="items">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icons"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#aaa"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
-          </svg>
-          <p>Employees</p>
-        </div>
-      </router-link>
-      <router-link class="nav-link" to="/">
-        <div @click="offseting" class="items">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icons"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#aaa"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path
-              d="M3 19c3.333 -2 5 -4 5 -6c0 -3 -1 -3 -2 -3s-2.032 1.085 -2 3c.034 2.048 1.658 2.877 2.5 4c1.5 2 2.5 2.5 3.5 1c.667 -1 1.167 -1.833 1.5 -2.5c1 2.333 2.333 3.5 4 3.5h2.5"
-            />
-            <path
-              d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2z"
-            />
-            <path d="M16 7h4" />
-          </svg>
-          <span class="tooltiptext">Tasks</span>
-          <p>Tasks</p>
-        </div>
-      </router-link>
-      <router-link class="nav-link" to="/records">
-        <div @click="offseting" class="items">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icons"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#aaa"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <rect x="3" y="12" width="6" height="8" rx="1" />
-            <rect x="9" y="8" width="6" height="12" rx="1" />
-            <rect x="15" y="4" width="6" height="16" rx="1" />
-            <line x1="4" y1="20" x2="18" y2="20" />
-          </svg>
-          <span class="tooltiptext">Time</span>
-          <p>Time</p>
-        </div>
-      </router-link>
-      <a class="nav-link" href="http://Loom.com" target="_blank">
-        <div @click="offseting" class="items">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="icons"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="#aaa"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <circle cx="12" cy="12" r="9" />
-            <circle cx="12" cy="12" r="1" />
-            <line x1="13.41" y1="10.59" x2="16" y2="8" />
-            <path d="M7 12a5 5 0 0 1 5 -5" />
-          </svg>
-          <span class="tooltiptext">Loom</span>
-          <p>Loom</p>
-        </div>
-      </a>
-      <!-- <router-link class="nav-link" to="/settings">
+        <router-link
+          v-if="decoded ? decoded.role === 'Manager' : null"
+          class="nav-link"
+          to="/users"
+        >
+          <div @click="offseting" class="items">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icons"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#aaa"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+            </svg>
+            <p>Employees</p>
+          </div>
+        </router-link>
+        <router-link class="nav-link" to="/">
+          <div @click="offseting" class="items">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icons"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#aaa"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M3 19c3.333 -2 5 -4 5 -6c0 -3 -1 -3 -2 -3s-2.032 1.085 -2 3c.034 2.048 1.658 2.877 2.5 4c1.5 2 2.5 2.5 3.5 1c.667 -1 1.167 -1.833 1.5 -2.5c1 2.333 2.333 3.5 4 3.5h2.5"
+              />
+              <path
+                d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2z"
+              />
+              <path d="M16 7h4" />
+            </svg>
+            <span class="tooltiptext">Tasks</span>
+            <p>Tasks</p>
+          </div>
+        </router-link>
+        <router-link class="nav-link" to="/records">
+          <div @click="offseting" class="items">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icons"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#aaa"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <rect x="3" y="12" width="6" height="8" rx="1" />
+              <rect x="9" y="8" width="6" height="12" rx="1" />
+              <rect x="15" y="4" width="6" height="16" rx="1" />
+              <line x1="4" y1="20" x2="18" y2="20" />
+            </svg>
+            <span class="tooltiptext">Time</span>
+            <p>Time</p>
+          </div>
+        </router-link>
+        <a class="nav-link" href="http://Loom.com" target="_blank">
+          <div @click="offseting" class="items">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icons"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#aaa"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="1" />
+              <line x1="13.41" y1="10.59" x2="16" y2="8" />
+              <path d="M7 12a5 5 0 0 1 5 -5" />
+            </svg>
+            <span class="tooltiptext">Loom</span>
+            <p>Loom</p>
+          </div>
+        </a>
+        <!-- <router-link class="nav-link" to="/settings">
         <div @click="offseting" class="items">
           <svg
             class="icons"
@@ -192,31 +193,32 @@
           <p>Settings</p>
         </div>
       </router-link> -->
-      <!-- <div :style="{ top: getOffset + 'px' }" id="marker"></div> -->
-    </div>
-    <div @click="logOut" class="log-out items">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="icons"
-        width="20"
-        height="20"
-        viewBox="0 0 24 20"
-        stroke-width="1.5"
-        stroke="#2c3e50"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path
-          d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
-        />
-        <path d="M7 12h14l-3 -3m0 6l3 -3" />
-      </svg>
-      <span class="tooltiptext">Log Out</span>
-      <p>Log Out</p>
-    </div>
-  </nav>
+        <!-- <div :style="{ top: getOffset + 'px' }" id="marker"></div> -->
+      </div>
+      <div @click="logOut" class="log-out items">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icons"
+          width="20"
+          height="20"
+          viewBox="0 0 24 20"
+          stroke-width="1.5"
+          stroke="#2c3e50"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
+          />
+          <path d="M7 12h14l-3 -3m0 6l3 -3" />
+        </svg>
+        <span class="tooltiptext">Log Out</span>
+        <p>Log Out</p>
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -225,8 +227,7 @@ export default {
     return {
       userInfo: {},
       isLogOut: false,
-      haveAuth: null,
-      // isNavOpened: true,
+      // haveAuth: null,
     };
   },
   computed: {
@@ -256,10 +257,8 @@ export default {
       this.isLogOut = true;
     },
     deleteToken() {
-      // localStorage.removeItem("loginUser");
       localStorage.clear();
       this.close();
-      this.$router.replace("/signIn");
       this.$store.commit("clearState");
     },
   },

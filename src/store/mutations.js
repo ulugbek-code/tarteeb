@@ -1,3 +1,5 @@
+import router from "../router.js";
+
 export default {
   toggleNavbar(state) {
     state.isNavOpened = !state.isNavOpened;
@@ -33,6 +35,7 @@ export default {
     state.loginUser = null;
     state.decodedUser = null;
     state.isAuth = false;
+    router.replace("/signIn");
   },
   changeAuth(state) {
     state.isAuth = true;

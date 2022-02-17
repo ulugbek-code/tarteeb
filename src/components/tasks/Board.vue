@@ -393,7 +393,7 @@ export default {
 }
 .board-filter small:first-child {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   height: 25px;
   padding-right: 12px;

@@ -1,6 +1,8 @@
 <template>
   <vue-progress-bar></vue-progress-bar>
-  <the-navigation v-if="isAuth || loginUser"></the-navigation>
+  <transition name="nav" mode="out-in">
+    <the-navigation v-if="isAuth || loginUser"></the-navigation>
+  </transition>
   <router-view v-slot="slotProps">
     <transition name="route" mode="out-in">
       <component :is="slotProps.Component"></component>
@@ -59,18 +61,21 @@ input {
   opacity: 0;
   transform: translateY(-30px);
 }
-.route-leave-to {
+.route-leave-to,
+.nav-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
 .route-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all 0.2s ease-out;
 }
-.route-leave-active {
-  transition: all 0.3s ease-in;
+.route-leave-active,
+.nav-leave-active {
+  transition: all 0.2s ease-in;
 }
 .route-enter-to,
-.route-leave-from {
+.route-leave-from,
+.nav-leave-from {
   opacity: 1;
   transform: translateY(0);
 }
