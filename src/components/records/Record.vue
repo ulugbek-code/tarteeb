@@ -1,7 +1,25 @@
 <template>
   <div @click="openForm" :class="{ changedDay: isTimeOpened }" class="day">
-    <!-- {{ day.dateOrg }} -->
-    <p>{{ day.date.replace(/-/g, "/") }}</p>
+    <p>
+      <span id="plus-svg" :class="{ spin: isTimeOpened }">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-plus"
+          width="16"
+          height="16"
+          viewBox="0 0 22 22"
+          stroke-width="1.5"
+          stroke="#fff"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" /></svg
+      ></span>
+      {{ day.date.replace(/-/g, "/") }}
+    </p>
     <animate-number :number="totalHours"></animate-number>
     <!-- <p>{{ totalHours }} h</p> -->
     <div class="time-btn-wrapper">
@@ -38,6 +56,7 @@
       </div>
     </div>
   </div>
+
   <div v-if="isTimeOpened" class="tasks-wrapper">
     <div v-for="time in times" :key="time.id">
       <record-task
@@ -263,5 +282,17 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 #cancel:hover {
   background: #04bdcbbf;
+}
+#plus-svg {
+  margin-right: 6px;
+  border-radius: 12px;
+  padding: 4px 5px 0;
+  background: #2c3e50;
+}
+#plus-svg svg {
+  transition: all 0.3s ease;
+}
+#plus-svg.spin svg {
+  transform: rotate(135deg) translate(-2%, -10%);
 }
 </style>

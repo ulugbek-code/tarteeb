@@ -10,7 +10,6 @@
           <input
             v-model="userData.phoneNumber"
             @input="enforcePhoneFormat()"
-            @keydown.enter="signIn"
             type="tel"
             required
           />
@@ -19,7 +18,7 @@
         <div class="input-container">
           <input
             v-model.trim="userData.password"
-            @keydown.enter="signIn"
+            @keyup.enter="signIn"
             :type="typeOf"
             required
           />
@@ -90,6 +89,7 @@ export default {
       if (this.userData.phoneNumber !== "" && this.userData.password !== "") {
         try {
           this.$Progress.start();
+
           const response = await axios.post(
             "https://api-tarteeb.azurewebsites.net/api/user/login",
             {
@@ -103,8 +103,11 @@ export default {
             }
           );
           localStorage.setItem("loginUser", JSON.stringify(response.data));
+
           const token = await JSON.parse(localStorage.getItem("loginUser"));
+
           let decoded = jwt_decode(token.token);
+
           localStorage.setItem("decodedToken", JSON.stringify(decoded));
 
           this.$router.replace("/");
@@ -112,7 +115,8 @@ export default {
           // this.$forceUpdate();
           this.$Progress.finish();
         } catch (err) {
-          this.error = err.response.data.title;
+          console.log(err.message); //network
+          this.error = err.message; //err.response.data.title;
           this.$Progress.fail();
         }
       }
