@@ -1,6 +1,6 @@
 <template>
   <div id="sign-in-wrapper">
-    <div @click="toggleError" class="sign-in">
+    <div @click="toggleError" :class="{ 'red-shadow': error }" class="sign-in">
       <div class="form-img">
         <img src="../assets/SignInHat.svg" alt="" />
       </div>
@@ -132,23 +132,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  background: #fff; */
 }
 .sign-in {
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
   border-radius: 25px;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.08);
   padding: 3rem;
   padding-bottom: 1rem;
   z-index: 1;
   background: #fff;
+  transition: all 0.2s ease-in-out;
+}
+.sign-in.red-shadow {
+  box-shadow: 0px 0px 8px 0px rgba(221, 78, 78, 0.9);
 }
 .form-img {
   display: flex;
@@ -160,7 +155,7 @@ export default {
   margin-bottom: 0.2rem;
 }
 .sign-in h3 {
-  color: rgb(34, 34, 34);
+  color: #444;
   text-align: center;
   font-family: "Poppins", "sans-serif";
   margin: 0.9rem 0 0.6rem;
@@ -171,9 +166,6 @@ export default {
 }
 .form div {
   position: relative;
-}
-.warning {
-  color: red;
 }
 .form input {
   width: 100%;
@@ -244,6 +236,10 @@ export default {
   transform: translate(-20%, -70%);
   font-size: 12px;
   color: #4361ee;
+}
+.sign-in.red-shadow .form input:focus ~ span,
+.sign-in.red-shadow .form input:valid ~ span {
+  color: rgb(221, 78, 78);
 }
 #load {
   position: absolute;
