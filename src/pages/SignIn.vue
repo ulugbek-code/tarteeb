@@ -142,9 +142,6 @@ export default {
   background: #fff;
   transition: all 0.2s ease-in-out;
 }
-.sign-in.red-shadow {
-  box-shadow: 0px 0px 8px 0px rgba(221, 78, 78, 0.9);
-}
 .form-img {
   display: flex;
   justify-content: center;
@@ -228,7 +225,7 @@ export default {
   padding-left: 28px;
   padding-top: 20px;
   font-size: 14px;
-  transition: 0.3s ease-in-out;
+  transition: 0.35s ease-in-out;
   pointer-events: none;
 }
 .form input:focus ~ span,
