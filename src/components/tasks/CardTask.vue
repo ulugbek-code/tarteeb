@@ -57,11 +57,9 @@ export default {
             "Access-Control-Allow-Origin": "*",
           };
           this.$Progress.start();
-          await axios.post(
-            "https://api-tarteeb.azurewebsites.net/api/Tasks",
-            res,
-            { headers }
-          );
+          await axios.post("https://tarteeb.azurewebsites.net/api/Tasks", res, {
+            headers,
+          });
           // const card = {
           //   listId: this.listId,
           //   name: this.cardName,

@@ -5,15 +5,13 @@ export default {
     context.commit("toggleNavbar");
   },
   async getLists(context) {
-    const res = await axios.get(
-      "https://api-tarteeb.azurewebsites.net/api/Boards"
-    );
+    const res = await axios.get("https://tarteeb.azurewebsites.net/api/Boards");
     context.commit("getLists", res);
   },
   async getCards(context) {
     try {
       const res = await axios.get(
-        "https://api-tarteeb.azurewebsites.net/api/Tasks"
+        "https://tarteeb.azurewebsites.net/api/Tasks"
       );
       context.commit("getCards", res);
     } catch (e) {
@@ -23,7 +21,7 @@ export default {
   async getUsers(context) {
     try {
       const res = await axios.get(
-        "https://api-tarteeb.azurewebsites.net/api/user/getUsersByManagerId",
+        "https://tarteeb.azurewebsites.net/api/user/getUsersByManagerId",
         {
           headers: {
             Authorization: `Bearer ${
@@ -88,7 +86,7 @@ export default {
     // console.log(context.state.loginUser.id);
     try {
       const res = await axios.get(
-        `https://api-tarteeb.azurewebsites.net/api/Times/${
+        `https://tarteeb.azurewebsites.net/api/Times/${
           context.state.loginUser.id
         }/${context.state.orgDays[0]}/${
           context.state.orgDays[context.state.orgDays.length - 1]

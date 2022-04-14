@@ -170,7 +170,7 @@ export default {
       ) {
         this.$Progress.start();
         await axios.post(
-          "https://api-tarteeb.azurewebsites.net/api/user/register",
+          "https://tarteeb.azurewebsites.net/api/user/register",
           obj,
           {
             headers: {
