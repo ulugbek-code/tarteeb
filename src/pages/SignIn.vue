@@ -91,7 +91,7 @@ export default {
           this.$Progress.start();
 
           const response = await axios.post(
-            "https://tarteeb.azurewebsites.net/api/user/login",
+            "https://tarteeb-core.azurewebsites.net/api/user/login",
             {
               phone: this.resolvedNumber, //"998914490133",
               password: this.userData.password,

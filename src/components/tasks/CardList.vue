@@ -211,7 +211,7 @@ export default {
           try {
             this.$Progress.start();
             await axios.put(
-              `https://tarteeb.azurewebsites.net/api/Tasks/${this.currObj.id}`,
+              `https://tarteeb-core.azurewebsites.net/api/Tasks/${this.currObj.id}`,
               sendObj
             );
             await this.$store.dispatch("getCards");
@@ -282,7 +282,7 @@ export default {
     async deleteTask() {
       this.$Progress.start();
       await axios.delete(
-        `https://tarteeb.azurewebsites.net/api/Tasks/${this.deletingId}`
+        `https://tarteeb-core.azurewebsites.net/api/Tasks/${this.deletingId}`
       );
       await this.$store.dispatch("getCards");
       this.$Progress.finish();
@@ -320,7 +320,7 @@ export default {
       try {
         this.$Progress.start();
         await axios.put(
-          `https://tarteeb.azurewebsites.net/api/Tasks/${this.obj.id}`,
+          `https://tarteeb-core.azurewebsites.net/api/Tasks/${this.obj.id}`,
           sendObj
         );
         await this.$store.dispatch("getCards");
@@ -336,7 +336,7 @@ export default {
       try {
         this.$Progress.start();
         const res = await axios.get(
-          `https://tarteeb.azurewebsites.net/api/Tasks/${id}`
+          `https://tarteeb-core.azurewebsites.net/api/Tasks/${id}`
         );
         this.obj = res.data;
         // console.log(this.obj);

@@ -84,7 +84,7 @@ export default {
       try {
         this.$Progress.start();
         const res = await axios.get(
-          `https://tarteeb.azurewebsites.net/api/Times/${this.userId}`
+          `https://tarteeb-core.azurewebsites.net/api/Times/${this.userId}`
         );
         this.times = res.data;
         let timesByMonth;

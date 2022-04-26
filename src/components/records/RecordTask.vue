@@ -83,7 +83,9 @@ export default {
     async deleteTask(id) {
       try {
         this.$Progress.start();
-        await axios.delete(`https://tarteeb.azurewebsites.net/api/Times/${id}`);
+        await axios.delete(
+          `https://tarteeb-core.azurewebsites.net/api/Times/${id}`
+        );
         this.$Progress.finish();
         await this.$store.dispatch("getTimes");
       } catch (e) {
@@ -94,7 +96,7 @@ export default {
     async sendEditData() {
       try {
         this.$Progress.start();
-        await axios.put("https://tarteeb.azurewebsites.net/api/Times", {
+        await axios.put("https://tarteeb-core.azurewebsites.net/api/Times", {
           id: this.task.id,
           taskId: this.taskId,
           userId: this.task.userId,

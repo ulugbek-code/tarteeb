@@ -171,7 +171,7 @@ export default {
         try {
           this.$Progress.start();
           await axios.post(
-            "https://tarteeb.azurewebsites.net/api/Boards/ChangeOrder",
+            "https://tarteeb-core.azurewebsites.net/api/Boards/ChangeOrder",
             {
               id: this.id,
               newOrder: this.newOrder,
@@ -245,10 +245,13 @@ export default {
       if (this.listName !== "") {
         try {
           this.$Progress.start();
-          await axios.post("https://tarteeb.azurewebsites.net/api/Boards", {
-            name: this.listName,
-            order: this.getMaxOrder,
-          });
+          await axios.post(
+            "https://tarteeb-core.azurewebsites.net/api/Boards",
+            {
+              name: this.listName,
+              order: this.getMaxOrder,
+            }
+          );
           this.$store.dispatch("getLists");
           this.$Progress.finish();
           this.isAddClicked = false;
@@ -276,7 +279,7 @@ export default {
       ) {
         try {
           this.$Progress.start();
-          await axios.post("https://tarteeb.azurewebsites.net/api/Tasks", {
+          await axios.post("https://tarteeb-core.azurewebsites.net/api/Tasks", {
             description: this.desc,
             priority: this.newRating,
             deadline: this.newDate + "T00:00:00",

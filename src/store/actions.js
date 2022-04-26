@@ -5,13 +5,15 @@ export default {
     context.commit("toggleNavbar");
   },
   async getLists(context) {
-    const res = await axios.get("https://tarteeb.azurewebsites.net/api/Boards");
+    const res = await axios.get(
+      "https://tarteeb-core.azurewebsites.net/api/Boards"
+    );
     context.commit("getLists", res);
   },
   async getCards(context) {
     try {
       const res = await axios.get(
-        "https://tarteeb.azurewebsites.net/api/Tasks"
+        "https://tarteeb-core.azurewebsites.net/api/Tasks"
       );
       context.commit("getCards", res);
     } catch (e) {
@@ -21,7 +23,7 @@ export default {
   async getUsers(context) {
     try {
       const res = await axios.get(
-        "https://tarteeb.azurewebsites.net/api/user/getUsersByManagerId",
+        "https://tarteeb-core.azurewebsites.net/api/user/getUsersByManagerId",
         {
           headers: {
             Authorization: `Bearer ${
@@ -86,12 +88,13 @@ export default {
     // console.log(context.state.loginUser.id);
     try {
       const res = await axios.get(
-        `https://tarteeb.azurewebsites.net/api/Times/${
+        `https://tarteeb-core.azurewebsites.net/api/Times/${
           context.state.loginUser.id
         }/${context.state.orgDays[0]}/${
           context.state.orgDays[context.state.orgDays.length - 1]
         }`
       );
+      console.log(res.data);
       context.commit("getTimes", res.data);
     } catch (e) {
       console.log(e.message); //Network error
